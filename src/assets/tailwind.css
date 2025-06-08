@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-h2 {
+    @apply text-2xl font-bold text-blue-500 text-center md:mb-4 md:mt-2;
+}
+.input-field {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+           focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5;
+  }
+.label-field {
+    @apply block mt-1 text-sm font-medium text-gray-900;
+}
+div#instructions > div:not(:has(div)):after {
+    content: "Sélectionner une instruction ou une option";
+    font-size: 1.5rem;
+    font-stretch: expanded;
+    position: relative;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+.modal a {
+    @apply text-blue-600 hover:underline;
+}
