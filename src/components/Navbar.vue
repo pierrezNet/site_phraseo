@@ -9,7 +9,7 @@
           <span v-else>✕</span>
         </DisclosureButton>
         <button
-          @click="toggleRecording"
+          @click="startRecording"
           :disabled="isLoading"
           class="p-2 fill-current"
           :aria-label="isRecording ? 'Arrêter l\'enregistrement' : 'Démarrer l\'enregistrement'"
@@ -62,12 +62,12 @@ import phraseo from '../assets/phraseologieIFR.json'
 
 function onKeyDown(e: KeyboardEvent) {
   if (e.key === 'Control' && !isRecording.value) {
-    toggleRecording()
+    startRecording()
   }
 }
 function onKeyUp(e: KeyboardEvent) {
   if (e.key === 'Control' && isRecording.value) {
-    toggleRecording()
+    stopRecording()
   }
 }
 
@@ -252,28 +252,40 @@ const changeLanguage = (lang: string) => langStore.changeLanguage(lang)
 
 const isRecording = ref(false)
 const isLoading = ref(false)
-const score = ref<number|null>(null)
+const score = ref<number | null>(null)
 let mediaRecorder: MediaRecorder | null = null
 let audioChunks: BlobPart[] = []
 
-// Fonction pour basculer entre démarrage et arrêt de l'enregistrement
-async function toggleRecording() {
-  if (isRecording.value) {
-    await stopRecording();
-    
-    // Arrêter toute synthèse vocale en cours
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
-    
-    // Arrêter tout minuteur en cours
-    clearAllTimers();
-  } else {
-    await startRecording();
-  }
+// Fonction pour réinitialiser les indicateurs et minuteurs
+function resetIndicators() {
+  score.value = null
+  isLoading.value = false
+  //clearAllTimers()
+  window.lastTranscriptTaskId = null
+  window.currentTaskId = null
 }
 
-// Cette déclaration est déjà faite plus haut dans le fichier
+// Fonction pour basculer entre démarrage et arrêt de l'enregistrement
+async function startRecording() {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+  mediaRecorder = new MediaRecorder(stream)
+  audioChunks = []
+  mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data)
+
+  mediaRecorder.start()
+  isRecording.value = true
+  console.log("Enregistrement démarré")
+}
+
+async function stopRecording() {
+  if (!mediaRecorder) return
+
+  // Vérifier si l'enregistrement est déjà arrêté pour éviter les arrêts multiples
+  if (!isRecording.value) return
+
+  console.log("Arrêt de l'enregistrement");
+  isRecording.value = false
+  console.log("Enregistrement arrêté")
 
 // Fonction pour arrêter tous les minuteurs
 function clearAllTimers() {
@@ -293,39 +305,6 @@ function clearAllTimers() {
   }
 }
 
-async function startRecording() {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-  mediaRecorder = new MediaRecorder(stream)
-  audioChunks = []
-  mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data)
-  
-  mediaRecorder.start()
-  isRecording.value = true
-  window.isRecordingActive = true; // Mettre à jour la variable globale
-  console.log("Enregistrement démarré, isRecordingActive =", window.isRecordingActive);
-  score.value = null
-}
-
-async function stopRecording() {
-  if (!mediaRecorder) return
-  
-  // Vérifier si l'enregistrement est déjà arrêté pour éviter les arrêts multiples
-  if (!isRecording.value) return
-  
-  console.log("Arrêt de l'enregistrement");
-  isRecording.value = false
-  window.isRecordingActive = false; // Mettre à jour la variable globale
-  console.log("Enregistrement arrêté, isRecordingActive =", window.isRecordingActive);
-  
-  try {
-    mediaRecorder.stop()
-  } catch (e) {
-    console.error("Erreur lors de l'arrêt de l'enregistrement:", e);
-    // Réinitialiser l'état même en cas d'erreur
-    isLoading.value = false;
-    return;
-  }
-  
   mediaRecorder.onstop = async () => {
     isLoading.value = true
     const blob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' })
@@ -704,5 +683,5 @@ async function stopRecording() {
       isLoading.value = false
     }
   }
-};
+}
 </script>

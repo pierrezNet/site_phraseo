@@ -67,12 +67,9 @@
 import { useLangStore } from '../stores/lang';
 import { useFormStore } from '../stores/form';
 import data from '../assets/phraseologieIFR.json';
-import { onMounted, ref, computed, watch } from 'vue';
+import { defineComponent, onMounted, ref, computed, watch } from 'vue';
 import { iconTaxonomy } from '../stores/taxonomy';
-import { mockIvaoApi } from '../services/MockApiService';
-import { replaceMetarTag, formatTextForAviationSpeech } from '../utils/weatherFormatter';
-
-export default {
+export default defineComponent({
   name: 'Tabs',
   setup() {
     const langStore = useLangStore();
@@ -814,7 +811,7 @@ export default {
       this.refreshDisplayedTexts();
     }
   }
-};
+});
 </script>
   
 <style scoped>
