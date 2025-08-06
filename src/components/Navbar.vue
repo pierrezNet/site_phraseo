@@ -704,5 +704,5 @@ async function stopRecording() {
       isLoading.value = false
     }
   }
-}
+};
 </script>
