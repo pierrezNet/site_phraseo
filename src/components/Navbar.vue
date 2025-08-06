@@ -140,55 +140,46 @@ function checkIfNeedsReadback(responseText: string, taskId: string): boolean {
 function generateReadback(atcText: string, lang: 'fr' | 'en'): string {
   const formStore = useFormStore();
   const callsign = formStore.form.CAA;
-  
-  // Extraire les informations importantes du texte ATC
-  let readbackText = "";
-  
-  // Vérifier si le texte contient des informations de piste
-  if (atcText.includes("piste") || atcText.includes("runway")) {
-    const runway = formStore.formatRunway(formStore.form.RWY, lang);
-    
-    // Vérifier si le texte contient des informations QNH
-    if (atcText.includes("QNH") || atcText.includes("Q_N_H")) {
-      const qnh = formStore.form.QNH;
-      
-      // Collationnement pour les informations de départ (piste + QNH)
-      readbackText = lang === 'fr' 
-        ? `Piste ${runway}, QNH ${qnh}, ${callsign}.`
-        : `Runway ${runway}, QNH ${qnh}, ${callsign}.`;
-    } 
-    // Collationnement pour autorisation de décollage ou atterrissage
-    else if (atcText.includes("décollage") || atcText.includes("take-off") || 
-             atcText.includes("atterrissage") || atcText.includes("land")) {
-      readbackText = lang === 'fr'
-        ? `Piste ${runway}, je ${atcText.includes("décollage") ? "décolle" : "j'atterris"}, ${callsign}.`
-        : `Runway ${runway}, ${atcText.includes("take-off") ? "taking off" : "landing"}, ${callsign}.`;
+
+  // Fonction de normalisation simple pour comparer les textes
+  const normalize = (t: string) =>
+    t
+      .toLowerCase()
+      .replace(/[.,/#!$%\^&*;:{}=\-_`~()]/g, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+
+  const normalizedAtc = normalize(atcText);
+
+  // Parcourir toutes les tâches de la phraséologie pour trouver la réponse pilote
+  const allTasks = [
+    ...(tasks.spawnTask || []),
+    ...(tasks.orTask || [])
+  ];
+
+  for (const task of allTasks) {
+    if (!task.para) continue;
+    for (let i = 0; i < task.para.length - 1; i++) {
+      const current = task.para[i];
+      const next = task.para[i + 1];
+      if (
+        current._class === 'ATC' &&
+        current._lang === lang &&
+        next._class === 'Pilot' &&
+        next._lang === lang
+      ) {
+        const replacedAtc = replacePlaceholders(current.__text);
+        if (normalize(replacedAtc) === normalizedAtc) {
+          return replacePlaceholders(next.__text);
+        }
+      }
     }
   }
-  // Collationnement pour roulage
-  else if (atcText.includes("roulez") || atcText.includes("taxi")) {
-    const holdingPoint = formStore.form.HLD || "";
-    const taxiway = formStore.form.VOI || "";
-    readbackText = lang === 'fr'
-      ? `Je roule point d'attente piste ${formStore.formatRunway(formStore.form.RWY, lang)} via ${taxiway} ${holdingPoint}, ${callsign}.`
-      : `Taxiing holding point runway ${formStore.formatRunway(formStore.form.RWY, lang)} via ${taxiway} ${holdingPoint}, ${callsign}.`;
-  }
-  // Collationnement pour niveau
-  else if (atcText.includes("niveau") || atcText.includes("level")) {
-    const level = formStore.form.NIV;
-    readbackText = lang === 'fr'
-      ? `Je ${atcText.includes("montez") ? "monte" : "descends"} niveau ${level}, ${callsign}.`
-      : `${atcText.includes("climb") ? "Climbing" : "Descending"} level ${level}, ${callsign}.`;
-  }
-  
-  // Si aucun collationnement spécifique n'a été généré, utiliser un collationnement générique
-  if (!readbackText) {
-    readbackText = lang === 'fr'
-      ? `Roger, ${callsign}.`
-      : `Roger, ${callsign}.`;
-  }
-  
-  return readbackText;
+
+  // Si aucun collationnement spécifique trouvé, utiliser un texte générique
+  return lang === 'fr'
+    ? `Roger, ${callsign}.`
+    : `Roger, ${callsign}.`;
 }
 
 // Fonction pour remplacer les placeholders par des valeurs réalistes
@@ -236,6 +227,7 @@ function replacePlaceholders(text: string): string {
     '[CTR]': formStore.form.CTR,
     '[GND]': formStore.form.GND,
     '[FIR]': formStore.form.FIR,
+    '[MET]': formStore.form.MET,
     '[QNH]': formStore.form.QNH,
     '[SQU]': formStore.form.SQU,
     '[CAP]': formStore.form.CAP,
