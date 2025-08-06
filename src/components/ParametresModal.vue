@@ -59,6 +59,10 @@
               <input type="text" id="HLD" v-model="formStore.form.HLD" @change="updateForm" class="input-field">
             </div>
             <div>
+              <label for="MET" class="label-field">Code OACI METAR</label>
+              <input type="text" id="MET" v-model="formStore.form.MET" @change="updateForm" class="input-field">
+            </div>
+            <div>
               <label for="QNH" class="label-field">QNH</label>
               <input type="text" id="QNH" v-model="formStore.form.QNH" @change="updateForm" class="input-field">
             </div>
@@ -70,6 +74,8 @@
               <label for="SQU" class="label-field">Code transpondeur</label>
               <input type="text" id="SQU" v-model="formStore.form.SQU" @change="updateForm" class="input-field">
             </div>
+          </div>
+          <div>
             <div>
               <label for="NIV" class="label-field">Niveau</label>
               <input type="text" id="NIV" v-model="formStore.form.NIV" @change="updateForm" class="input-field">

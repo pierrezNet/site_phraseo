@@ -221,7 +221,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], piste [RWY], vent (240) degrés (10) noeuds, visibilité (5) kilomètres, température (16), QNH [QNH], niveau de transition (5_0), il est [HOU]."
+							"__text": "[CAA], piste [RWY], [MET], il est [HOU]."
 						},
 						{
 							"_lang": "fr",

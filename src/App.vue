@@ -52,7 +52,8 @@ export default defineComponent({
     TaskTextDisplay,
     AideModal,
     ParametresModal,
-    AboutModal
+    AboutModal,
+    IvaoApiDemo
   },
   setup() {
     const aideModal: Ref<Modal | null> = ref(null);
