@@ -80,8 +80,6 @@
               <label for="NIV" class="label-field">Niveau</label>
               <input type="text" id="NIV" v-model="formStore.form.NIV" @change="updateForm" class="input-field">
             </div>
-          </div>
-          <div>
             <div>
               <label for="VIT" class="label-field">Vitesse</label>
               <input type="text" id="VIT" v-model="formStore.form.VIT" @change="updateForm" class="input-field">

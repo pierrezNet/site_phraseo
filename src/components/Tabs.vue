@@ -69,6 +69,8 @@ import { useFormStore } from '../stores/form';
 import data from '../assets/phraseologieIFR.json';
 import { onMounted, ref, computed, watch } from 'vue';
 import { iconTaxonomy } from '../stores/taxonomy';
+import { mockIvaoApi } from '../services/MockApiService';
+import { replaceMetarTag, formatTextForAviationSpeech } from '../utils/weatherFormatter';
 
 export default {
   name: 'Tabs',
@@ -77,13 +79,37 @@ export default {
     const formStore = useFormStore();
     const selectedSubgraphs = ref([]);
     const lastSelectedTaskId = ref(null);
+    const metarData = ref(null);
+    const metarLoading = ref(false);
+    const metarError = ref(null);
 
     // Utiliser computed pour que selectedLanguage soit réactif aux changements du store
     const selectedLanguage = computed(() => langStore.current);
 
     onMounted(() => {
       langStore.loadLanguage(); // Chargez la langue lorsque le composant est monté
+      loadMetarData(); // Charger les données météo au montage
     });
+
+    // Fonction pour charger les données météo
+    const loadMetarData = async () => {
+      try {
+        metarLoading.value = true;
+        metarError.value = null;
+        // Utiliser le code ICAO des paramètres ou LFPG par défaut
+        const icao = formStore.form.MET || 'LFPG';
+        console.log('Chargement des données météo pour:', icao);
+        
+        const data = await mockIvaoApi.getMetar(icao);
+        metarData.value = data;
+        console.log('Données météo chargées:', data);
+      } catch (error) {
+        console.error('Erreur lors du chargement des données météo:', error);
+        metarError.value = error.message || 'Erreur inconnue';
+      } finally {
+        metarLoading.value = false;
+      }
+    };
 
     const POL = {
       matin: { fr: "bonjour", en: "hello" },
@@ -154,10 +180,22 @@ export default {
         switch(p1) {
           case 'POL':
             return POL[getHeure()][lang];
-          case 'HOU': {
-            const now = new Date();
-            return `${now.getUTCHours().toString().padStart(2, '0')} heures ${now.getMinutes().toString().padStart(2, '0')}`;
-          }
+          case 'MET':
+            if (metarLoading.value) {
+              return lang === 'fr' ? 'chargement des données météo...' : 'loading weather data...';
+            }
+            if (metarError.value) {
+              return lang === 'fr' ? `erreur météo: ${metarError.value}` : `weather error: ${metarError.value}`;
+            }
+            if (metarData.value) {
+              const options = { lang }; // Suppression de l'annotation de type
+              return replaceMetarTag('[MET]', metarData.value, options);
+            }
+            return lang === 'fr' ? 'données météo non disponibles' : 'weather data not available';
+              case 'HOU': {
+                const now = new Date();
+                return `${now.getUTCHours().toString().padStart(2, '0')} heures ${now.getMinutes().toString().padStart(2, '0')}`;
+              }
           case 'RWY':
             return formStore.formatRunway(formStore.form.RWY, lang);
           case 'DEL':
@@ -207,7 +245,11 @@ export default {
       selectedLanguage,
       selectedSubgraphs,
       replacePlaceholders,
-      lastSelectedTaskId
+      lastSelectedTaskId,
+      metarData,
+      metarLoading,
+      metarError,
+      loadMetarData
     };
   },
   data() {
@@ -499,9 +541,11 @@ export default {
         const firstAtcElement = atcElements[0];
         
         // Remplacer les placeholders dans le texte ATC
-        const atcText = this.replacePlaceholders(firstAtcElement.__text);
+        // Note: replacePlaceholders ne traite pas correctement [MET] pour la synthèse vocale,
+        // car il est conçu pour l'affichage visuel. Nous utilisons directement le texte brut.
+        const atcText = firstAtcElement.__text;
         
-        // Lancer la synthèse vocale
+        // Lancer la synthèse vocale avec le texte brut (prepareTextForSpeech s'occupera de [MET])
         this.speakText(atcText, lang);
         
         // Vérifier si cette tâche nécessite un collationnement
@@ -663,15 +707,66 @@ export default {
       return formStore.form.CAA || "Station";
     },
     
+    // Méthode pour traiter le texte avant la synthèse vocale
+    async prepareTextForSpeech(text, lang) {
+      // Pour la synthèse vocale, on veut remplacer le tag [MET] par les données météo
+      let processedText = text;
+      
+      // Traiter le tag [MET] spécifiquement si présent
+      if (processedText.includes('[MET]')) {
+        try {
+          // Utiliser le code ICAO des paramètres ou LFPG par défaut
+          const formStore = useFormStore();
+          const icao = formStore.form.MET || 'LFPG';
+          console.log('Préparation du tag [MET] pour la synthèse vocale avec ICAO:', icao);
+          
+          // Récupérer les données météo
+          const metar = await mockIvaoApi.getMetar(icao);
+          
+          // Définir les options de formatage avec forSpeech=true pour appliquer les règles d'épellation
+          const options = { lang, forSpeech: true };
+          
+          // Remplacer le tag [MET] par les données formatées
+          const metarText = replaceMetarTag('[MET]', metar, options);
+          processedText = processedText.replace(/\[MET\]/g, metarText);
+          console.log('Tag [MET] remplacé pour la synthèse vocale:', metarText);
+        } catch (err) {
+          console.error('Erreur lors du traitement du tag [MET] pour la synthèse vocale:', err);
+          // En cas d'erreur, remplacer par un message d'erreur
+          const errorMessage = lang === 'fr' 
+            ? 'données météo non disponibles' 
+            : 'weather data not available';
+          processedText = processedText.replace(/\[MET\]/g, errorMessage);
+        }
+      }
+      
+      // Traiter tous les autres placeholders standards
+      processedText = this.replacePlaceholders(processedText);
+      
+      // Appliquer les règles d'épellation pour l'aviation à tout le texte
+      processedText = formatTextForAviationSpeech(processedText);
+      
+      // Vérifier et remplacer manuellement les acronymes spécifiques qui posent problème
+      processedText = processedText.replace(/Charlie Tango Oscar Tango/g, "C. T. O. T.");
+      processedText = processedText.replace(/Quebec November Hotel/g, "Q. N. H.");
+      
+      console.log('Texte préparé pour synthèse vocale (avec météo):', processedText);
+      return processedText;
+    },
+    
     // Méthode pour lancer la synthèse vocale
     speakText(text, lang) {
-      // Suppression de la vérification de window.isRecordingActive pour permettre
-      // la synthèse vocale même lorsque l'enregistrement n'est pas actif
-      
+      if (!window.isRecordingActive) {
+        return;
+      }
+
       if (!window.speechSynthesis) {
         console.error("La synthèse vocale n'est pas disponible dans ce navigateur");
         return;
       }
+      
+      // Préparer le texte (remplacer les tags spéciaux comme [MET])
+      text = await this.prepareTextForSpeech(text, lang);
       
       // Annuler toute synthèse vocale en cours
       window.speechSynthesis.cancel();

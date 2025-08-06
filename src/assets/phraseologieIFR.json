@@ -236,7 +236,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "Runway [RWY], wind (2_4_0) degrees (1_0) knots, visibility (5) kilometres, temperature (1_6), QNH [QNH], transition level (5_0), time [HOU]."
+							"__text": "Runway [RWY], [MET], time [HOU]."
 						},
 						{
 							"_lang": "en",
@@ -648,22 +648,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], alignez-vous et attendez piste [RWY], intersection Whiskey_7, numéro deux derrière un Boeing 737."
+							"__text": "[CAA], alignez-vous et attendez piste [RWY], intersection W7, numéro deux derrière un Boeing 737."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je m'aligne et attends piste [RWY], intersection Whiskey_7, [CAA], numéro deux derrière un Boeing 737."
+							"__text": "Je m'aligne et attends piste [RWY], intersection W7, [CAA], numéro deux derrière un Boeing 737."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], line up and wait runway [RWY], intersection Whiskey_7, number two behind a 737."
+							"__text": "[CAA], line up and wait runway [RWY], intersection W7, number two behind a 737."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Lining up and waiting runway [RWY], intersection Whiskey_7, number two behind a 737, [CAA]."
+							"__text": "Lining up and waiting runway [RWY], intersection W7, number two behind a 737, [CAA]."
 						}
 					],
 					"_id": "ALIGNEMENT_POS2",

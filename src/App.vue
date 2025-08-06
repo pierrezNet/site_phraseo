@@ -9,6 +9,10 @@
       <div id="instructions" class="col-span-12 md:col-span-6 m-1 md:mt-3 md:ml-3">
         <TaskTextDisplay :selectedTaskTexts="selectedTaskTexts" />
       </div>
+      <!-- IVAO API Demo Component -->
+      <div class="col-span-12 mt-6 px-4">
+        <IvaoApiDemo />
+      </div>
     </div>
     <footer class="fixed bottom-0 md:right-4 bg-white w-full md:w-1/3 modal">
         <div class="w-full mx-auto max-w-screen-xl p-1 pl-4 md:flex md:justify-between">
@@ -32,17 +36,16 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import type { Ref } from 'vue'; // Utiliser une importation de type pour Ref
+import type { TextItem } from './types/text';
+import type { Modal, TabsInstance } from './types/components';
 import Navbar from './components/Navbar.vue';
 import Tabs from './components/Tabs.vue';
 import TaskTextDisplay from './components/TaskTextDisplay.vue';
 import AideModal from './components/AideModal.vue';
 import ParametresModal from './components/ParametresModal.vue';
 import AboutModal from './components/AboutModal.vue';
+import IvaoApiDemo from './components/IvaoApiDemo.vue';
 
-interface Modal {
-  open: () => void;
-  close: () => void;
-}
 
 export default defineComponent({
   name: 'App',
@@ -74,10 +77,10 @@ export default defineComponent({
       }
     };
 
-    const selectedTaskTexts = ref<string[]>([]);
-    const tabsRef = ref(null);
+    const selectedTaskTexts = ref<TextItem[]>([]);
+    const tabsRef = ref<TabsInstance | null>(null);
 
-    const updateSelectedTaskTexts = (texts: string[]) => {
+    const updateSelectedTaskTexts = (texts: TextItem[]) => {
       selectedTaskTexts.value = texts;
     };
     
@@ -89,10 +92,13 @@ export default defineComponent({
         
         // Attendre que le changement d'onglet soit effectué
         setTimeout(() => {
-          // Trouver et sélectionner la tâche correspondante
-          const task = tabsRef.value.filteredPhaseTasks.find(t => t._id === taskId);
-          if (task) {
-            tabsRef.value.logTask(task);
+          // Vérifier à nouveau tabsRef.value car sa valeur pourrait changer
+          if (tabsRef.value) {
+            // Trouver et sélectionner la tâche correspondante
+            const task = tabsRef.value.filteredPhaseTasks.find((t) => t._id === taskId);
+            if (task) {
+              tabsRef.value.logTask(task);
+            }
           }
         }, 100);
       }
