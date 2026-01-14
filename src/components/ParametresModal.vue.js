@@ -40,10 +40,10 @@ let __VLS_directives;
 // CSS variable injection end 
 if (__VLS_ctx.isOpen) {
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-        ...{ class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal" },
+        ...{ class: "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal w-full max-h-screen overflow-y-auto" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-        ...{ class: "bg-white p-6 rounded-lg shadow-lg w-full max-w-xl" },
+        ...{ class: "bg-white p-6 rounded-lg shadow-lg w-full max-w-xl max-h-screen overflow-y-auto" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
         ...{ class: "flex justify-between items-center border-b pb-2" },
@@ -59,7 +59,7 @@ if (__VLS_ctx.isOpen) {
         ...{ class: "mt-4 space-y-4" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-        ...{ class: "grid grid-cols-3 space-x-4" },
+        ...{ class: "grid grid-cols-1 md:grid-cols-3 md:space-x-4 gap-y-4" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
@@ -209,6 +209,18 @@ if (__VLS_ctx.isOpen) {
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
     __VLS_asFunctionalElement(__VLS_intrinsicElements.label, __VLS_intrinsicElements.label)({
+        for: "MET",
+        ...{ class: "label-field" },
+    });
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.input, __VLS_intrinsicElements.input)({
+        ...{ onChange: (__VLS_ctx.updateForm) },
+        type: "text",
+        id: "MET",
+        value: (__VLS_ctx.formStore.form.MET),
+        ...{ class: "input-field" },
+    });
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.label, __VLS_intrinsicElements.label)({
         for: "QNH",
         ...{ class: "label-field" },
     });
@@ -244,6 +256,7 @@ if (__VLS_ctx.isOpen) {
         ...{ class: "input-field" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
+    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
     __VLS_asFunctionalElement(__VLS_intrinsicElements.label, __VLS_intrinsicElements.label)({
         for: "NIV",
         ...{ class: "label-field" },
@@ -255,7 +268,6 @@ if (__VLS_ctx.isOpen) {
         value: (__VLS_ctx.formStore.form.NIV),
         ...{ class: "input-field" },
     });
-    __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({});
     __VLS_asFunctionalElement(__VLS_intrinsicElements.label, __VLS_intrinsicElements.label)({
         for: "VIT",
@@ -502,12 +514,17 @@ if (__VLS_ctx.isOpen) {
 /** @type {__VLS_StyleScopedClasses['bg-black']} */ ;
 /** @type {__VLS_StyleScopedClasses['bg-opacity-50']} */ ;
 /** @type {__VLS_StyleScopedClasses['modal']} */ ;
+/** @type {__VLS_StyleScopedClasses['w-full']} */ ;
+/** @type {__VLS_StyleScopedClasses['max-h-screen']} */ ;
+/** @type {__VLS_StyleScopedClasses['overflow-y-auto']} */ ;
 /** @type {__VLS_StyleScopedClasses['bg-white']} */ ;
 /** @type {__VLS_StyleScopedClasses['p-6']} */ ;
 /** @type {__VLS_StyleScopedClasses['rounded-lg']} */ ;
 /** @type {__VLS_StyleScopedClasses['shadow-lg']} */ ;
 /** @type {__VLS_StyleScopedClasses['w-full']} */ ;
 /** @type {__VLS_StyleScopedClasses['max-w-xl']} */ ;
+/** @type {__VLS_StyleScopedClasses['max-h-screen']} */ ;
+/** @type {__VLS_StyleScopedClasses['overflow-y-auto']} */ ;
 /** @type {__VLS_StyleScopedClasses['flex']} */ ;
 /** @type {__VLS_StyleScopedClasses['justify-between']} */ ;
 /** @type {__VLS_StyleScopedClasses['items-center']} */ ;
@@ -520,8 +537,12 @@ if (__VLS_ctx.isOpen) {
 /** @type {__VLS_StyleScopedClasses['mt-4']} */ ;
 /** @type {__VLS_StyleScopedClasses['space-y-4']} */ ;
 /** @type {__VLS_StyleScopedClasses['grid']} */ ;
-/** @type {__VLS_StyleScopedClasses['grid-cols-3']} */ ;
-/** @type {__VLS_StyleScopedClasses['space-x-4']} */ ;
+/** @type {__VLS_StyleScopedClasses['grid-cols-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:grid-cols-3']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:space-x-4']} */ ;
+/** @type {__VLS_StyleScopedClasses['gap-y-4']} */ ;
+/** @type {__VLS_StyleScopedClasses['label-field']} */ ;
+/** @type {__VLS_StyleScopedClasses['input-field']} */ ;
 /** @type {__VLS_StyleScopedClasses['label-field']} */ ;
 /** @type {__VLS_StyleScopedClasses['input-field']} */ ;
 /** @type {__VLS_StyleScopedClasses['label-field']} */ ;

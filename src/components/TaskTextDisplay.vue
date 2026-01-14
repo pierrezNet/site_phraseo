@@ -31,9 +31,15 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
 import type { TextItem } from '../types/text';
-import { mockIvaoApi } from '../services/MockApiService';
 import { replaceMetarTag } from '../utils/weatherFormatter';
 import type { WeatherFormatOptions } from '../utils/weatherFormatter';
+
+const colorMap = {
+  blue:   'bg-blue-200 hover:bg-blue-300',
+  yellow: 'bg-yellow-200 hover:bg-yellow-300',
+  orange: 'bg-orange-200 hover:bg-orange-300',
+  gray:   'bg-gray-200 hover:bg-gray-300'
+};
 
 const props = defineProps({
   selectedTaskTexts: {
@@ -51,50 +57,6 @@ const metarLoading = ref(false);
 const metarError = ref<string | null>(null);
 // Utiliser le code ICAO des paramètres avec LFPG comme valeur par défaut
 const metarIcao = computed(() => formStore.form.MET || 'LFPG');
-
-// Récupérer les données METAR au chargement du composant et lorsque le code ICAO change
-onMounted(async () => {
-  await fetchMetar();
-});
-
-// Surveiller les changements du code ICAO dans les paramètres
-watch(() => formStore.form.MET, async (newValue, oldValue) => {
-  if (newValue && newValue !== oldValue) {
-    console.log(`Code ICAO changé: ${oldValue} -> ${newValue}`);
-    await fetchMetar(newValue);
-  }
-});
-
-// Fonction pour récupérer les données METAR
-async function fetchMetar(icao?: string) {
-  if (icao) {
-    // metarIcao est maintenant un computed, donc pas besoin de le modifier directement
-    // l'icao sera pris en compte lors du prochain rendu
-  }
-  
-  metarLoading.value = true;
-  metarError.value = null;
-  
-  try {
-    // Utiliser l'API mock pour éviter les problèmes d'authentification
-    // Utiliser metarIcao.value pour obtenir la valeur actuelle du computed
-    const icaoToUse = icao || metarIcao.value;
-    console.log(`Chargement des données METAR pour: ${icaoToUse}`);
-    
-    const data = await mockIvaoApi.getMetar(icaoToUse);
-    metarData.value = data;
-    console.log('METAR data loaded:', data);
-  } catch (err) {
-    console.error('Failed to fetch METAR:', err);
-    if (err instanceof Error) {
-      metarError.value = err.message;
-    } else {
-      metarError.value = 'Erreur inconnue';
-    }
-  } finally {
-    metarLoading.value = false;
-  }
-}
 
 // Fonction pour transformer les notes entre accolades en infobulles
 function processTooltips(text: string): string {

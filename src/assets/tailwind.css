@@ -1,17 +1,43 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-.custom-h2 {
-    @apply text-2xl font-bold text-blue-500 text-center md:mb-4 md:mt-2;
+@theme {
+  /* Palette personnalisée intégrée au nouveau moteur v4 */
+  --color-orange-50: #fff2e6;
+  --color-orange-100: #ffe6cc;
+  --color-orange-200: #ffd9b3;
+  --color-orange-300: #ffcc99;
+  --color-orange-400: #ffb366;
+  --color-orange-500: #ff9933;
+  --color-orange-600: #ff8c1a;
+  --color-orange-700: #e67300;
+  --color-orange-800: #b35900;
+  --color-orange-900: #804000;
 }
-.input-field {
-    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-           focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5;
-  }
-.label-field {
-    @apply block mt-1 text-sm font-medium text-gray-900;
+
+/* On définit les styles dans la couche 'components' pour respecter la cascade */
+@layer components {
+    
+    .custom-h2 {
+        /* Utilisation directe de @apply */
+        @apply text-2xl font-bold text-blue-500 text-center;
+        
+        @media (min-width: 768px) {
+            margin-bottom: 1rem;
+            margin-top: 0.5rem;
+        }
+    }
+
+    .input-field {
+        @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5;
+    }
+
+    .label-field {
+        @apply block mt-1 text-sm font-medium text-gray-900;
+    }
 }
+
+/* Le reste peut rester en dehors de @layer s'il s'agit de CSS standard */
 div#instructions > div:not(:has(div)):after {
     content: "Sélectionner une instruction ou une option";
     font-size: 1.5rem;
@@ -21,6 +47,7 @@ div#instructions > div:not(:has(div)):after {
     left: 0;
     pointer-events: none;
 }
+
 .modal a {
     @apply text-blue-600 hover:underline;
 }

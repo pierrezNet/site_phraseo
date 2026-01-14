@@ -1,20 +1,44 @@
 import { useLangStore } from '../stores/lang';
 import { useFormStore } from '../stores/form';
 import data from '../assets/phraseologieIFR.json';
-import { onMounted, ref, computed, watch } from 'vue';
+import { defineComponent, onMounted, ref, computed, watch } from 'vue';
 import { iconTaxonomy } from '../stores/taxonomy';
-export default (await import('vue')).defineComponent({
+export default defineComponent({
     name: 'Tabs',
     setup() {
         const langStore = useLangStore();
         const formStore = useFormStore();
         const selectedSubgraphs = ref([]);
         const lastSelectedTaskId = ref(null);
+        const metarData = ref(null);
+        const metarLoading = ref(false);
+        const metarError = ref(null);
         // Utiliser computed pour que selectedLanguage soit réactif aux changements du store
         const selectedLanguage = computed(() => langStore.current);
         onMounted(() => {
             langStore.loadLanguage(); // Chargez la langue lorsque le composant est monté
+            loadMetarData(); // Charger les données météo au montage
         });
+        // Fonction pour charger les données météo
+        const loadMetarData = async () => {
+            try {
+                metarLoading.value = true;
+                metarError.value = null;
+                // Utiliser le code ICAO des paramètres ou LFPG par défaut
+                const icao = formStore.form.MET || 'LFPG';
+                console.log('Chargement des données météo pour:', icao);
+                const data = await mockIvaoApi.getMetar(icao);
+                metarData.value = data;
+                console.log('Données météo chargées:', data);
+            }
+            catch (error) {
+                console.error('Erreur lors du chargement des données météo:', error);
+                metarError.value = error.message || 'Erreur inconnue';
+            }
+            finally {
+                metarLoading.value = false;
+            }
+        };
         const POL = {
             matin: { fr: "bonjour", en: "hello" },
             soir: { fr: "bonsoir", en: "good evening" }
@@ -77,6 +101,18 @@ export default (await import('vue')).defineComponent({
                 switch (p1) {
                     case 'POL':
                         return POL[getHeure()][lang];
+                    case 'MET':
+                        if (metarLoading.value) {
+                            return lang === 'fr' ? 'chargement des données météo...' : 'loading weather data...';
+                        }
+                        if (metarError.value) {
+                            return lang === 'fr' ? `erreur météo: ${metarError.value}` : `weather error: ${metarError.value}`;
+                        }
+                        if (metarData.value) {
+                            const options = { lang }; // Suppression de l'annotation de type
+                            return replaceMetarTag('[MET]', metarData.value, options);
+                        }
+                        return lang === 'fr' ? 'données météo non disponibles' : 'weather data not available';
                     case 'HOU': {
                         const now = new Date();
                         return `${now.getUTCHours().toString().padStart(2, '0')} heures ${now.getMinutes().toString().padStart(2, '0')}`;
@@ -106,10 +142,9 @@ export default (await import('vue')).defineComponent({
                     case 'NTWR':
                     case 'NAPP':
                     case 'NCTR': {
-                        const fallback = findFallbackStation(p1, lang);
-                        return fallback.frequency
-                            ? `${fallback.label}, ${formStore.formatFrequency(fallback.frequency, lang)}`
-                            : fallback.label;
+                        // Pour les stations, on retourne uniquement le nom de la station sans la fréquence
+                        const stationLabel = formStore.frequencyLabels[p1]?.[lang] || p1;
+                        return stationLabel;
                     }
                     default:
                         return formStore.form[p1] || match;
@@ -127,7 +162,11 @@ export default (await import('vue')).defineComponent({
             selectedLanguage,
             selectedSubgraphs,
             replacePlaceholders,
-            lastSelectedTaskId
+            lastSelectedTaskId,
+            metarData,
+            metarLoading,
+            metarError,
+            loadMetarData
         };
     },
     data() {
@@ -136,7 +175,12 @@ export default (await import('vue')).defineComponent({
             taskPhaseMap: {},
             selectedTab: 'SO',
             isReady: false,
-            selectedTaskIds: []
+            selectedTaskIds: [],
+            readbackTimer: null, // Minuteur pour vérifier si le collationnement est reçu
+            pendingReadbackTaskId: null, // ID de la tâche en attente de collationnement
+            pendingReadbackText: null, // Texte ATC en attente de collationnement
+            pendingReadbackLang: null, // Langue du texte ATC en attente de collationnement
+            readbackReceived: false // Indique si un collationnement a été reçu
         };
     },
     created() {
@@ -152,6 +196,7 @@ export default (await import('vue')).defineComponent({
         const spawnTasks = data.processChain.tasks.spawnTask.map(task => ({
             _id: task._id,
             _name: task._name,
+            _short: task._short,
             _class: task._class,
             _tab: task._tab || '??',
             ...task
@@ -159,6 +204,7 @@ export default (await import('vue')).defineComponent({
         const orTasks = data.processChain.tasks.orTask.map(task => ({
             _id: task._id,
             _name: task._name,
+            _short: task._short,
             _class: task._class,
             _tab: task._tab || '??',
             ...task
@@ -180,6 +226,13 @@ export default (await import('vue')).defineComponent({
         const tabs = Object.keys(this.taskPhaseMap);
         this.selectedTab = tabs[0] || '';
         this.isReady = true;
+        // Écouter les événements de reconnaissance vocale pour détecter le collationnement
+        window.addEventListener('transcript-received', this.handleTranscriptReceived);
+    },
+    beforeDestroy() {
+        // Nettoyer les écouteurs d'événements
+        window.removeEventListener('transcript-received', this.handleTranscriptReceived);
+        this.cancelReadbackTimer();
     },
     computed: {
         phaseTabs() {
@@ -213,7 +266,11 @@ export default (await import('vue')).defineComponent({
         },
         getTaskNameById(refid) {
             const task = this.tasks.find(task => task._id === refid);
-            return task ? task._name : refid; // Retourne le nom de la tâche ou le refid si non trouvé
+            return {
+                refid: sub.call._refid,
+                _name: task._name,
+                _short: task._short || task._name.slice(0, 3) // ou n'importe quel fallback  
+            };
         },
         handleTaskData(taskId) {
             const taskData = this.tasks.find(t => t._id === taskId)
@@ -226,6 +283,20 @@ export default (await import('vue')).defineComponent({
             }
             // Stocker la dernière tâche sélectionnée pour la réactualisation
             this.lastSelectedTaskId = taskId;
+            // Si pas de para mais des sous-graphes, on reset
+            if ((!taskData.para || !taskData.para.length) && taskData.subgraph?.length) {
+                this.resetDisplay();
+                this.selectedSubgraphs = taskData.subgraph.map(sub => {
+                    const t = this.tasks.find(tt => tt._id === sub.call._refid);
+                    return {
+                        refid: sub.call._refid,
+                        _name: t._name,
+                        _short: t._short || t._name.slice(0, 3),
+                        _color: t._color
+                    };
+                });
+                return;
+            }
             // Gère les dialogues...
             if (taskData.para?.length) {
                 const texts = taskData.para
@@ -234,7 +305,7 @@ export default (await import('vue')).defineComponent({
                     const color = this.getColorFromClass(p._class);
                     const iconData = iconTaxonomy[color] || {};
                     return {
-                        value: this.replacePlaceholders(p.__text),
+                        value: p.__text, // Passer le texte brut, le remplacement sera fait dans TaskTextDisplay
                         _color: color,
                         icon: iconData.icon || ''
                     };
@@ -243,10 +314,15 @@ export default (await import('vue')).defineComponent({
             }
             // Gère les sous-options
             if (taskData.subgraph?.length) {
-                this.selectedSubgraphs = taskData.subgraph.map(sub => ({
-                    refid: sub.call._refid,
-                    name: this.getTaskNameById(sub.call._refid)
-                }));
+                this.selectedSubgraphs = taskData.subgraph.map(sub => {
+                    const t = this.tasks.find(t => t._id === sub.call._refid);
+                    return {
+                        refid: sub.call._refid,
+                        _name: t._name,
+                        _short: t._short || t._name.slice(0, 3),
+                        _color: t._color
+                    };
+                });
             }
             else {
                 this.selectedSubgraphs = [];
@@ -257,7 +333,12 @@ export default (await import('vue')).defineComponent({
             const index = this.taskPhaseMap[this.selectedTab].indexOf(task._id);
             const tasksToKeep = this.taskPhaseMap[this.selectedTab].slice(0, index + 1);
             this.selectedTaskIds = tasksToKeep;
+            // Mettre à jour l'ID de la tâche actuellement sélectionnée dans la variable globale
+            window.currentTaskId = task._id;
+            console.log(`Tâche sélectionnée: ${task._id}`);
             this.handleTaskData(task._id); // toujours afficher dialogues + subgraphs
+            // Vérifier si la tâche est à l'initiative de l'ATC
+            this.checkAndSpeakAtcInitiative(task._id);
         },
         logSubgraphTask(subgraph) {
             const refid = subgraph.refid;
@@ -266,27 +347,300 @@ export default (await import('vue')).defineComponent({
             }
             // Mettre à jour lastSelectedTaskId pour permettre la réactualisation lors du changement de langue
             this.lastSelectedTaskId = refid;
+            // Mettre à jour l'ID de la tâche actuellement sélectionnée dans la variable globale
+            window.currentTaskId = refid;
+            console.log(`Sous-tâche sélectionnée: ${refid}`);
             const taskData = this.tasks.find(t => t._id === refid);
             if (!taskData?.para)
                 return;
             const texts = taskData.para
                 .filter(p => p._lang === this.selectedLanguage)
                 .map(p => ({
-                value: this.replacePlaceholders(p.__text),
+                value: p.__text, // Passer le texte brut, le remplacement sera fait dans TaskTextDisplay
                 _color: this.getColorFromClass(p._class),
                 icon: iconTaxonomy[this.getColorFromClass(p._class)]?.icon || ''
             }));
             this.$emit('task-selected', texts);
+            // Vérifier si la sous-tâche est à l'initiative de l'ATC
+            this.checkAndSpeakAtcInitiative(refid);
         },
         resetDisplay() {
             this.selectedSubgraphs = [];
             this.$emit('task-selected', []);
+            // Réinitialiser l'ID de la tâche actuellement sélectionnée dans la variable globale
+            window.currentTaskId = null;
+            console.log("Affichage réinitialisé, aucune tâche sélectionnée");
         },
         // Méthode pour rafraîchir les textes affichés quand la langue change
         refreshDisplayedTexts() {
             if (this.lastSelectedTaskId) {
                 this.handleTaskData(this.lastSelectedTaskId);
             }
+        },
+        // Méthode pour vérifier si une tâche est à l'initiative de l'ATC et lancer la synthèse vocale
+        checkAndSpeakAtcInitiative(taskId) {
+            // Trouver la tâche dans les données
+            const taskData = this.tasks.find(t => t._id === taskId)
+                || data.processChain.tasks.orTask.find(t => t._id === taskId)
+                || data.processChain.tasks.spawnTask.find(t => t._id === taskId);
+            if (!taskData || !taskData.para || !taskData.para.length)
+                return;
+            // Liste des tâches qui sont des demandes du pilote et ne doivent pas déclencher de synthèse vocale automatique
+            const pilotInitiativeTasks = [
+                "PARAMETRES", // Demande de paramètres
+                "DEMANDE_MISE_EN_ROUTE", // Demande de mise en route
+                "DEMANDE_REPOUSSAGE", // Demande de repoussage
+                "DEMANDE_ROULAGE", // Demande de roulage
+                "DEMANDE_ALIGNEMENT", // Demande d'alignement
+                "DEMANDE_DECOLLAGE", // Demande de décollage
+                "DEMANDE_NIVEAU", // Demande de changement de niveau
+                "DEMANDE_APPROCHE", // Demande d'approche
+                "DEMANDE_ATTERRISSAGE" // Demande d'atterrissage
+            ];
+            // Si la tâche est une demande du pilote, ne pas déclencher la synthèse vocale automatiquement
+            // lors du clic sur le bouton, mais vérifier si elle a été déclenchée par reconnaissance vocale
+            if (pilotInitiativeTasks.includes(taskId)) {
+                console.log(`Tâche ${taskId} est une demande du pilote, pas de synthèse vocale automatique immédiate`);
+                // Vérifier si cette tâche a été déclenchée par reconnaissance vocale
+                // Si oui, programmer une réponse ATC après un court délai
+                if (window.lastTranscriptTaskId === taskId) {
+                    console.log(`Tâche ${taskId} déclenchée par reconnaissance vocale, programmation de la réponse ATC`);
+                    setTimeout(() => {
+                        // Trouver la réponse ATC correspondante
+                        const lang = this.selectedLanguage;
+                        const atcElements = taskData.para.filter(p => p._lang === lang && p._class === 'ATC');
+                        if (atcElements.length > 0) {
+                            // Remplacer les placeholders dans le texte ATC
+                            const atcText = this.replacePlaceholders(atcElements[0].__text);
+                            // Lancer la synthèse vocale
+                            this.speakText(atcText, lang);
+                        }
+                    }, 1500); // Délai de 1.5 secondes avant la réponse ATC
+                    // Réinitialiser l'ID de la dernière tâche reconnue
+                    window.lastTranscriptTaskId = null;
+                }
+                return;
+            }
+            // Vérifier si le premier élément de para est de classe ATC
+            const lang = this.selectedLanguage;
+            const atcElements = taskData.para.filter(p => p._lang === lang && p._class === 'ATC');
+            if (atcElements.length > 0) {
+                // Trouver le premier élément ATC
+                const firstAtcElement = atcElements[0];
+                // Remplacer les placeholders dans le texte ATC
+                // Note: replacePlaceholders ne traite pas correctement [MET] pour la synthèse vocale,
+                // car il est conçu pour l'affichage visuel. Nous utilisons directement le texte brut.
+                const atcText = firstAtcElement.__text;
+                // Lancer la synthèse vocale avec le texte brut (prepareTextForSpeech s'occupera de [MET])
+                this.speakText(atcText, lang);
+                // Vérifier si cette tâche nécessite un collationnement
+                const needsReadback = this.checkIfNeedsReadback(taskId);
+                if (needsReadback) {
+                    // Démarrer un minuteur pour vérifier si le collationnement est reçu
+                    this.startReadbackTimer(taskId, atcText, lang);
+                }
+            }
+        },
+        // Méthode pour vérifier si une tâche nécessite un collationnement
+        checkIfNeedsReadback(taskId) {
+            // Trouver la tâche dans les données
+            const taskData = this.tasks.find(t => t._id === taskId)
+                || data.processChain.tasks.orTask.find(t => t._id === taskId)
+                || data.processChain.tasks.spawnTask.find(t => t._id === taskId);
+            if (!taskData || !taskData.para || !taskData.para.length)
+                return false;
+            // Nouvelle règle : le collationnement est obligatoire dès lors que dans la branche 
+            // il reste un texte qui doit être lu par le pilote après une réponse ATC
+            const lang = this.selectedLanguage;
+            const paraElements = taskData.para.filter(p => p._lang === lang);
+            // Parcourir les éléments para pour trouver la séquence ATC -> Pilot
+            for (let i = 0; i < paraElements.length - 1; i++) {
+                if (paraElements[i]._class === 'ATC' && paraElements[i + 1]._class === 'Pilot') {
+                    // Si on trouve une séquence ATC suivi d'un Pilot, alors un collationnement est nécessaire
+                    return true;
+                }
+            }
+            return false;
+        },
+        // Méthode pour démarrer un minuteur pour vérifier si le collationnement est reçu
+        startReadbackTimer(taskId, atcText, lang) {
+            // Annuler tout minuteur existant
+            this.cancelReadbackTimer();
+            // Réinitialiser l'indicateur de collationnement reçu
+            this.readbackReceived = false;
+            // Stocker les informations sur la tâche en attente de collationnement
+            this.pendingReadbackTaskId = taskId;
+            this.pendingReadbackText = atcText;
+            this.pendingReadbackLang = lang;
+            // Démarrer un nouveau minuteur
+            this.readbackTimer = setTimeout(() => {
+                // Si le minuteur expire et qu'aucun collationnement n'a été reçu,
+                // demander au pilote de collationner
+                if (!this.readbackReceived) {
+                    const callsign = this.getCallsign();
+                    const requestReadbackText = lang === 'fr'
+                        ? `${callsign}, collationnez.`
+                        : `${callsign}, read back.`;
+                    console.log("Pas de collationnement reçu, demande de collationnement:", requestReadbackText);
+                    this.speakText(requestReadbackText, lang);
+                }
+            }, 60000); // 60 secondes = 1 minute
+        },
+        // Méthode pour annuler le minuteur de collationnement
+        cancelReadbackTimer() {
+            if (this.readbackTimer) {
+                clearTimeout(this.readbackTimer);
+                this.readbackTimer = null;
+            }
+        },
+        // Méthode pour gérer les transcripts reçus
+        handleTranscriptReceived(event) {
+            // Vérifier si le transcript est marqué comme un collationnement par Navbar.vue
+            const isReadback = event.detail.isReadback;
+            // Vérifier si nous attendons un collationnement
+            if (this.pendingReadbackTaskId && this.pendingReadbackText && this.pendingReadbackLang) {
+                const transcript = event.detail.transcript;
+                if (isReadback) {
+                    console.log("Collationnement détecté, annulation du minuteur");
+                    this.readbackReceived = true;
+                    this.cancelReadbackTimer();
+                    // Nettoyer les informations sur la tâche en attente de collationnement
+                    this.pendingReadbackTaskId = null;
+                    this.pendingReadbackText = null;
+                    this.pendingReadbackLang = null;
+                }
+                else {
+                    // Si ce n'est pas un collationnement selon Navbar.vue, vérifier avec notre propre méthode
+                    const isReadbackLocal = this.isTranscriptAReadback(transcript);
+                    if (isReadbackLocal) {
+                        console.log("Collationnement détecté par Tabs.vue, annulation du minuteur");
+                        this.readbackReceived = true;
+                        this.cancelReadbackTimer();
+                        // Nettoyer les informations sur la tâche en attente de collationnement
+                        this.pendingReadbackTaskId = null;
+                        this.pendingReadbackText = null;
+                        this.pendingReadbackLang = null;
+                    }
+                }
+            }
+        },
+        // Méthode pour déterminer si un transcript est un collationnement
+        isTranscriptAReadback(transcript) {
+            if (!transcript || !this.pendingReadbackText || !this.pendingReadbackLang)
+                return false;
+            // Normaliser les textes pour la comparaison
+            const normalizedTranscript = transcript.toLowerCase();
+            const normalizedAtcText = this.pendingReadbackText.toLowerCase();
+            // Extraire les mots clés de l'instruction ATC
+            const keywordsToCheck = [];
+            // Vérifier les mots clés spécifiques selon le type d'instruction
+            if (normalizedAtcText.includes("niveau") || normalizedAtcText.includes("level")) {
+                keywordsToCheck.push("niveau", "level", "descend", "climb", "monte");
+            }
+            if (normalizedAtcText.includes("piste") || normalizedAtcText.includes("runway")) {
+                keywordsToCheck.push("piste", "runway");
+            }
+            if (normalizedAtcText.includes("roulez") || normalizedAtcText.includes("taxi")) {
+                keywordsToCheck.push("roule", "taxi");
+            }
+            if (normalizedAtcText.includes("bubli") || normalizedAtcText.includes("star")) {
+                keywordsToCheck.push("bubli", "star", "via");
+            }
+            // Ajouter l'indicatif d'appel comme mot clé
+            const callsign = this.getCallsign().toLowerCase();
+            keywordsToCheck.push(callsign);
+            // Compter combien de mots clés sont présents dans le transcript
+            let matchCount = 0;
+            for (const keyword of keywordsToCheck) {
+                if (normalizedTranscript.includes(keyword)) {
+                    matchCount++;
+                }
+            }
+            // Si au moins 2 mots clés sont présents, considérer comme un collationnement
+            return matchCount >= 2;
+        },
+        // Méthode pour obtenir l'indicatif d'appel
+        getCallsign() {
+            const formStore = useFormStore();
+            return formStore.form.CAA || "Station";
+        },
+        // Méthode pour traiter le texte avant la synthèse vocale
+        async prepareTextForSpeech(text, lang) {
+            // Pour la synthèse vocale, on veut remplacer le tag [MET] par les données météo
+            let processedText = text;
+            // Traiter le tag [MET] spécifiquement si présent
+            if (processedText.includes('[MET]')) {
+                try {
+                    // Utiliser le code ICAO des paramètres ou LFPG par défaut
+                    const formStore = useFormStore();
+                    const icao = formStore.form.MET || 'LFPG';
+                    console.log('Préparation du tag [MET] pour la synthèse vocale avec ICAO:', icao);
+                    // Récupérer les données météo
+                    const metar = await mockIvaoApi.getMetar(icao);
+                    // Définir les options de formatage avec forSpeech=true pour appliquer les règles d'épellation
+                    const options = { lang, forSpeech: true };
+                    // Remplacer le tag [MET] par les données formatées
+                    const metarText = replaceMetarTag('[MET]', metar, options);
+                    processedText = processedText.replace(/\[MET\]/g, metarText);
+                    console.log('Tag [MET] remplacé pour la synthèse vocale:', metarText);
+                }
+                catch (err) {
+                    console.error('Erreur lors du traitement du tag [MET] pour la synthèse vocale:', err);
+                    // En cas d'erreur, remplacer par un message d'erreur
+                    const errorMessage = lang === 'fr'
+                        ? 'données météo non disponibles'
+                        : 'weather data not available';
+                    processedText = processedText.replace(/\[MET\]/g, errorMessage);
+                }
+            }
+            // Traiter tous les autres placeholders standards
+            processedText = this.replacePlaceholders(processedText);
+            // Appliquer les règles d'épellation pour l'aviation à tout le texte
+            processedText = formatTextForAviationSpeech(processedText);
+            // Vérifier et remplacer manuellement les acronymes spécifiques qui posent problème
+            processedText = processedText.replace(/Charlie Tango Oscar Tango/g, "C. T. O. T.");
+            processedText = processedText.replace(/Quebec November Hotel/g, "Q. N. H.");
+            console.log('Texte préparé pour synthèse vocale (avec météo):', processedText);
+            return processedText;
+        },
+        // Méthode pour lancer la synthèse vocale␊
+        async speakText(text, lang) {
+            if (!window.isRecordingActive) {
+                return;
+            }
+            if (!window.speechSynthesis) {
+                console.error("La synthèse vocale n'est pas disponible dans ce navigateur");
+                return;
+            }
+            // Préparer le texte (remplacer les tags spéciaux comme [MET])
+            text = await this.prepareTextForSpeech(text, lang);
+            // Annuler toute synthèse vocale en cours
+            window.speechSynthesis.cancel();
+            // Créer l'utterance
+            const utter = new SpeechSynthesisUtterance(text);
+            // Définir la langue
+            const langCode = lang === 'fr' ? 'fr-FR' : 'en-US';
+            utter.lang = langCode;
+            // Sélectionner une voix
+            const voices = window.speechSynthesis.getVoices();
+            let voice = voices.find(v => v.lang === langCode);
+            // Si aucune correspondance exacte, essayer de trouver une voix qui commence par le code de langue
+            if (!voice) {
+                voice = voices.find(v => v.lang.startsWith(langCode.split('-')[0]));
+            }
+            // Si toujours rien, utiliser la première voix disponible
+            if (!voice && voices.length > 0) {
+                voice = voices[0];
+            }
+            if (voice) {
+                utter.voice = voice;
+            }
+            // Paramètres de la voix
+            utter.volume = 1.0;
+            utter.rate = 0.9;
+            utter.pitch = 1.0;
+            // Parler
+            window.speechSynthesis.speak(utter);
         }
     },
     watch: {
@@ -299,6 +653,7 @@ export default (await import('vue')).defineComponent({
         }
     }
 });
+debugger; /* PartiallyEnd: #3632/script.vue */
 const __VLS_ctx = {};
 let __VLS_components;
 let __VLS_directives;
@@ -306,10 +661,10 @@ let __VLS_directives;
 // CSS variable injection end 
 if (__VLS_ctx.isReady) {
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-        ...{ class: "p-4" },
+        ...{ class: "p-1 md:p-4" },
     });
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-        ...{ class: "flex gap-2 mb-5" },
+        ...{ class: "flex justify-between md:justify-start md:gap-2 mb-1 md:mb-5" },
     });
     for (const [tab, i] of __VLS_getVForSourceType((__VLS_ctx.phaseTabs))) {
         __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
@@ -333,7 +688,7 @@ if (__VLS_ctx.isReady) {
         __VLS_asFunctionalDirective(__VLS_directives.vHtml)(null, { ...__VLS_directiveBindingRestFields, value: (tab.icon) }, null, null);
     }
     __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-        ...{ class: "" },
+        ...{ class: "grid grid-cols-3 md:grid-cols-1 place-content-between gap-1" },
     });
     for (const [task] of __VLS_getVForSourceType((__VLS_ctx.filteredPhaseTasks))) {
         __VLS_asFunctionalElement(__VLS_intrinsicElements.button, __VLS_intrinsicElements.button)({
@@ -344,24 +699,34 @@ if (__VLS_ctx.isReady) {
                 } },
             key: (task._id),
             ...{ class: ([
-                    'w-full text-white rounded-md py-2 mb-4 shadow transition',
-                    `bg-${task._color}-700`,
-                    `hover:bg-${task._color}-800`,
+                    'md:w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition',
                     __VLS_ctx.selectedTaskIds.includes(task._id)
-                        ? `hover:bg-green-800 text-black bg-green-700`
-                        : `hover:bg-${task._color}-800`
+                        ? `hover:bg-green-800 text-white bg-green-700`
+                        : `hover:bg-${task._color}-800 bg-${task._color}-700`
                 ]) },
         });
+        __VLS_asFunctionalElement(__VLS_intrinsicElements.span, __VLS_intrinsicElements.span)({
+            ...{ class: "hidden md:inline" },
+        });
         (task._name);
+        __VLS_asFunctionalElement(__VLS_intrinsicElements.span, __VLS_intrinsicElements.span)({
+            ...{ class: "inline md:hidden" },
+        });
+        (task._short);
         if (__VLS_ctx.selectedTaskIds.includes(task._id)) {
             __VLS_asFunctionalElement(__VLS_intrinsicElements.span, __VLS_intrinsicElements.span)({
-                ...{ class: "float-right" },
+                ...{ class: "float-right text-white mr-2" },
             });
         }
     }
     if (__VLS_ctx.selectedSubgraphs.length > 0) {
+        __VLS_asFunctionalElement(__VLS_intrinsicElements.hr)({
+            ...{ class: "md:hidden border border-blue-800 mt-1 mb-1" },
+        });
+    }
+    if (__VLS_ctx.selectedSubgraphs.length > 0) {
         __VLS_asFunctionalElement(__VLS_intrinsicElements.div, __VLS_intrinsicElements.div)({
-            ...{ class: "mt-4" },
+            ...{ class: "grid grid-cols-3 md:grid-cols-1 place-content-between gap-1" },
         });
         __VLS_asFunctionalElement(__VLS_intrinsicElements.h2, __VLS_intrinsicElements.h2)({
             ...{ class: "custom-h2" },
@@ -377,26 +742,36 @@ if (__VLS_ctx.isReady) {
                     } },
                 key: (subgraph.refid),
                 ...{ class: ([
-                        'w-full text-white rounded-md py-2 mb-4 shadow transition',
+                        'w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition',
                         __VLS_ctx.selectedTaskIds.includes(subgraph.refid)
-                            ? `hover:bg-orange-800 text-black bg-orange-700`
+                            ? `hover:bg-green-700 text-white bg-green-600`
                             : `bg-orange-700 hover:bg-orange-800`
                     ]) },
             });
-            (subgraph.name);
+            __VLS_asFunctionalElement(__VLS_intrinsicElements.span, __VLS_intrinsicElements.span)({
+                ...{ class: "hidden md:inline" },
+            });
+            (subgraph._name);
+            __VLS_asFunctionalElement(__VLS_intrinsicElements.span, __VLS_intrinsicElements.span)({
+                ...{ class: "inline md:hidden" },
+            });
+            (subgraph._short);
             if (__VLS_ctx.selectedTaskIds.includes(subgraph.refid)) {
                 __VLS_asFunctionalElement(__VLS_intrinsicElements.span, __VLS_intrinsicElements.span)({
-                    ...{ class: "float-right" },
+                    ...{ class: "float-right text-white mr-2" },
                 });
             }
         }
     }
 }
-/** @type {__VLS_StyleScopedClasses['']} */ ;
-/** @type {__VLS_StyleScopedClasses['p-4']} */ ;
+/** @type {__VLS_StyleScopedClasses['p-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:p-4']} */ ;
 /** @type {__VLS_StyleScopedClasses['flex']} */ ;
-/** @type {__VLS_StyleScopedClasses['gap-2']} */ ;
-/** @type {__VLS_StyleScopedClasses['mb-5']} */ ;
+/** @type {__VLS_StyleScopedClasses['justify-between']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:justify-start']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:gap-2']} */ ;
+/** @type {__VLS_StyleScopedClasses['mb-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:mb-5']} */ ;
 /** @type {__VLS_StyleScopedClasses['flex']} */ ;
 /** @type {__VLS_StyleScopedClasses['items-center']} */ ;
 /** @type {__VLS_StyleScopedClasses['p-4']} */ ;
@@ -404,23 +779,51 @@ if (__VLS_ctx.isReady) {
 /** @type {__VLS_StyleScopedClasses['inline-block']} */ ;
 /** @type {__VLS_StyleScopedClasses['w-5']} */ ;
 /** @type {__VLS_StyleScopedClasses['h-5']} */ ;
-/** @type {__VLS_StyleScopedClasses['w-full']} */ ;
+/** @type {__VLS_StyleScopedClasses['grid']} */ ;
+/** @type {__VLS_StyleScopedClasses['grid-cols-3']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:grid-cols-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['place-content-between']} */ ;
+/** @type {__VLS_StyleScopedClasses['gap-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:w-full']} */ ;
 /** @type {__VLS_StyleScopedClasses['text-white']} */ ;
 /** @type {__VLS_StyleScopedClasses['rounded-md']} */ ;
-/** @type {__VLS_StyleScopedClasses['py-2']} */ ;
-/** @type {__VLS_StyleScopedClasses['mb-4']} */ ;
+/** @type {__VLS_StyleScopedClasses['m-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:p-2']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:mb-2']} */ ;
 /** @type {__VLS_StyleScopedClasses['shadow']} */ ;
 /** @type {__VLS_StyleScopedClasses['transition']} */ ;
+/** @type {__VLS_StyleScopedClasses['hidden']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:inline']} */ ;
+/** @type {__VLS_StyleScopedClasses['inline']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:hidden']} */ ;
 /** @type {__VLS_StyleScopedClasses['float-right']} */ ;
-/** @type {__VLS_StyleScopedClasses['mt-4']} */ ;
+/** @type {__VLS_StyleScopedClasses['text-white']} */ ;
+/** @type {__VLS_StyleScopedClasses['mr-2']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:hidden']} */ ;
+/** @type {__VLS_StyleScopedClasses['border']} */ ;
+/** @type {__VLS_StyleScopedClasses['border-blue-800']} */ ;
+/** @type {__VLS_StyleScopedClasses['mt-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['mb-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['grid']} */ ;
+/** @type {__VLS_StyleScopedClasses['grid-cols-3']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:grid-cols-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['place-content-between']} */ ;
+/** @type {__VLS_StyleScopedClasses['gap-1']} */ ;
 /** @type {__VLS_StyleScopedClasses['custom-h2']} */ ;
 /** @type {__VLS_StyleScopedClasses['w-full']} */ ;
 /** @type {__VLS_StyleScopedClasses['text-white']} */ ;
 /** @type {__VLS_StyleScopedClasses['rounded-md']} */ ;
-/** @type {__VLS_StyleScopedClasses['py-2']} */ ;
-/** @type {__VLS_StyleScopedClasses['mb-4']} */ ;
+/** @type {__VLS_StyleScopedClasses['m-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:p-2']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:mb-2']} */ ;
 /** @type {__VLS_StyleScopedClasses['shadow']} */ ;
 /** @type {__VLS_StyleScopedClasses['transition']} */ ;
+/** @type {__VLS_StyleScopedClasses['hidden']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:inline']} */ ;
+/** @type {__VLS_StyleScopedClasses['inline']} */ ;
+/** @type {__VLS_StyleScopedClasses['md:hidden']} */ ;
 /** @type {__VLS_StyleScopedClasses['float-right']} */ ;
+/** @type {__VLS_StyleScopedClasses['text-white']} */ ;
+/** @type {__VLS_StyleScopedClasses['mr-2']} */ ;
 var __VLS_dollars;
 let __VLS_self;

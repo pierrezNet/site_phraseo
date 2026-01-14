@@ -8,8 +8,8 @@
           <span v-if="!open">☰</span>
           <span v-else>✕</span>
         </DisclosureButton>
-        <button
-          @click="startRecording"
+        <!-- <button
+          @click="isRecording ? stopRecording() : startRecording()"
           :disabled="isLoading"
           class="p-2 fill-current"
           :aria-label="isRecording ? 'Arrêter l\'enregistrement' : 'Démarrer l\'enregistrement'"
@@ -24,7 +24,7 @@
           >
             <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 14 0h-2zm-5 9a1 1 0 0 1-1-1v-2h2v2a1 1 0 0 1-1 1z"/>
           </svg>
-        </button>
+        </button> -->
         <div class="hidden md:flex space-x-4">
           <!-- Affichage du score
           <span v-if="score !== null" class="">Score : {{ score }} %</span> -->
@@ -61,14 +61,14 @@ import { ref, inject, onMounted, onBeforeUnmount } from 'vue'
 import phraseo from '../assets/phraseologieIFR.json'
 
 function onKeyDown(e: KeyboardEvent) {
-  if (e.key === 'Control' && !isRecording.value) {
+  /*if (e.key === 'Control' && !isRecording.value) {
     startRecording()
-  }
+  }*/
 }
 function onKeyUp(e: KeyboardEvent) {
-  if (e.key === 'Control' && isRecording.value) {
+  /*if (e.key === 'Control' && isRecording.value) {
     stopRecording()
-  }
+  }*/
 }
 
 onMounted(() => {
@@ -250,7 +250,7 @@ const langStore = useLangStore();
 const formStore = useFormStore();
 const changeLanguage = (lang: string) => langStore.changeLanguage(lang)
 
-const isRecording = ref(false)
+//const isRecording = ref(false)
 const isLoading = ref(false)
 const score = ref<number | null>(null)
 let mediaRecorder: MediaRecorder | null = null
@@ -264,7 +264,7 @@ function resetIndicators() {
   window.lastTranscriptTaskId = null
   window.currentTaskId = null
 }
-
+/*
 // Fonction pour basculer entre démarrage et arrêt de l'enregistrement
 async function startRecording() {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -274,6 +274,7 @@ async function startRecording() {
 
   mediaRecorder.start()
   isRecording.value = true
+  window.isRecordingActive = true
   console.log("Enregistrement démarré")
 }
 
@@ -283,27 +284,27 @@ async function stopRecording() {
   // Vérifier si l'enregistrement est déjà arrêté pour éviter les arrêts multiples
   if (!isRecording.value) return
 
-  console.log("Arrêt de l'enregistrement");
   isRecording.value = false
   console.log("Enregistrement arrêté")
 
-// Fonction pour arrêter tous les minuteurs
-function clearAllTimers() {
-  // Liste des minuteurs à arrêter
-  const timers = document.querySelectorAll('[data-timer-id]');
-  timers.forEach(timer => {
-    const timerId = timer.getAttribute('data-timer-id');
-    if (timerId) {
-      clearTimeout(parseInt(timerId));
+  // Fonction pour arrêter tous les minuteurs
+  function clearAllTimers() {
+    // Liste des minuteurs à arrêter
+    const timers = document.querySelectorAll('[data-timer-id]');
+    timers.forEach(timer => {
+      const timerId = timer.getAttribute('data-timer-id');
+      if (timerId) {
+        clearTimeout(parseInt(timerId));
+      }
+    });
+    
+    // Arrêter également les minuteurs globaux si nécessaire
+    if (window.readbackTimer) {
+      clearTimeout(window.readbackTimer);
+      window.readbackTimer = null;
     }
-  });
-  
-  // Arrêter également les minuteurs globaux si nécessaire
-  if (window.readbackTimer) {
-    clearTimeout(window.readbackTimer);
-    window.readbackTimer = null;
   }
-}
+clearAllTimers();
 
   mediaRecorder.onstop = async () => {
     isLoading.value = true
@@ -313,10 +314,7 @@ function clearAllTimers() {
     form.append('file', file)
     form.append('model', 'whisper-1')
     try {
-      const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${import.meta.env.VITE_OPENAI_KEY}` },
-        body: form,
+
       })
       if (!res.ok) {
         console.error(await res.json())
@@ -683,5 +681,8 @@ function clearAllTimers() {
       isLoading.value = false
     }
   }
-}
+  // Terminer l'enregistrement et libérer le microphone
+  mediaRecorder.stop()
+  mediaRecorder.stream.getTracks().forEach(track => track.stop())
+}*/
 </script>

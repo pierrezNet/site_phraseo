@@ -9,10 +9,10 @@
       <div id="instructions" class="col-span-12 md:col-span-6 m-1 md:mt-3 md:ml-3">
         <TaskTextDisplay :selectedTaskTexts="selectedTaskTexts" />
       </div>
-      <!-- IVAO API Demo Component -->
+      <!-- IVAO API Demo Component 
       <div class="col-span-12 mt-6 px-4">
         <IvaoApiDemo />
-      </div>
+      </div>-->
     </div>
     <footer class="fixed bottom-0 md:right-4 bg-white w-full md:w-1/3 modal">
         <div class="w-full mx-auto max-w-screen-xl p-1 pl-4 md:flex md:justify-between">
@@ -44,7 +44,7 @@ import TaskTextDisplay from './components/TaskTextDisplay.vue';
 import AideModal from './components/AideModal.vue';
 import ParametresModal from './components/ParametresModal.vue';
 import AboutModal from './components/AboutModal.vue';
-import IvaoApiDemo from './components/IvaoApiDemo.vue';
+//import IvaoApiDemo from './components/IvaoApiDemo.vue';
 
 
 export default defineComponent({
@@ -56,7 +56,7 @@ export default defineComponent({
     AideModal,
     ParametresModal,
     AboutModal,
-    IvaoApiDemo
+    //IvaoApiDemo
   },
   setup() {
     const aideModal: Ref<Modal | null> = ref(null);
