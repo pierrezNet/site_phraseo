@@ -37,8 +37,11 @@ import type { WeatherFormatOptions } from '../utils/weatherFormatter';
 const colorMap = {
   blue:   'bg-blue-200 hover:bg-blue-300',
   yellow: 'bg-yellow-200 hover:bg-yellow-300',
+  gray:   'bg-gray-200 hover:bg-gray-300',
   orange: 'bg-orange-200 hover:bg-orange-300',
-  gray:   'bg-gray-200 hover:bg-gray-300'
+  red:    'bg-red-200 hover:bg-red-300',
+  blueDark: 'bg-blue-700 hover:bg-blue-800 text-white', 
+  orangeDark: 'bg-orange-400 hover:bg-orange-500'
 };
 
 const props = defineProps({

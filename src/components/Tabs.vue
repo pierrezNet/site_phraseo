@@ -359,7 +359,7 @@ export default defineComponent({
       return {
         ...task,
         _class: taskClass,
-        _color: color || 'blue'
+        _color: color || 'orange'
       };
     });
 
@@ -404,7 +404,7 @@ export default defineComponent({
       if (cls.includes('pilot')) return 'blue';
       if (cls.includes('atc')) return 'yellow';
       if (cls.includes('option')) return 'orange';
-      if (cls.includes('info')) return 'blue';
+      if (cls.includes('info')) return 'orange';
 
       return 'gray'; // fallback
     },
