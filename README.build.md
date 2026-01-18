@@ -5,7 +5,7 @@ Ce dépôt contient la version **statique buildée** du site *Phraséo*, dédié
 Le site est généré en amont (build) puis déployé tel quel, sans backend ni runtime serveur.
 
 🌍 Site en ligne :  
-https://pierreznet.github.io/site_phraseo/
+https://phraseo.aeronautiqe.xyz/
 
 ## Stack
 - HTML statique

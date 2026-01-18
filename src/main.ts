@@ -1,15 +1,16 @@
 import { createApp } from 'vue';
-import { createPinia } from 'pinia'
+import { createPinia } from 'pinia';
 import App from './App.vue';
 import { useFormStore } from './stores/form';
 import '@/assets/tailwind.css'; 
 
 const app = createApp(App);
+const pinia = createPinia();
 
-app.use(createPinia())
+app.use(pinia);
 
-// Initialiser les données du formulaire
-const formStore = useFormStore();
+// Initialisation des données après l'installation de pinia
+const formStore = useFormStore(pinia); // Passer 'pinia' ici sécurise l'appel hors composant
 formStore.initializeFormData();
 
-app.mount('#app')
+app.mount('#app');

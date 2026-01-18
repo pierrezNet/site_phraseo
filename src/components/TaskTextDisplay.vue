@@ -2,18 +2,11 @@
     <div class="m-1 md:space-y-4 md:pr-6">
         <h2 class="hidden md:block custom-h2">Dialogues</h2>
         <div
-          v-for="(text, index) in selectedTaskTexts"
+          v-for="(text, index) in displayedTexts"
           :key="index"
           :class="[
-            'w-full',
-            'p-4',
-            'rounded-md',
-            'py-2',
-            'mb-4',
-            'shadow',
-            'transition',
-            `bg-${text._color || 'gray'}-200`,
-            `hover:bg-${text._color || 'gray'}-300`
+            'w-full p-4 rounded-md py-2 mb-4 shadow transition',
+            text._class === 'Pilot' ? 'bg-blue-100 border-l-4 border-blue-500' : 'bg-orange-100 border-l-4 border-orange-500'
           ]"
         >
         <span
@@ -21,38 +14,46 @@
           v-html="text.icon"
           class="inline-block w-5 h-5 mr-2 align-middle"
         ></span>
-          <span v-html="replacePlaceholders(text.value)"></span>
+          <span v-html="replacePlaceholders(text.__text)"></span>
         </div>
     </div>
-  </template>
+</template>
   
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
-import type { TextItem } from '../types/text';
 import { replaceMetarTag } from '../utils/weatherFormatter';
 import type { WeatherFormatOptions } from '../utils/weatherFormatter';
 
-const colorMap = {
-  blue:   'bg-blue-200 hover:bg-blue-300',
-  yellow: 'bg-yellow-200 hover:bg-yellow-300',
-  gray:   'bg-gray-200 hover:bg-gray-300',
-  orange: 'bg-orange-200 hover:bg-orange-300',
-  red:    'bg-red-200 hover:bg-red-300',
-  blueDark: 'bg-blue-700 hover:bg-blue-800 text-white', 
-  orangeDark: 'bg-orange-400 hover:bg-orange-500'
-};
+// Interface locale identique à celle d'App.vue pour la cohérence
+interface PhraseoLine {
+  _class: string;
+  _lang: string;
+  __text: string;
+  _color?: string; // Optionnel, au cas où tu l'ajoutes au JSON
+  icon?: string;   // Optionnel
+}
 
-const props = defineProps({
-  selectedTaskTexts: {
-    type: Array as () => TextItem[],
-    required: true
-  }
-});
+const props = defineProps<{
+  selectedTaskTexts: any[] // Reçoit maintenant le tableau 'para' brut
+}>();
 
 const formStore = useFormStore();
 const langStore = useLangStore();
+
+const displayedTexts = computed(() => {
+  // Cette fonction s'exécute à chaque fois que langStore.current change !
+  return props.selectedTaskTexts.filter(t => t._lang === langStore.current);
+});
+
+// Map des couleurs pour le template
+const colorMap: Record<string, string> = {
+  Pilot: 'bg-blue-200 hover:bg-blue-300', // On utilise les classes du JSON
+  ATC: 'bg-orange-200 hover:bg-orange-300',
+  info: 'bg-gray-200 hover:bg-gray-300',
+  warning: 'bg-red-200 hover:bg-red-300'
+};
 
 // État pour les données METAR
 const metarData = ref<any>(null);

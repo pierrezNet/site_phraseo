@@ -1,0 +1,267 @@
+{
+  "processChain": {
+    "tasks": {
+      "compoundTask": {
+        "call": [
+          { "_class": "info", "_tab": "SO", "_refid": "MISE_EN_ROUTE" },
+          { "_class": "option", "_tab": "SO", "_refid": "TAXI" },
+          { "_class": "info", "_tab": "SO", "_refid": "PRET_DEPART" },
+          { "_class": "info", "_tab": "DE", "_refid": "CONTACT_TOUR" },
+          { "_class": "info", "_tab": "DE", "_refid": "DECOL_INTEROMPU" },
+          { "_class": "info", "_tab": "DE", "_refid": "VENT_ARRIERE" },
+          { "_class": "info", "_tab": "DE", "_refid": "SORTIE_ZONE" },
+          { "_class": "option", "_tab": "CR", "_refid": "CROISIERE" },
+          { "_class": "info", "_tab": "AP", "_refid": "ENTREE_ZONE" },
+          { "_class": "info", "_tab": "AP", "_refid": "FIN_VENT_ARRIERE" },
+          { "_class": "option", "_tab": "AP", "_refid": "TRANSFERT_TOUR" },
+          { "_class": "info", "_tab": "AP", "_refid": "ATTERISSAGE" },
+          { "_class": "option", "_tab": "AT", "_refid": "DEGAGEMENT" },
+          { "_class": "option", "_tab": "AT", "_refid": "TRANSFERT_SOL" },
+          { "_class": "option", "_tab": "AT", "_refid": "TAXI2" },
+          { "_class": "option", "_tab": "AT", "_refid": "PARKING" },
+          { "_class": "option", "_tab": "EX", "_refid": "ACCUSEZ" },
+          { "_class": "option", "_tab": "EX", "_refid": "REPETEA" },
+          { "_class": "info", "_tab": "EX", "_refid": "REPETEP" },
+          { "_class": "info", "_tab": "EX", "_refid": "IDENT" },
+          { "_class": "info", "_tab": "EX", "_refid": "LENTEMENT" },
+          { "_class": "option", "_tab": "EX", "_refid": "VISUEL" }
+        ]
+      },
+      "spawnTask": [
+        {
+          "_id": "DESTINATION",
+          "_name": "Sortie de zone",
+          "para": [
+            { "_lang": "fr", "_class": "Pilot", "__text": "[CAA], Cessna au parking de l'aviation générale, avec information [INF], pour un vol VFR à destination de [ARR]." },
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], sortie [STA], transpondeur [SQU], roulez point d'arrêt [VOI] piste [RWY]." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Sortie [STA], transpondeur [SQU], roulons point d'arrêt [VOI] piste [RWY], [CAA]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "[CAA], Cessna at the general aviation apron, with information [INF], VFR flight destination [ARR]." },
+            { "_lang": "en", "_class": "ATC", "__text": "[CAA], [STA] departure, squawk [SQU], taxi holding point [VOI] runway [RWY]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "[STA] departure, squawk [SQU], taxiing holding point [VOI] runway [RWY], [CAA]." }
+          ]
+        },
+        {
+          "_id": "TOUR_PISTE",
+          "_name": "Tour de piste",
+          "para": [
+            { "_lang": "fr", "_class": "Pilot", "__text": "[CAA], Cessna au parking de l'aviation générale, avec information [INF], demandons roulage pour des tours de piste." },
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], transpondeur [SQU], roulez point d'arrêt [VOI] piste [RWY]." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Transpondeur [SQU], roulons point d'arrêt [VOI] piste [RWY], [CAA]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "[CAA], Cessna at the general aviation apron, with information [INF], request taxi for patterns." },
+            { "_lang": "en", "_class": "ATC", "__text": "[CAA], squawk [SQU], taxi holding point [VOI] runway [RWY]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Squawk [SQU], taxiing holding point [VOI] runway [RWY], [CAA]." }
+          ]
+        },
+        {
+          "_id": "PRET_DEPART",
+          "_name": "Prêt au départ",
+          "para": [
+            { "_lang": "fr", "_class": "Pilot", "__text": "Point d'arrêt [VOI] piste [RWY], prêt au départ, [CAA]." },
+            { "_lang": "fr", "_class": "ATC", "__text": "Contactez [DEP] [TWR]." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Contactons [DEP] [TWR], merci pour le contrôle, [CAA]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Holding point [VOI] piste [RWY], ready for departure, [CAA]." },
+            { "_lang": "en", "_class": "ATC", "__text": "Contact [DEP] [TWR]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Contact [DEP] [TWR], thanks for control, [CAA]." }
+          ]
+        },
+        {
+          "_id": "RAPPEL_PT_SORTIE",
+          "_name": "Décollage avec sortie de zone",
+          "para": [
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], alignez-vous piste [RWY], autorisé décollage, vent 0_60 degrés 10 nœuds, rappelez [STA]." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Nous nous alignons piste [RWY], autorisé décollage, rappellerons [STA], [CAA]." },
+            { "_lang": "en", "_class": "ATC", "__text": "[CAA], line up runway [RWY], cleared for take-off, wind 0_6_0 degrees, 10 knots, report over [STA]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Lining up runway [RWY], cleared for take-off, will report over [STA], [CAA]." }
+          ]
+        },
+        {
+          "_id": "RAPPEL_VENT_ARRIERE",
+          "_name": "Décollage Tours de piste",
+          "para": [
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], alignez-vous piste [RWY], autorisé décollage, vent 0_60 degrés 10 nœuds, rappelez vent arrière main gauche piste [RWY]." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Nous nous alignons piste [RWY], autorisé décollage, rappellerons vent arrière main gauche piste [RWY], [CAA]." },
+            { "_lang": "en", "_class": "ATC", "__text": "[CAA], line up runway [RWY], cleared for take-off, wind 0_6_0 degrees, 10 knots, report downwind left hand runway [RWY]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Lining up runway [RWY], cleared for take-off, will report over downwind left hand runway [RWY], [CAA]." }
+          ]
+        },
+        {
+          "_id": "FIN_VENT_ARRIERE",
+          "_name": "Fin de vent arrière",
+          "para": [
+            { "_lang": "fr", "_class": "Pilot", "__text": "[CAA], fin de vent arrière piste [RWY]." },
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], rappellez finale piste [RWY]." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Rappellerons finale piste [RWY], [CAA]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "[CAA], end of downwind runway [RWY]." },
+            { "_lang": "en", "_class": "ATC", "__text": "Report on final runway [RWY], [CAA]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Will report on final runway [RWY], [CAA]." }
+          ]
+        },
+        {
+          "_id": "TOUCHER",
+          "_name": "Autorisé toucher",
+          "para": [
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], autorisé toucher piste [RWY], vent 0_50 degrés 10 nœuds." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Autorisé toucher piste [RWY], [CAA]." },
+            { "_lang": "en", "_class": "ATC", "__text": "[CAA], cleared to touch and go runway [RWY], wind 0_6_0 degrees, 10 knots." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Cleared to touch and go runway [RWY], [CAA]." }
+          ]
+        },
+        {
+          "_id": "COMPLET",
+          "_name": "Autorisé complet",
+          "para": [
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], autorisé atterrissage piste [RWY], vent 0_60 degrés 10 nœuds." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Autorisé atterrissage piste [RWY], [CAA]." },
+            { "_lang": "en", "_class": "ATC", "__text": "[CAA], cleared to land runway [RWY]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Cleared to land runway [RWY], [CAA]." }
+          ]
+        },
+        {
+          "_id": "TRAFIC",
+          "_name": "Trafic",
+          "para": [
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], trafic à 11 heures, 4 nautiques, gauche vers droite, TB-9, 1000 pieds plus haut." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Bien compris, [CAA] (<i>et dès acquisition visuelle</i>)." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "TB-9 en vue, 1000 pieds plus haut, [CAA]." },
+            { "_lang": "en", "_class": "ATC", "__text": "[CAA],traffic 11 o'clock 4 miles, left to right, TB-9, 1000 feet above." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Roger, [CAA] (<i>et dès acquisition visuelle</i>)." },
+            { "_lang": "en", "_class": "Pilot", "__text": "TB-9 in sight, 1000 feet above, [CAA]." }
+          ]
+        },
+        {
+          "_id": "PARKING",
+          "_name": "Parking",
+          "para": [
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], roulez parking de l'aviation générale via [VOI]." },
+            { "_lang": "fr", "_class": "Pilot", "__text": "Roulons parking de l'aviation générale via [VOI], [CAA]." },
+            { "_lang": "en", "_class": "ATC", "__text": "[CAA], taxi via [VOI]." },
+            { "_lang": "en", "_class": "Pilot", "__text": "Taxiing general aviation apron via [VOI], [CAA]." }
+          ]
+        },
+        { "_id": "TRANSFERT_SOL", "_name": "Transfert sol", "para": [ { "_lang": "fr", "_class": "ATC", "__text": "[CAA], contactez [ARR] [GND]." }, { "_lang": "fr", "_class": "Pilot", "__text": "Contactons [ARR] [GND], merci pour le contrôle, [CAA]." } ] },
+        { "_id": "TRANSFERT_TOUR", "_name": "Transfert tour", "para": [ { "_lang": "fr", "_class": "ATC", "__text": "[CAA], contactez [ARR] [TWR]." }, { "_lang": "fr", "_class": "Pilot", "__text": "Contactons [ARR] [TWR], merci pour le contrôle, [CAA]." } ] },
+        { "_id": "TRANSFERT_UNICOM", "_name": "Transfert UNICOM", "para": [ { "_lang": "fr", "_class": "ATC", "__text": "[CAA], changement de fréquence approuvé, auto-information sur UNICOM, 122 décimal 800." } ] },
+        { "_id": "ACCUSEZ", "_name": "Accuser réception", "para": [ { "_lang": "fr", "_class": "ATC", "__text": "[CAA], Accusez réception." }, { "_lang": "fr", "_class": "Pilot", "__text": "Wilco, [CAA]." } ] },
+        { "_id": "IDENT", "_name": "Identification transpondeur", "para": [ { "_lang": "fr", "_class": "ATC", "__text": "[CAA], transpondeur ident." }, { "_lang": "fr", "_class": "Pilot", "__text": "Transpondeur ident, [CAA]." } ] },
+        { "_id": "CROISIERE", "_name": "Croisière", "para": [ { "_lang": "fr", "_class": "ATC", "__text": "[CAA], volez librement et en sécurité." } ] },
+        {
+  "_id": "ACCELERE",
+  "_name": "Accélérez roulage",
+  "para": [
+    { "_lang": "fr", "_class": "ATC", "__text": "[CAA], Expédiez le roulage." },
+    { "_lang": "en", "_class": "ATC", "__text": "[CAA], Expedite taxi." }
+  ]
+},
+{
+  "_id": "DECELERE",
+  "_name": "Ralentir roulage",
+  "para": [
+    { "_lang": "fr", "_class": "ATC", "__text": "[CAA], Ralentissez." },
+    { "_lang": "en", "_class": "ATC", "__text": "[CAA], Taxi slower." }
+  ]
+},
+{
+  "_id": "TRAFIC_SOL",
+  "_name": "Priorité trafic",
+  "para": [
+    { "_lang": "fr", "_class": "ATC", "__text": "[CAA], maintenez position avant la prochaine intersection pour laisser passer un Cessna 172 droite vers la gauche." },
+    { "_lang": "en", "_class": "ATC", "__text": "[CAA], hold position before next intersection to give way to an Cessna 172 from right to left." },
+    { "_lang": "fr", "_class": "Pilot", "__text": "Maintenons position avant la prochaine intersection pour laisser passer un Cessna 172 droite vers la gauche, [CAA]." },
+    { "_lang": "en", "_class": "Pilot", "__text": "Holding position before next intersection to give way to an Cessna 172 from right to left, [CAA]." }
+  ]
+},
+{
+  "_id": "DECOL_INTEROMPU",
+  "_name": "Interrompre décollage",
+  "para": [
+    { "_lang": "fr", "_class": "Pilot", "__text": "[CAA], Interrompons décollage." },
+    { "_lang": "en", "_class": "Pilot", "__text": "[CAA], Aborting take-off." }
+  ]
+},
+{
+  "_id": "DEGAGEMENT_STANDARD",
+  "_name": "Dégagement standard",
+  "para": [
+    { "_lang": "fr", "_class": "ATC", "__text": "[CAA], rappelez piste dégagée." },
+    { "_lang": "fr", "_class": "Pilot", "__text": "Bien compris, [CAA]." },
+    { "_lang": "en", "_class": "ATC", "__text": "[CAA], report runway vacated." },
+    { "_lang": "en", "_class": "Pilot", "__text": "Roger, [CAA]." }
+  ]
+},
+{
+  "_id": "DEGAGEMENT_PISTE",
+  "_name": "Dégagement rapide",
+  "para": [
+    { "_lang": "fr", "_class": "ATC", "__text": "[CAA], dégagez rapidement la piste." },
+    { "_lang": "fr", "_class": "Pilot", "__text": "Degageons rapidement la piste, [CAA]." },
+    { "_lang": "en", "_class": "ATC", "__text": "[CAA], expedite vacating runway." },
+    { "_lang": "en", "_class": "Pilot", "__text": "Expediting vacating runway, [CAA]." }
+  ]
+},
+{
+  "_id": "DEGAGEMENT_REMONTEE",
+  "_name": "Remontée et dégagement",
+  "para": [
+    { "_lang": "fr", "_class": "ATC", "__text": "[CAA], faites un 180, remontez la piste puis dégagez première à droite." },
+    { "_lang": "fr", "_class": "Pilot", "__text": "Remontons la piste puis première à droite, [CAA]." },
+    { "_lang": "en", "_class": "ATC", "__text": "[CAA], make a 180, backtrack runway then vacate first right." },
+    { "_lang": "en", "_class": "Pilot", "__text": "Backtracking runway then first right, [CAA]." }
+  ]
+}
+      ],
+      "orTask": [
+        {
+          "_id": "MISE_EN_ROUTE",
+          "_name": "Mise en route",
+          "para": [
+            { "_lang": "fr", "_class": "Pilot", "__text": "[DEP] [NDEL], [POL], [CAA]." },
+            { "_lang": "fr", "_class": "ATC", "__text": "[CAA], [POL], transmettez." }
+          ],
+          "subgraph": [
+            { "call": { "_class": "info", "_refid": "DESTINATION" } },
+            { "call": { "_class": "info", "_refid": "TOUR_PISTE" } }
+          ]
+        },
+        {
+          "_id": "TAXI",
+          "_name": "Circulation",
+          "subgraph": [
+            { "call": { "_class": "option", "_refid": "ACCELERE" } },
+            { "call": { "_class": "option", "_refid": "DECELERE" } },
+            { "call": { "_class": "option", "_refid": "TRAFIC_SOL" } }
+          ]
+        },
+        {
+          "_id": "CONTACT_TOUR",
+          "_name": "Contact tour",
+          "para": [
+            { "_lang": "fr", "_class": "Pilot", "__text": "[DEP] [NTWR], [CAA], nous sommes au point d'arrêt [VOI], piste [RWY], prêt au départ." }
+          ],
+          "subgraph": [
+            { "call": { "_class": "option", "_refid": "RAPPEL_PT_SORTIE" } },
+            { "call": { "_class": "option", "_refid": "RAPPEL_VENT_ARRIERE" } }
+          ]
+        },
+        {
+          "_id": "ATTERISSAGE",
+          "_name": "Atterrissage",
+          "para": [
+            { "_lang": "fr", "_class": "Pilot", "__text": "[ARR] [NTWR], [CAA], finale piste [RWY]." }
+          ],
+          "subgraph": [
+            { "call": { "_class": "option", "_refid": "COMPLET" } },
+            { "call": { "_class": "option", "_refid": "TOUCHER" } }
+          ]
+        },
+        {
+          "_id": "DEGAGEMENT",
+          "_name": "Dégagement",
+          "subgraph": [
+            { "call": { "_class": "option", "_refid": "DEGAGEMENT_STANDARD" } },
+            { "call": { "_class": "option", "_refid": "DEGAGEMENT_PISTE" } }
+          ]
+        }
+      ]
+    }
+  }
+}

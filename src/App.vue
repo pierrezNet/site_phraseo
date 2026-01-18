@@ -1,31 +1,24 @@
 <template>
   <div id="app">
-    <Navbar @open-modal="openModal" @select-task="selectTask" />
+    <Navbar 
+      @open-modal="openModal" 
+      @select-task="selectTask" 
+      @update:mode="handleModeChange" 
+    />
+    
     <div class="grid grid-cols-10 gap-4">
       <div class="col-span-12 md:col-span-4">
-        <Tabs ref="tabsRef" @task-selected="updateSelectedTaskTexts" />
+        <Tabs 
+          ref="tabsRef" 
+          :phraseoData="currentPhraseoData"
+          @task-selected="updateSelectedTaskTexts" 
+        />
       </div>
-      <!-- Affichage du texte sélectionné -->
+      
       <div id="instructions" class="col-span-12 md:col-span-6 m-1 md:mt-3 md:ml-3">
         <TaskTextDisplay :selectedTaskTexts="selectedTaskTexts" />
       </div>
-      <!-- IVAO API Demo Component 
-      <div class="col-span-12 mt-6 px-4">
-        <IvaoApiDemo />
-      </div>-->
     </div>
-    <footer class="fixed bottom-0 md:right-4 bg-white w-full md:w-1/3 modal">
-        <div class="w-full mx-auto max-w-screen-xl p-1 pl-4 md:flex md:justify-between">
-          <span class="text-sm text-gray-700 text-left md:text-right">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 980" width="18" height="18" class="inline align-text-bottom">
-              <circle cx="490" cy="490" r="440" fill="none" stroke="currentColor" stroke-width="100"/>
-              <path d="M219,428H350a150,150 0 1 1 0,125H219a275,275 0 1 0 0-125z" fill="currentColor"/>
-            </svg> Copyleft <span property="dc:date" datatype="xsd:gYear">2014</span>-<span property="dc:date" datatype="xsd:gYear">{{ new Date().getFullYear() }}
-            -  <a property="dc:publisher" href="https://aeronautique.xyz/">aeronautique.xyz</a>,
-            <a href="https://pierrez.net/"><span property="dc:creator" resource="#me">E. Pierrez</span></a></span>
-          </span>
-        </div>
-    </footer>
 
     <AideModal ref="aideModal" />
     <ParametresModal ref="parametresModal" />
@@ -33,87 +26,84 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-import type { Ref } from 'vue'; // Utiliser une importation de type pour Ref
-import type { TextItem } from './types/text';
-import type { Modal, TabsInstance } from './types/components';
-import Navbar from './components/Navbar.vue';
-import Tabs from './components/Tabs.vue';
-import TaskTextDisplay from './components/TaskTextDisplay.vue';
-import AideModal from './components/AideModal.vue';
-import ParametresModal from './components/ParametresModal.vue';
-import AboutModal from './components/AboutModal.vue';
-//import IvaoApiDemo from './components/IvaoApiDemo.vue';
+<script setup lang="ts">
+import { ref, computed, provide } from 'vue';
+import Navbar from '@/components/Navbar.vue';
+import Tabs from '@/components/Tabs.vue';
+import TaskTextDisplay from '@/components/TaskTextDisplay.vue';
+import AideModal from '@/components/AideModal.vue';
+import ParametresModal from '@/components/ParametresModal.vue';
+import AboutModal from '@/components/AboutModal.vue';
 
+// Import des deux bases de données
+import phraseoIFR from '@/data/phraseologieIFR.json';
+import phraseoVFR from '@/data/phraseologieVFR.json';
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    Navbar,
-    Tabs,
-    TaskTextDisplay,
-    AideModal,
-    ParametresModal,
-    AboutModal,
-    //IvaoApiDemo
-  },
-  setup() {
-    const aideModal: Ref<Modal | null> = ref(null);
-    const parametresModal: Ref<Modal | null> = ref(null);
-    const aboutModal: Ref<Modal | null> = ref(null);
+/** * 1. ON DÉFINIT UNE INTERFACE LOCALE POUR ÉVITER LE CONFLIT
+ * On ne l'appelle pas TextItem, on l'appelle PhraseoLine
+ */
+interface PhraseoLine {
+  _class: string;
+  _lang: string;
+  __text: string;
+}
 
-    const openModal = (modalName: string) => {
-      switch (modalName) {
-        case 'aide':
-          aideModal.value?.open();
-          break;
-        case 'parametres':
-          parametresModal.value?.open();
-          break;
-        case 'about':
-          aboutModal.value?.open();
-          break;
-      }
-    };
+interface ModalInstance {
+  open: () => void;
+  close: () => void;
+}
 
-    const selectedTaskTexts = ref<TextItem[]>([]);
-    const tabsRef = ref<TabsInstance | null>(null);
+interface TabsInstance {
+  selectedTab: string;
+  filteredPhaseTasks: any[];
+  logTask: (task: any) => void;
+}
 
-    const updateSelectedTaskTexts = (texts: TextItem[]) => {
-      selectedTaskTexts.value = texts;
-    };
-    
-    // Méthode pour sélectionner un onglet et une tâche
-    const selectTask = (tabCode: string, taskId: string) => {
-      if (tabsRef.value) {
-        // Changer l'onglet actif
-        tabsRef.value.selectedTab = tabCode;
-        
-        // Attendre que le changement d'onglet soit effectué
-        setTimeout(() => {
-          // Vérifier à nouveau tabsRef.value car sa valeur pourrait changer
-          if (tabsRef.value) {
-            // Trouver et sélectionner la tâche correspondante
-            const task = tabsRef.value.filteredPhaseTasks.find((t) => t._id === taskId);
-            if (task) {
-              tabsRef.value.logTask(task);
-            }
-          }
-        }, 100);
-      }
-    };
+// État réactif du mode
+const currentMode = ref(localStorage.getItem('flightMode') || 'IFR');
 
-    return {
-      aideModal,
-      parametresModal,
-      aboutModal,
-      openModal,
-      selectedTaskTexts,
-      updateSelectedTaskTexts,
-      tabsRef,
-      selectTask
-    };
-  }
+// Données calculées en fonction du mode
+const currentPhraseoData = computed(() => {
+  return currentMode.value === 'VFR' ? phraseoVFR : phraseoIFR;
 });
+
+provide('phraseoData', currentPhraseoData);
+
+const handleModeChange = (newMode: string) => {
+  currentMode.value = newMode;
+  selectedTaskTexts.value = [];
+};
+
+const aideModal = ref<ModalInstance | null>(null);
+const parametresModal = ref<ModalInstance | null>(null);
+const aboutModal = ref<ModalInstance | null>(null);
+const tabsRef = ref<TabsInstance | null>(null);
+
+/**
+ * 2. ON UTILISE NOTRE NOUVELLE INTERFACE ICI
+ */
+const selectedTaskTexts = ref<PhraseoLine[]>([]);
+
+const updateSelectedTaskTexts = (texts: any[]) => {
+  selectedTaskTexts.value = texts;
+};
+
+const openModal = (modalName: string) => {
+  if (modalName === 'aide') aideModal.value?.open();
+  if (modalName === 'parametres') parametresModal.value?.open();
+  if (modalName === 'about') aboutModal.value?.open();
+};
+
+const selectTask = (tabCode: string, taskId: string) => {
+  const tabs = tabsRef.value;
+  if (tabs) {
+    tabs.selectedTab = tabCode;
+    setTimeout(() => {
+      if (tabsRef.value) {
+        const task = tabsRef.value.filteredPhaseTasks.find((t) => t._id === taskId);
+        if (task) tabsRef.value.logTask(task);
+      }
+    }, 100);
+  }
+};
 </script>
