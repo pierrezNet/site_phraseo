@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal w-full max-h-screen overflow-y-auto">
+  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm modal w-full max-h-screen overflow-y-auto">
   <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl max-h-screen overflow-y-auto">
     <div class="flex justify-between items-center border-b pb-2">
       <h4 class="text-lg font-semibold">Paramètres</h4>

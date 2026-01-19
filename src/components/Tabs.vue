@@ -36,7 +36,12 @@
       >
         <span class="hidden md:inline">{{ task._name }}</span>
         <span class="inline md:hidden">{{ task._short }}</span> 
-        <span v-if="selectedTaskIds.includes(task._id)" class="float-right text-white mr-2">✓</span>
+        <span 
+          v-if="selectedTaskIds.includes(task._id)" 
+          class="hidden md:inline float-right text-white mr-2"
+        >
+          ✓
+        </span>
       </button>
     </div>
  

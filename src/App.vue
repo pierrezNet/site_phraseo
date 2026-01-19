@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="[currentMode === 'IFR' ? 'theme-ifr' : 'theme-vfr']" class="min-h-screen transition-colors duration-500">
     <Navbar 
       @open-modal="openModal" 
       @select-task="selectTask" 
@@ -107,3 +107,86 @@ const selectTask = (tabCode: string, taskId: string) => {
   }
 };
 </script>
+
+<style>
+/* --- Styles de base pour la transition --- */
+#app {
+  transition: background-color 0.5s ease, color 0.3s ease;
+}
+
+/* --- THEME VFR (Classique) --- */
+.theme-vfr {
+  background-color: #f8fafc; /* Fond très clair */
+  color: #1e293b;
+}
+
+/* --- THEME IFR (Glass Cockpit Soft) --- */
+.theme-ifr {
+  background-color: #0f172a; /* Slate 900 : Bleu-Noir profond */
+  color: #f1f5f9; /* Texte blanc cassé */
+}
+
+/* Ajustement des titres en IFR */
+.theme-ifr .custom-h2 {
+  color: #38bdf8; /* Bleu ciel type instrument */
+  border-bottom: 2px solid #075985;
+}
+
+/* Adaptation douce des cartes/zones de texte en IFR */
+.theme-ifr #instructions > div {
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+/* Style des paragraphes Pilot/ATC spécifiques au mode sombre IFR */
+.theme-ifr .bg-blue-100 { background-color: #1e3a8a !important; color: #dbeafe !important; }
+.theme-ifr .bg-orange-100 { background-color: #3d033f !important; color: #dbeafe !important; }
+.theme-ifr .bg-yellow-100 { background-color: #3d033f !important; color: #fef9c3 !important; }
+.theme-ifr .border-blue-500 { border-color: #3b82f6 !important; }
+.theme-ifr .border-yellow-500 { border-color: #7d0781 !important; }
+.theme-ifr .border-orange-500 { border-color: #7d0781 !important; }
+
+.theme-ifr .modal-content, 
+.theme-ifr .bg-white {
+  /* On remplace le fond blanc par un gris-bleu très sombre */
+  background-color: #1e293b !important; 
+  color: #f1f5f9 !important;
+}
+
+/* On ajuste les bordures et les headers des modales */
+.theme-ifr .modal-header {
+  border-bottom: 1px solid #334155;
+  color: #38bdf8; /* Bleu instrument pour les titres */
+}
+
+.theme-ifr .modal-footer {
+  border-top: 1px solid #334155;
+}
+
+.theme-ifr .label-field {
+  color: #cccccc;
+}
+
+/* Inversion des inputs et champs de saisie dans les modales */
+.theme-ifr input, 
+.theme-ifr select, 
+.theme-ifr textarea {
+  background-color: #0f172a !important;
+  color: #f1f5f9 !important;
+  border: 1px solid #334155 !important;
+}
+
+/* Style des boutons "Fermer" ou "Valider" dans la modale */
+.theme-ifr .modal-footer button {
+  border-color: #334155;
+}
+.theme-ifr .bg-white svg {
+  fill: #ffffff !important;
+  color: #ffffff !important; /* Pour couvrir les deux modes de coloration possibles */
+}
+
+/* Optionnel : changer aussi la couleur de la bordure du bouton actif pour qu'elle soit plus visible */
+.theme-ifr .bg-white.border-gray-300 {
+  background-color: #334155 !important; /* Gris-bleu Slate 700 au lieu du blanc pur */
+}
+</style>

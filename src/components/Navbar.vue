@@ -3,9 +3,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
 
-        <div class="flex items-center space-x-3 bg-blue-800/50 px-4 py-2">
+        <div class="flex items-center space-x-3 bg-blue-800/50">
           <span class="text-2xl font-bold">Phraséologie </span>
-          <span :class="['font-bold transition-colors', flightMode === 'IFR' ? 'text-white' : 'text-blue-400']">IFR</span>
+          <span :class="['font-bold transition-colors', flightMode === 'IFR' ? 'text-white' : 'text-blue-200']">IFR</span>
           
           <label class="relative inline-block w-12 h-6 cursor-pointer">
             <input 
@@ -14,7 +14,7 @@
               :checked="flightMode === 'VFR'"
               @change="toggleFlightMode"
             >
-            <div class="w-full h-full bg-blue-600 rounded-full peer transition-colors peer-checked:bg-green-500 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-6"></div>
+            <div class="w-full h-full bg-gray-500 rounded-full peer transition-colors peer-checked:bg-blue-500 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-6"></div>
           </label>
 
           <span :class="['text-xs font-bold transition-colors', flightMode === 'VFR' ? 'text-white' : 'text-blue-400']">VFR</span>
