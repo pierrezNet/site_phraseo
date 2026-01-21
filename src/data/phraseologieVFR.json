@@ -87,7 +87,7 @@
         {
           "_id": "RAPPEL_PT_SORTIE",
           "_name": "Décollage Sortie de zone",
-          "_short": "Décollage sortie",
+          "_short": "Décol sortie",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], alignez-vous piste [RWY], autorisé décollage, vent 0_60 degrés 10 nœuds, rappelez [STA]."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Nous alignons piste [RWY], autorisé décollage, rappellerons [STA], [CAA]."},
@@ -98,7 +98,7 @@
         {
           "_id": "RAPPEL_VENT_ARRIERE",
           "_name": "Décollage Tours de piste",
-          "_short": "Décollage tours",
+          "_short": "Décol tours",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], alignez-vous piste [RWY], autorisé décollage, vent 0_60 degrés 10 nœuds, rappelez vent arrière main gauche piste [RWY]."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Nous alignons piste [RWY], autorisé décollage, rappellerons vent arrière main gauche piste [RWY], [CAA]."},
@@ -109,7 +109,7 @@
         {
           "_id": "DEMANDE_COMPLET",
           "_name": "Complet",
-          "_short": "Demande complet",
+          "_short": "Complet",
           "para": [
             {"_lang": "fr", "_class": "Pilot", "__text": "[CAA], fin de vent arrière piste pour un complet, piste [RWY]."},
             {"_lang": "en", "_class": "Pilot", "__text": "[CAA], end of downwind runway for a full stop, runway [RWY]."},
@@ -122,7 +122,7 @@
         {
           "_id": "DEMANDE_TOUCHER",
           "_name": "Toucher",
-          "_short": "Demande toucher",
+          "_short": "Toucher",
           "para": [
             {"_lang": "fr", "_class": "Pilot", "__text": "[CAA], fin de vent arrière pour un toucher, piste [RWY]."},
             {"_lang": "en", "_class": "Pilot", "__text": "[CAA], end of downwind runway for a touch and go, runway [RWY]."},
@@ -135,7 +135,7 @@
         {
           "_id": "EXERCICE",
           "_name": "Décollage Exercice",
-          "_short": "Décollage exercice",
+          "_short": "Décol exercice",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], alignez-vous piste [RWY], autorisé décollage, vent 0_60 degrés 10 nœuds, rappelez verticale terrain [NIV] pieds."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Nous alignons piste [RWY], autorisé décollage, rappellerons verticale terrain [NIV] pieds, [CAA]."},
@@ -172,7 +172,7 @@
         {
           "_id": "TRANSFERT_SIMPLE",
           "_name": "Transfert contrôleur",
-          "_short": "Transfert",
+          "_short": "Tr CTR",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], contactez [DEP] [APP]."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Contactons [DEP] [APP], merci pour le contrôle, [CAA]."},
@@ -183,7 +183,7 @@
         {
           "_id": "TRANSFERT_SOL",
           "_name": "Transfert sol",
-          "_short": "Transfert sol",
+          "_short": "Tr GND",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], contactez [ARR] [GND]."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Contactons [ARR] [GND], merci pour le contrôle, [CAA]."},
@@ -194,7 +194,7 @@
         {
           "_id": "CONTACT_TOUR",
           "_name": "Transfert tour",
-          "_short": "Transfert tour",
+          "_short": "Tr TWR",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "Contactez [DEP] [TWR]."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Contactons [DEP] [TWR], merci pour le contrôle, [CAA]."},
@@ -284,7 +284,7 @@
         {
           "_id": "INTEGRATION_COMPLET",
           "_name": "Intégration complet",
-          "_short": "Intégration complet",
+          "_short": "Intégr complet",
           "para": [
             {"_lang": "fr", "_class": "Pilot", "__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de vos installations, verticale [STA], [NIV] pieds, avec information [INF], demandons intégration pour un complet."},
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], rappelez verticale (point intermédiaire)."},
@@ -297,7 +297,7 @@
         {
           "_id": "INTEGRATION_TOUCHER",
           "_name": "Intégration toucher",
-          "_short": "Intégration toucher",
+          "_short": "Intégr toucher",
           "para": [
             {"_lang": "fr", "_class": "Pilot", "__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de vos installations, verticale [STA], [NIV] pieds, avec information [INF], demandons intégration pour un toucher."},
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], rappelez verticale (point intermédiaire)."},
@@ -310,7 +310,7 @@
         {
           "_id": "DEGAGEMENT_PISTE",
           "_name": "Dégagement rapide",
-          "_short": "Dégagement rapide",
+          "_short": "Dégag rapide",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], dégagez rapidement la piste."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Degageons rapidement la piste, [CAA]."},
@@ -332,7 +332,7 @@
         {
           "_id": "DEGAGEMENT_REMONTEE",
           "_name": "Remontée et dégagement",
-          "_short": "Remontée dégagement",
+          "_short": "Avec remontée",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], faites un 180, remontez la piste puis dégagez première à droite."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Remontons la piste puis première à droite, [CAA]."},

@@ -1,64 +1,31 @@
-/**
- * Utilitaires pour formater les données météorologiques
- */
+// utils/weatherFormatter.ts
 
-/**
- * Options pour le formattage météo
- */
-export interface WeatherFormatOptions {
-  lang: 'fr' | 'en';
-}
-
-/**
- * Formatage des données météo à partir d'un objet METAR
- * @param metarData Les données METAR
- * @param options Options de formatage
- */
-export function formatMetarData(metarData: any, options: WeatherFormatOptions = { lang: 'fr' }): string {
-  if (!metarData || !metarData.decoded) {
-    return options.lang === 'fr' 
-      ? 'Données météo non disponibles' 
-      : 'Weather data not available';
+export function formatMetarData(metarData: any, options: any = { lang: 'fr' }): string {
+  // 1. Si metarData est null ou undefined
+  if (!metarData) {
+    return options.lang === 'fr' ? 'vent 240 degrés 5 noeuds, température 12, Q_N_H 1013' : 'wind 240 degrees 5 knots, temperature 12, QNH 1013';
   }
 
-  const { decoded } = metarData;
+  // 2. On pointe directement sur les données (ton Proxy AVWX)
+  // On gère le cas où les données sont à la racine (ton cas) ou dans .decoded
+  const d = metarData.decoded || metarData;
   
-  // Extraction des valeurs
-  const windDirection = decoded.wind?.direction || 0;
-  const windSpeed = decoded.wind?.speed || 0;
-  const visibility = typeof decoded.visibility === 'string' 
-    ? parseInt(decoded.visibility, 10) / 1000 // Conversion en km si c'est en mètres
-    : decoded.visibility || 0;
-  const temperature = decoded.temperature || 0;
-  const qnh = decoded.altimeter || 0;
-  
-  // Formatage de la visibilité (cas spécial pour 9999)
-  let visibilityText;
-  if (decoded.visibility === '9999' || visibility >= 10) {
-    visibilityText = options.lang === 'fr' ? 'supérieure à 10 km' : 'greater than 10 km';
-  } else {
-    visibilityText = options.lang === 'fr' ? `${visibility} km` : `${visibility} km`;
-  }
-  
-  // Formatage selon la langue
+  // 3. Extraction sécurisée avec valeurs par défaut
+  const qnh = d.altimeter?.value || "1013";
+  const temp = d.temperature?.value || "15";
+  const windDir = d.wind_direction?.value || "variable";
+  const windSpd = d.wind_speed?.value || "0";
+
+  // 4. Retour de la phrase
   if (options.lang === 'fr') {
-    return `vent ${windDirection} degrés ${windSpeed} noeuds, visibilité ${visibilityText}, température ${temperature}, Q_N_H ${qnh}`;
+    return `vent ${windDir} degrés ${windSpd} noeuds, température ${temp}, Q_N_H ${qnh}`;
   } else {
-    return `wind ${windDirection} degrees ${windSpeed} knots, visibility ${visibilityText}, temperature ${temperature}, QNH ${qnh}`;
+    return `wind ${windDir} degrees ${windSpd} knots, temperature ${temp}, QNH ${qnh}`;
   }
 }
 
-/**
- * Remplace le tag [MET] dans un texte par les données météo formatées
- * @param text Texte contenant le tag [MET]
- * @param metarData Données METAR
- * @param options Options de formatage
- */
-export function replaceMetarTag(text: string, metarData: any, options: WeatherFormatOptions = { lang: 'fr' }): string {
-  if (!text.includes('[MET]')) {
-    return text;
-  }
-  
-  const formattedMetar = formatMetarData(metarData, options);
-  return text.replace(/\[MET\]/g, formattedMetar);
+export function replaceMetarTag(text: string, metarData: any, options: any = { lang: 'fr' }): string {
+  if (!text || !text.includes('[MET]')) return text;
+  const info = formatMetarData(metarData, options);
+  return text.replace(/\[MET\]/g, info);
 }

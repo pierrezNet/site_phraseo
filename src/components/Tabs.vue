@@ -62,7 +62,12 @@
       >
         <span class="hidden md:inline">{{ subgraph._name }}</span>
         <span class="inline md:hidden">{{ subgraph._short }}</span>
-        <span v-if="selectedTaskIds.includes(subgraph.refid)" class="float-right text-white mr-2">✓</span>
+        <span 
+          v-if="selectedTaskIds.includes(subgraph.refid)" 
+          class="hidden md:inline float-right text-white mr-2"
+        >
+          ✓
+        </span>
       </button>
     </div>
   </div>
@@ -73,7 +78,8 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useLangStore } from '../stores/lang';
 import { useFormStore } from '../stores/form';
 import { iconTaxonomy } from '../stores/taxonomy';
-import { replaceMetarTag } from '../utils/weatherFormatter';
+import { get } from '../utils/api';
+import { formatMetarData } from '../utils/weatherFormatter';
 
 const props = defineProps<{
   phraseoData: any
@@ -87,7 +93,7 @@ const formStore = useFormStore();
 // --- State ---
 const selectedSubgraphs = ref<any[]>([]);
 const lastSelectedTaskId = ref<string | null>(null);
-const metarData = ref(null);
+const metarData = ref<any>(null);
 const metarLoading = ref(false);
 const metarError = ref(null);
 
@@ -245,7 +251,31 @@ function findFallbackStation(requestedStation: string, lang: 'fr' | 'en') {
   return { station: requestedStation, label: requestedStation };
 }
 
-const safeReplaceMetarTag = (tag: string, metar: any, options: any) => {
+const updateMetar = async () => {
+  // On récupère le code OACI (MET)
+  const icao = formStore.form.MET || formStore.form.ARR;
+  if (!icao || icao.length < 4) return;
+
+  metarLoading.value = true;
+  metarError.value = null;
+
+  try {
+    // Appel à AVWX avec ta clé API stockée dans les variables d'environnement
+    const data = await get<any>(`https://avwx.rest/api/metar/${icao}`, {
+      headers: { 'Authorization': import.meta.env.VITE_AVWX_API_KEY }
+    });
+    console.log("Structure AVWX reçue :", data);
+    metarData.value = data;
+    console.log("Données stockées dans metarData", metarData.value);
+  } catch (error: any) {
+    metarError.value = error.message;
+    console.error("Erreur METAR AVWX:", error);
+  } finally {
+    metarLoading.value = false;
+  }
+};
+
+/*const safeReplaceMetarTag = (tag: string, metar: any, options: any) => {
   try {
     if (typeof replaceMetarTag === 'function') {
       return replaceMetarTag(tag, metar, options);
@@ -260,7 +290,7 @@ const safeReplaceMetarTag = (tag: string, metar: any, options: any) => {
   if (metar.temp != null) parts.push((lang === 'fr' ? 'température ' : 'temperature ') + metar.temp);
   if (metar.qnh != null) parts.push('Q N H ' + metar.qnh);
   return parts.join(', ');
-};
+};*/
 
 /**
  * Prepares text for speech synthesis by replacing placeholders and stripping annotations.
@@ -269,17 +299,20 @@ const safeReplaceMetarTag = (tag: string, metar: any, options: any) => {
  * @returns The processed text ready for speech.
  */
 const prepareTextForSpeech = (text: string, lang: string): string => {
-  let processed = text.replace(/\[(.*?)\]/g, (match, p1) => {
+  let processed = text.replace(/\[([^\]]+)\]/g, (match, p1) => {
     switch (p1) {
       case 'POL': {
         const key = getHeure();
         return POL[key][lang as 'fr'|'en'];
       }
+      case 'CAA': {
+        return getCallsign();
+      }
       case 'MET': {
-        if (metarLoading.value) return lang === 'fr' ? 'chargement des données météo...' : 'loading weather data...';
-        if (metarError.value) return lang === 'fr' ? `erreur météo: ${metarError.value}` : `weather error: ${metarError.value}`;
-        if (metarData.value) return safeReplaceMetarTag('[MET]', metarData.value, { lang, forSpeech: true });
-        return lang === 'fr' ? 'données météo non disponibles' : 'weather data not available';
+        console.log("Balise MET trouvée !"); 
+        if (metarLoading.value) return lang === 'fr' ? 'chargement...' : 'loading...';
+        // Utilisation de ton fichier weatherFormatter.ts
+        return formatMetarData(metarData.value, { lang: lang as 'fr' | 'en' });
       }
       case 'HOU': {
         const now = new Date();
@@ -315,10 +348,6 @@ const prepareTextForSpeech = (text: string, lang: string): string => {
         return formStore.form[p1] || match;
     }
   });
-
-  // For speech, we strip the tooltip markers and just keep the content.
-  processed = processed.replace(/\{([^}]+)\}/g, '$1');
-
   return processed;
 };
 
@@ -625,6 +654,13 @@ onBeforeUnmount(() => {
 
 watch(selectedTab, () => {
   resetDisplay();
+});
+
+// On surveille le changement de terrain pour mettre à jour la météo automatiquement
+watch(() => formStore.form.MET, (newIcao) => {
+  if (newIcao && newIcao.length === 4) {
+    updateMetar();
+  }
 });
 
 // Watch props change to re-init tasks if data changes (e.g. mode switch)

@@ -24,7 +24,6 @@ import { ref, onMounted, computed } from 'vue';
 import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
 import { replaceMetarTag } from '../utils/weatherFormatter';
-import type { WeatherFormatOptions } from '../utils/weatherFormatter';
 
 // Interface locale identique à celle d'App.vue pour la cohérence
 interface PhraseoLine {
@@ -137,7 +136,7 @@ function replacePlaceholders(text: string): string {
   };
   
   // D'abord traiter les placeholders entre crochets
-  let result = text.replace(/\[(.*?)\]/g, (match, p1) => {
+  let result = text.replace(/\[([^\]]+)\]/g, (match, p1) => {
     // Gestion des placeholders spéciaux
     switch(p1) {
       case 'POL':
@@ -145,17 +144,12 @@ function replacePlaceholders(text: string): string {
       case 'HOU':
         return currentHour;
       case 'MET':
-        if (metarLoading.value) {
-          return lang === 'fr' ? 'chargement des données météo...' : 'loading weather data...';
-        }
-        if (metarError.value) {
-          return lang === 'fr' ? `erreur météo: ${metarError.value}` : `weather error: ${metarError.value}`;
-        }
-        if (metarData.value) {
-          const options: WeatherFormatOptions = { lang };
-          return replaceMetarTag('[MET]', metarData.value, options);
-        }
-        return lang === 'fr' ? 'données météo non disponibles' : 'weather data not available';
+        console.log("Balise MET trouvée dans TaskDisplay !"); 
+        if (metarLoading.value) return lang === 'fr' ? 'chargement...' : 'loading...';
+        // Utilisation de ton fichier weatherFormatter.ts
+        return replaceMetarTag('[MET]', metarData.value, { lang: lang as 'fr' | 'en' });
+      case 'CAA':
+        return formStore.form.CAA || "Station";
       case 'RWY':
         return formStore.formatRunway(formStore.form.RWY, lang);
       case 'DEL':

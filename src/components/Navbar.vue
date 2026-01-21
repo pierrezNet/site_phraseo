@@ -17,7 +17,7 @@
             <div class="w-full h-full bg-gray-500 rounded-full peer transition-colors peer-checked:bg-blue-500 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-6"></div>
           </label>
 
-          <span :class="['text-xs font-bold transition-colors', flightMode === 'VFR' ? 'text-white' : 'text-blue-400']">VFR</span>
+          <span :class="['font-bold transition-colors', flightMode === 'VFR' ? 'text-white' : 'text-blue-400']">VFR</span>
         </div>
 
         <DisclosureButton class="md:hidden p-2">
