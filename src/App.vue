@@ -7,7 +7,7 @@
     />
     
     <div class="grid grid-cols-10 gap-4">
-      <div class="col-span-12 md:col-span-4">
+      <div class="col-span-10 md:col-span-4">
         <Tabs 
           ref="tabsRef" 
           :phraseoData="currentPhraseoData"
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, provide } from 'vue';
+import { ref, computed, provide, nextTick } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import Tabs from '@/components/Tabs.vue';
 import TaskTextDisplay from '@/components/TaskTextDisplay.vue';
@@ -98,12 +98,10 @@ const selectTask = (tabCode: string, taskId: string) => {
   const tabs = tabsRef.value;
   if (tabs) {
     tabs.selectedTab = tabCode;
-    setTimeout(() => {
-      if (tabsRef.value) {
-        const task = tabsRef.value.filteredPhaseTasks.find((t) => t._id === taskId);
-        if (task) tabsRef.value.logTask(task);
-      }
-    }, 100);
+    nextTick(() => {
+      const task = tabsRef.value?.filteredPhaseTasks.find((t) => t._id === taskId);
+      if (task) tabsRef.value?.logTask(task);
+    });
   }
 };
 </script>

@@ -8,5 +8,13 @@ export default defineConfig({
     alias: {
       '@': '/src'
     }
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    include: ['src/**/*.{test,spec}.ts'],
+    alias: {
+      '@': new URL('./src', import.meta.url).pathname
+    }
   }
 });
