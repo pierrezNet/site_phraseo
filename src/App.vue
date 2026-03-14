@@ -7,7 +7,7 @@
     />
     
     <div class="grid grid-cols-10 gap-4">
-      <div class="col-span-10 md:col-span-4">
+      <div class="col-span-12 md:col-span-4">
         <Tabs 
           ref="tabsRef" 
           :phraseoData="currentPhraseoData"
