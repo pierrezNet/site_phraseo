@@ -253,7 +253,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], confirmez si capable départ RNP (BASIP 5Z)."
+							"__text": "[CAL], [POL], confirmez si capable départ R_N_P (BASIP 5Z)."
 						},
 						{
 							"_lang": "fr",
@@ -268,7 +268,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], confirm if able RNP (BASIP 5Z) departure."
+							"__text": "[CAL], [POL], confirm if able R_N_P (BASIP 5Z) departure."
 						},
 						{
 							"_lang": "en",
@@ -295,7 +295,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Impossible RNP zone terminale{La zone terminale correspond au Terminal Manoeuvring Area (TMA)}, [CAA]."
+							"__text": "Impossible R_N_P zone terminale{La zone terminale correspond au Terminal Manoeuvring Area (TMA)}, [CAA]."
 						},
 						{
 							"_lang": "fr",
@@ -310,7 +310,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Unable RNP terminal area{La zone terminale correspond au Terminal Manoeuvring Area (TMA)}, [CAA]."
+							"__text": "Unable R_N_P terminal area{La zone terminale correspond au Terminal Manoeuvring Area (TMA)}, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -342,12 +342,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], multidirectionnal departure, runway [RWY], at (800) ft turn (right) [CAP], climb (3000) feet QNH, squawk [SQU]."
+							"__text": "[CAL], [POL], multidirectional departure, runway [RWY], at (800) ft turn (right) [CAP], climb (3000) feet QNH, squawk [SQU]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Multidirectionnal departure, runway [RWY], at (800) ft turn (right) [CAP], climb (3000) feet QNH squawk [SQU], [CAA]."
+							"__text": "Multidirectional departure, runway [RWY], at (800) ft turn (right) [CAP], climb (3000) feet QNH squawk [SQU], [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -388,7 +388,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Startup approved, C_TOT (1 2 5 0), [STA] departure, intitial climb [NIV], squawk [SQU]."
+							"__text": "Startup approved, C_TOT (1 2 5 0), [STA] departure, initial climb [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
@@ -454,7 +454,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Push-back approved, accordingly a 737 insight, [CAA]."
+							"__text": "Push-back approved, according to 737 in sight, [CAA]."
 						}
 					],
 					"_id": "REPOUSSAGE_CONDITIONNEL",
@@ -530,12 +530,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], give way to Air-France Airbus comming from your right, taxi holding point runway [RWY]."
+							"__text": "[CAA], give way to Air-France Airbus coming from your right, taxi holding point runway [RWY]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Giving way to Air-France Airbus comming from our right, taxiing holding point runway [RWY], [CAA]."
+							"__text": "Giving way to Air-France Airbus coming from our right, taxiing holding point runway [RWY], [CAA]."
 						}
 					],
 					"_id": "ROULAGE_TRAFIC",
@@ -557,12 +557,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], backtrap runway [RWY], line up and wait."
+							"__text": "[CAA], backtrack runway [RWY], line up and wait."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Backtraping runway [RWY], lining up and waiting, [CAA]."
+							"__text": "Backtracking runway [RWY], lining up and waiting, [CAA]."
 						}
 					],
 					"_id": "REMONTEE_PISTE",
@@ -857,12 +857,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], service du contrôle terminé, auto-information, 122 décimal 8."
+							"__text": "[CAA], service du contrôle terminé, auto-information, 122 décimale 8."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Auto-information, 122 décimal 8, merci pour le contrôle, [CAA]."
+							"__text": "Auto-information, 122 décimale 8, merci pour le contrôle, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1101,7 +1101,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Airbus en vue, 1000 pieds au-dessus, [CAA]."
+							"__text": "Airbus en vue, 1000 pieds plus haut, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1543,7 +1543,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], have you visual contact on preceeding traffic ?"
+							"__text": "[CAA], have you visual contact on preceding traffic ?"
 						},
 						{
 							"_lang": "en",
@@ -1553,7 +1553,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], cleared visual approach runway [RWY], maintain own separation from preceeding Fokker 70."
+							"__text": "[CAA], cleared visual approach runway [RWY], maintain own separation from preceding Fokker 70."
 						},
 						{
 							"_lang": "en",
@@ -1617,7 +1617,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], cleared visual approach runway [RWY], maintain own separation from preceeding (Airbus 3_2_0)."
+							"__text": "[CAA], cleared visual approach runway [RWY], maintain own separation from preceding (Airbus 3_2_0)."
 						},
 						{
 							"_lang": "en",
@@ -1907,12 +1907,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], make a 180, backtrap runway then vacate first (right)."
+							"__text": "[CAA], make a 180, backtrack runway then vacate first (right)."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Backtraping runway then first (right), [CAA]."
+							"__text": "Backtracking runway then first (right), [CAA]."
 						}
 					],
 					"_id": "DEGAGEMENT_REMONTEE",
@@ -2333,7 +2333,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], have you visual contact on preceeding traffic?"
+							"__text": "[CAA], have you visual contact on preceding traffic?"
 						},
 						{
 							"_lang": "en",

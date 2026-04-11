@@ -113,7 +113,7 @@
           "para": [
             {"_lang": "fr", "_class": "Pilot", "__text": "[CAA], fin de vent arrière piste pour un complet, piste [RWY]."},
             {"_lang": "en", "_class": "Pilot", "__text": "[CAA], end of downwind runway for a full stop, runway [RWY]."},
-            {"_lang": "fr", "_class": "ATC", "__text": "[CAA], rappellez finale piste [RWY]."},
+            {"_lang": "fr", "_class": "ATC", "__text": "[CAA], rappelez finale piste [RWY]."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Rappellerons finale piste [RWY], [CAA]."},
             {"_lang": "en", "_class": "ATC", "__text": "Report on final runway [RWY], [CAA]."},
             {"_lang": "en", "_class": "Pilot", "__text": "Will report on final runway [RWY], [CAA]."}
@@ -126,7 +126,7 @@
           "para": [
             {"_lang": "fr", "_class": "Pilot", "__text": "[CAA], fin de vent arrière pour un toucher, piste [RWY]."},
             {"_lang": "en", "_class": "Pilot", "__text": "[CAA], end of downwind runway for a touch and go, runway [RWY]."},
-            {"_lang": "fr", "_class": "ATC", "__text": "[CAA], rappellez finale piste [RWY]."},
+            {"_lang": "fr", "_class": "ATC", "__text": "[CAA], rappelez finale piste [RWY]."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Rappellerons finale piste [RWY], [CAA]."},
             {"_lang": "en", "_class": "ATC", "__text": "Report on final runway [RWY], [CAA]."},
             {"_lang": "en", "_class": "Pilot", "__text": "Will report on final runway [RWY], [CAA]."}
@@ -207,8 +207,8 @@
           "_name": "Fin service",
           "_short": "Fin service",
           "para": [
-            {"_lang": "fr", "_class": "ATC", "__text": "[CAA], service du contrôle terminé, auto-information, 122 décimal 8."},
-            {"_lang": "fr", "_class": "Pilot", "__text": "Auto-information, 122 décimal 8, merci pour le contrôle, [CAA]."},
+            {"_lang": "fr", "_class": "ATC", "__text": "[CAA], service du contrôle terminé, auto-information, 122 décimale 8."},
+            {"_lang": "fr", "_class": "Pilot", "__text": "Auto-information, 122 décimale 8, merci pour le contrôle, [CAA]."},
             {"_lang": "en", "_class": "ATC", "__text": "[CAA], control service terminated, air-to-air frequency, one hundred twenty two decimal eight."},
             {"_lang": "en", "_class": "Pilot", "__text": "Air-to-air frequency, one hundred twenty two decimal eight, thanks for control, [CAA]."}
           ]
@@ -243,9 +243,9 @@
           "_short": "Complet",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], (numéro X), autorisé atterrissage piste [RWY] vent 0_60 degrés 10 nœuds."},
-            {"_lang": "fr", "_class": "Pilot", "__text": "(numéro X), Autorisé atterrissage piste [RWY], [CAA]."},
+            {"_lang": "fr", "_class": "Pilot", "__text": "(numéro X), J'atterris piste [RWY], [CAA]."},
             {"_lang": "en", "_class": "ATC", "__text": "[CAA], (number X), cleared to land runway [RWY]."},
-            {"_lang": "en", "_class": "Pilot", "__text": "(number X), cleared to land runway [RWY], [CAA]."}
+            {"_lang": "en", "_class": "Pilot", "__text": "(number X), Landing runway [RWY], [CAA]."}
           ]
         },
         {
@@ -313,7 +313,7 @@
           "_short": "Dégag rapide",
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], dégagez rapidement la piste."},
-            {"_lang": "fr", "_class": "Pilot", "__text": "Degageons rapidement la piste, [CAA]."},
+            {"_lang": "fr", "_class": "Pilot", "__text": "Dégageons rapidement la piste, [CAA]."},
             {"_lang": "en", "_class": "ATC", "__text": "[CAA], expedite vacating runway."},
             {"_lang": "en", "_class": "Pilot", "__text": "Expediting vacating runway, [CAA]."}
           ]
@@ -325,7 +325,7 @@
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], rappelez piste dégagée."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Bien compris, [CAA]."},
-            {"_lang": "en", "_class": "ATC", "__text": "[CAA], report runway vacating."},
+            {"_lang": "en", "_class": "ATC", "__text": "[CAA], report runway vacated."},
             {"_lang": "en", "_class": "Pilot", "__text": "Roger, [CAA]."}
           ]
         },
@@ -336,8 +336,8 @@
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], faites un 180, remontez la piste puis dégagez première à droite."},
             {"_lang": "fr", "_class": "Pilot", "__text": "Remontons la piste puis première à droite, [CAA]."},
-            {"_lang": "en", "_class": "ATC", "__text": "[CAA], make a 180, backtrap runway then vacate first right."},
-            {"_lang": "en", "_class": "Pilot", "__text": "Backtraping runway then first right, [CAA]."}
+            {"_lang": "en", "_class": "ATC", "__text": "[CAA], make a 180, backtrack runway then vacate first right."},
+            {"_lang": "en", "_class": "Pilot", "__text": "Backtracking runway then first right, [CAA]."}
           ]
         },
         {
@@ -428,8 +428,8 @@
           "para": [
             {"_lang": "fr", "_class": "Pilot", "__text": "[DEP] [NGND], [CAA], au parking, pour quitter."},
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], vous pouvez quitter la fréquence, au revoir."},
-            {"_lang": "en", "_class": "Pilot", "__text": "[DEP] [NGND], [CAA], au parking, pour quitter."},
-            {"_lang": "en", "_class": "ATC", "__text": "[CAA], you can leave frequency, good day."}
+            {"_lang": "en", "_class": "Pilot", "__text": "[DEP] [NGND], [CAA], at the apron, leaving the frequency."},
+            {"_lang": "en", "_class": "ATC", "__text": "[CAA], you may leave frequency, good day."}
           ]
         },
         {
@@ -504,7 +504,7 @@
           "para": [
             {"_lang": "fr", "_class": "ATC", "__text": "[CAA], avez-vous visuel sur trafic précédent ?"},
             {"_lang": "fr", "_class": "Pilot", "__text": "Affirm, [CAA]."},
-            {"_lang": "en", "_class": "ATC", "__text": "[CAA], have you visual contact on preceeding traffic?"},
+            {"_lang": "en", "_class": "ATC", "__text": "[CAA], have you visual contact on preceding traffic?"},
             {"_lang": "en", "_class": "Pilot", "__text": "Affirm, [CAA]."}
           ]
         },

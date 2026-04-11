@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between h-16">
 
         <div class="flex items-center space-x-3 bg-blue-800/50">
-          <span class="text-2xl font-bold">Phraséologie </span>
+          <span class="text-2xl font-bold">Phraséologie</span><span class="text-2xl font-bold hidden md:flex"> aéronautique </span>
           <span :class="['font-bold transition-colors', flightMode === 'IFR' ? 'text-white' : 'text-blue-200']">IFR</span>
           
           <label class="relative inline-block w-12 h-6 cursor-pointer">

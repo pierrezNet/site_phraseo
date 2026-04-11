@@ -27,6 +27,7 @@ CLAUDE.md
 *.njsproj
 *.sln
 *.sw?
+Manuel_Phraseologie.pdf
 
 # Generated build artifacts
 src/**/*.js
