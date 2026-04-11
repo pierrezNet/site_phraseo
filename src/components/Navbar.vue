@@ -18,6 +18,29 @@
           </label>
 
           <span :class="['font-bold transition-colors', flightMode === 'VFR' ? 'text-white' : 'text-blue-400']">VFR</span>
+
+          <div class="hidden md:flex items-center">
+            <div class="h-6 w-px bg-blue-700 mx-2"></div>
+            <div class="flex items-center space-x-1">
+              <button
+                v-for="level in levels"
+                :key="level.value"
+                :disabled="level.disabled"
+                @click="setLevel(level.value)"
+                :class="[
+                  'px-2 py-0.5 rounded text-xs font-medium transition-colors',
+                  level.disabled
+                    ? 'bg-blue-900/50 text-blue-700 cursor-not-allowed'
+                    : formStore.form.LEVEL === level.value
+                      ? 'bg-white text-blue-900'
+                      : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+                ]"
+                :title="level.disabled ? 'Bientôt disponible' : level.label"
+              >
+                {{ level.short }}
+              </button>
+            </div>
+          </div>
         </div>
 
         <DisclosureButton class="md:hidden p-2">
@@ -42,6 +65,26 @@
       <a :class="langStore.current==='fr'? 'block font-bold text-white':'block text-blue-200'" @click.prevent="changeLanguage('fr')">Français</a>
       <a :class="langStore.current==='en'? 'block font-bold text-white':'block text-blue-200'" @click.prevent="changeLanguage('en')">English</a>
       <hr class="border-blue-700 my-2">
+      <div class="flex items-center space-x-2 py-1">
+        <span class="text-blue-200 text-sm">Niveau :</span>
+        <button
+          v-for="level in levels"
+          :key="level.value"
+          :disabled="level.disabled"
+          @click="setLevel(level.value)"
+          :class="[
+            'px-2 py-0.5 rounded text-xs font-medium transition-colors',
+            level.disabled
+              ? 'bg-blue-900/50 text-blue-700 cursor-not-allowed'
+              : formStore.form.LEVEL === level.value
+                ? 'bg-white text-blue-900'
+                : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+          ]"
+        >
+          {{ level.short }}
+        </button>
+      </div>
+      <hr class="border-blue-700 my-2">
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','aide')">Aide</a>
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','parametres')">Paramètres</a>
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','about')">À propos</a>
@@ -52,7 +95,7 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { useLangStore } from '../stores/lang'
-import { useFormStore } from '../stores/form'
+import { useFormStore, type UserLevel } from '../stores/form'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps(['currentMode'])
@@ -68,6 +111,17 @@ const toggleFlightMode = () => {
   flightMode.value = flightMode.value === 'IFR' ? 'VFR' : 'IFR'
   localStorage.setItem('flightMode', flightMode.value)
   emit('update:mode', flightMode.value)
+}
+
+const levels = [
+  { value: 'débutant' as UserLevel, label: 'Débutant', short: 'Déb', disabled: false },
+  { value: 'intermédiaire' as UserLevel, label: 'Intermédiaire', short: 'Int', disabled: false },
+  { value: 'avancé' as UserLevel, label: 'Avancé', short: 'Av', disabled: true }
+]
+
+const setLevel = (level: UserLevel) => {
+  formStore.form.LEVEL = level
+  formStore.updateFormData(formStore.form)
 }
 
 const changeLanguage = (lang: string) => langStore.changeLanguage(lang)

@@ -42,13 +42,21 @@
             </div>
           </div>
           <div>
-            <div>
+            <div v-if="!isVFR()">
               <label for="WPT" class="label-field">Waypoint</label>
               <input type="text" id="WPT" v-model="formStore.form.WPT" @change="updateForm" class="input-field">
             </div>
-            <div>
+            <div v-if="!isVFR()">
               <label for="STA" class="label-field">SID/STAR</label>
               <input type="text" id="STA" v-model="formStore.form.STA" @change="updateForm" class="input-field">
+            </div>
+            <div v-if="isVFR()">
+              <label for="SORTIE" class="label-field">Point de sortie</label>
+              <input type="text" id="SORTIE" v-model="formStore.form.SORTIE" @change="updateForm" class="input-field">
+            </div>
+            <div v-if="isVFR()">
+              <label for="ALT" class="label-field">Altitude (pieds)</label>
+              <input type="text" id="ALT" v-model="formStore.form.ALT" @change="updateForm" class="input-field">
             </div>
             <div>
               <label for="VOI" class="label-field">Voies de circulation</label>
@@ -63,10 +71,6 @@
               <input type="text" id="MET" v-model="formStore.form.MET" @change="updateForm" class="input-field">
             </div>
             <div>
-              <label for="QNH" class="label-field">QNH</label>
-              <input type="text" id="QNH" v-model="formStore.form.QNH" @change="updateForm" class="input-field">
-            </div>
-            <div>
               <label for="RWY" class="label-field">Piste en service</label>
               <input type="text" id="RWY" v-model="formStore.form.RWY" @change="updateForm" class="input-field">
             </div>
@@ -76,7 +80,7 @@
             </div>
           </div>
           <div>
-            <div>
+            <div v-if="!isVFR()">
               <label for="NIV" class="label-field">Niveau</label>
               <input type="text" id="NIV" v-model="formStore.form.NIV" @change="updateForm" class="input-field">
             </div>
@@ -221,9 +225,16 @@ import { useFormStore } from '../stores/form'
 
 export default defineComponent({
   name: 'ParametresModal',
-  setup() {
+  props: {
+    currentMode: {
+      type: String,
+      default: 'IFR'
+    }
+  },
+  setup(props) {
     const isOpen = ref(false)
     const formStore = useFormStore()
+    const isVFR = () => props.currentMode === 'VFR'
 
     const open = () => {
       if (!formStore.form.DEP) {
@@ -247,8 +258,9 @@ export default defineComponent({
     }
 
     return {
-      isOpen, 
+      isOpen,
       formStore,
+      isVFR,
       open,
       close,
       clearInput,

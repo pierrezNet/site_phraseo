@@ -6,8 +6,13 @@ export type FrequencyType = 'DEL' | 'GND' | 'TWR' | 'APP' | 'CTR'
 export type StationType = 'NDEL' | 'NGND' | 'NTWR' | 'NAPP' | 'NCTR'
 export type RunwaySuffix = 'L' | 'R' | 'C'
 
+export type UserLevel = 'débutant' | 'intermédiaire' | 'avancé'
+
 export interface FormData {
   [key: string]: string | undefined
+  LEVEL: UserLevel
+  ALT: string
+  SORTIE: string
   FIR: string
   DEP: string
   POS: string
@@ -99,6 +104,9 @@ const DECIMAL_PRECISION = 1000
 export const useFormStore = defineStore('form', {
   state: (): FormStoreState => ({
     form: {
+      LEVEL: 'débutant' as UserLevel,
+      ALT: '2500',
+      SORTIE: 'Melun',
       FIR: 'Paris',
       DEP: 'Orly',
       POS: 'D2',

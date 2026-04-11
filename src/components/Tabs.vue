@@ -27,24 +27,29 @@
         v-for="task in filteredPhaseTasks"
         :key="task._id"
         :class="[
-          'md:w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition',
+          'md:w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
           selectedTaskIds.includes(task._id)
               ? `hover:bg-green-800 text-white bg-green-700`
               : `hover:bg-${task._color}-800 bg-${task._color}-700`
           ]"
         @click="logTask(task)"
       >
-        <span class="hidden md:inline">{{ task._name }}</span>
-        <span class="inline md:hidden">{{ task._short }}</span> 
-        <span 
-          v-if="selectedTaskIds.includes(task._id)" 
-          class="hidden md:inline float-right text-white mr-2"
+        <svg v-if="task.subgraph" class="hidden md:block w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        <PilotIcon v-else-if="getInitiator(task) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
+        <AtcIcon v-else-if="getInitiator(task) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
+        <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
+        <span class="hidden md:inline flex-1">{{ task._name }}</span>
+        <span class="inline md:hidden">{{ task._short }}</span>
+        <span
+          v-if="selectedTaskIds.includes(task._id)"
+          class="hidden md:block w-4 shrink-0 text-white"
         >
           ✓
         </span>
+        <span v-else class="hidden md:block w-4 shrink-0"></span>
       </button>
     </div>
- 
+
     <hr v-if="selectedSubgraphs.length > 0" class="md:hidden border border-blue-800 mt-1 mb-1"/>
     <!-- Boutons correspondants aux subgraph -->
     <div v-if="selectedSubgraphs.length > 0" class="grid grid-cols-3 md:grid-cols-1 place-content-between gap-1">
@@ -53,21 +58,25 @@
         v-for="subgraph in selectedSubgraphs"
         :key="subgraph.refid"
         :class="[
-          'w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition',
+          'w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
           selectedTaskIds.includes(subgraph.refid)
             ? `hover:bg-green-800 text-white bg-green-700`
             : `bg-orange-700 hover:bg-orange-800`
         ]"
           @click="logSubgraphTask(subgraph)"
       >
-        <span class="hidden md:inline">{{ subgraph._name }}</span>
+        <PilotIcon v-if="getInitiator(subgraph.fullTask) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
+        <AtcIcon v-else-if="getInitiator(subgraph.fullTask) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
+        <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
+        <span class="hidden md:inline flex-1">{{ subgraph._name }}</span>
         <span class="inline md:hidden">{{ subgraph._short }}</span>
-        <span 
-          v-if="selectedTaskIds.includes(subgraph.refid)" 
-          class="hidden md:inline float-right text-white mr-2"
+        <span
+          v-if="selectedTaskIds.includes(subgraph.refid)"
+          class="hidden md:block w-4 shrink-0 text-white"
         >
           ✓
         </span>
+        <span v-else class="hidden md:block w-4 shrink-0"></span>
       </button>
     </div>
   </div>
@@ -80,6 +89,8 @@ import { useFormStore } from '../stores/form';
 import { iconTaxonomy } from '../stores/taxonomy';
 import { useWeatherStore } from '../stores/weather';
 import { useSimulatorStore } from '../stores/simulator';
+import PilotIcon from './icons/PilotIcon.vue';
+import AtcIcon from './icons/AtcIcon.vue';
 
 const props = defineProps<{
   phraseoData: any
@@ -179,14 +190,45 @@ const phaseTabs = computed(() => {
   }));
 });
 
+// Niveaux cumulatifs : débutant < intermédiaire < avancé
+const LEVEL_HIERARCHY = ['débutant', 'intermédiaire', 'avancé'] as const;
+
+const isTaskVisible = (task: any): boolean => {
+  if (!task || !task._level) return true; // pas de niveau = toujours visible
+  const userLevelIndex = LEVEL_HIERARCHY.indexOf(formStore.form.LEVEL as any);
+  const taskLevelIndex = LEVEL_HIERARCHY.indexOf(task._level);
+  // _levelExact : visible uniquement si le niveau correspond exactement
+  if (task._levelExact) return taskLevelIndex === userLevelIndex;
+  return taskLevelIndex <= userLevelIndex;
+};
+
+const hasVisibleContent = (task: any): boolean => {
+  // Si la tâche a du texte propre, elle a du contenu
+  if (task.para && task.para.length > 0) return true;
+  // Sinon, vérifier si au moins un enfant subgraph est visible
+  if (task.subgraph) {
+    return task.subgraph.some((sub: any) => {
+      const child = tasks.value.find((t: any) => t._id === sub.call._refid);
+      return child && isTaskVisible(child);
+    });
+  }
+  return false;
+};
+
 const filteredPhaseTasks = computed(() => {
   const currentRefs = taskPhaseMap.value[selectedTab.value] || [];
   return currentRefs
     .map(ref => tasks.value.find(task => task._id === ref))
-    .filter(task => task);
+    .filter(task => task && isTaskVisible(task) && hasVisibleContent(task));
 });
 
 // --- Methods ---
+
+const getInitiator = (task: any): string => {
+  if (!task?.para?.length) return '';
+  const firstFr = task.para.find((p: any) => p._lang === 'fr');
+  return firstFr?._class || '';
+};
 
 const findTaskById = (id: string) => {
   // On cherche dans le tableau réactif 'tasks' déjà peuplé par initializeTasks
@@ -205,19 +247,34 @@ const logTask = (task: any) => {
   // 2. Mise à jour de l'état global
   simulatorStore.currentTaskId = task._id;
 
-  // 3. Gestion des options (Subgraphs)
+  // 3. Gestion des options (Subgraphs) — filtrage par niveau
   if (task.subgraph) {
-    selectedSubgraphs.value = task.subgraph.map((sub: any) => {
-      const t = findTaskById(sub.call._refid);
-      return {
-        refid: sub.call._refid,
-        // On assure l'affichage du nom ici
-        _name: t?._name || sub.call._refid, 
-        _short: t?._short || t?._name?.slice(0, 3) || sub.call._refid,
-        _color: t?._color || 'orange',
-        fullTask: t
-      };
-    });
+    const visibleSubgraphs = task.subgraph
+      .map((sub: any) => {
+        const t = findTaskById(sub.call._refid);
+        return {
+          refid: sub.call._refid,
+          _name: t?._name || sub.call._refid,
+          _short: t?._short || t?._name?.slice(0, 3) || sub.call._refid,
+          _color: t?._color || 'orange',
+          fullTask: t
+        };
+      })
+      .filter((sub: any) => isTaskVisible(sub.fullTask));
+
+    // Si une seule option visible, auto-sélection (plus un choix)
+    if (visibleSubgraphs.length === 1) {
+      selectedSubgraphs.value = [];
+      const single = visibleSubgraphs[0];
+      if (single.fullTask) {
+        if (!selectedTaskIds.value.includes(single.refid)) {
+          selectedTaskIds.value.push(single.refid);
+        }
+        emit('task-selected', single.fullTask.para || []);
+      }
+    } else {
+      selectedSubgraphs.value = visibleSubgraphs;
+    }
   } else {
     selectedSubgraphs.value = [];
   }
@@ -260,6 +317,11 @@ watch(() => formStore.form.MET, (newIcao) => {
     weatherStore.updateMetar(newIcao);
   }
 }, { immediate: true });
+
+// Changement de niveau : réinitialiser l'affichage
+watch(() => formStore.form.LEVEL, () => {
+  resetDisplay();
+});
 
 // Watch props change to re-init tasks if data changes (e.g. mode switch)
 watch(() => props.phraseoData, () => {

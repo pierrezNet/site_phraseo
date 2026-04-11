@@ -9,11 +9,8 @@
         textObj.class === 'Pilot' ? 'bg-blue-100 border-blue-500' : 'bg-orange-100 border-orange-500'
       ]"
     >
-      <span
-        v-if="textObj.icon"
-        v-html="textObj.icon"
-        class="inline-block w-5 h-5 mr-2 align-middle"
-      ></span>
+      <PilotIcon v-if="textObj.class === 'Pilot'" class="inline-block w-5 h-5 mr-2 align-middle" />
+      <AtcIcon v-else class="inline-block w-5 h-5 mr-2 align-middle" />
       <span v-html="textObj.content"></span>
     </div>
   </div>
@@ -25,6 +22,8 @@ import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
 import { useWeatherStore } from '../stores/weather';
 import { replacePlaceholders } from '../utils/phraseoHelpers';
+import PilotIcon from './icons/PilotIcon.vue';
+import AtcIcon from './icons/AtcIcon.vue';
 
 const props = defineProps<{
   selectedTaskTexts: any[]

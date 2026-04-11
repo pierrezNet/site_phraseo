@@ -246,7 +246,8 @@
 					],
 					"_id": "PARAMETRES",
 					"_name": "Demande paramètres",
-					"_short": "Paramètres"
+					"_short": "Paramètres",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -283,7 +284,8 @@
 					],
 					"_id": "EST_IL_RNAV",
 					"_name": "Capacité RNAV ?",
-					"_short": "RNAV ?"
+					"_short": "RNAV ?",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -320,7 +322,8 @@
 					],
 					"_id": "NON_RNAV",
 					"_name": "MER RNAV capacité conv.",
-					"_short": "Non RNAV"
+					"_short": "Non RNAV",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -357,23 +360,24 @@
 					],
 					"_id": "MER_OMNI",
 					"_name": "MER omnidirectionnel",
-					"_short": "Omni"
+					"_short": "Omni",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
 						{
 							"span": {
 								"_class": "AVA",
-								"__text": ", CTOT (12 50) {Créneau de Départ, décollage entre 1245 et 1300}"
+								"__text": ", CTOT [HDIFF] {Créneau de Départ, décollage entre [HDIFF5M] et [HDIFF10P]}"
 							},
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], mise en route approuvée, CTOT (12 50), départ [STA], montée initiale [NIV], transpondeur [SQU]."
+							"__text": "[CAL], [POL], mise en route approuvée, CTOT [HDIFF]{Créneau de Départ, décollage entre [HDIFF5M] et [HDIFF10P]}, départ [STA], montée initiale [NIV], transpondeur [SQU]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Mise en route approuvée, CTOT (12 50), départ [STA], montée initiale [NIV], transpondeur [SQU], [CAA]."
+							"__text": "Mise en route approuvée, CTOT [HDIFF], départ [STA], montée initiale [NIV], transpondeur [SQU], [CAA]."
 						},
 						{
 							"_lang": "fr",
@@ -383,12 +387,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], startup approved, C_TOT (1 2 5 0){Slot time, take off between 1245 and 1300}, [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], [POL], startup approved, C_TOT [HDIFF]{Slot time, take off between [HDIFF5M] and [HDIFF10P]}, [STA] departure, initial climb [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Startup approved, C_TOT (1 2 5 0), [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "Startup approved, C_TOT [HDIFF], [STA] departure, initial climb [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
@@ -398,24 +402,36 @@
 					],
 					"_id": "MER_APPROUVEE",
 					"_name": "MER approuvée",
-					"_short": "Approuvée"
+					"_short": "Approuvée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], prévoyez mise en route (18_10) cause trafic à l'arrivée."
+							"__text": "[CAA], prévoyez mise en route [HDIFF] cause trafic à l'arrivée."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], expect start-up time (1_8_1_0) due inbound traffic."
+							"__text": "[CAA], expect start-up time [HDIFF] due inbound traffic."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Prévoyons mise en route [HDIFF], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Expecting start-up [HDIFF], [CAA]."
 						}
 					],
 					"_id": "MER_DIFFEREE",
 					"_name": "MER différée",
-					"_short": "Différée"
+					"_short": "Différée",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -428,11 +444,22 @@
 							"_lang": "en",
 							"_class": "ATC",
 							"__text": "[CAA], push-back approved."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je repousse, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Pushing back, [CAA]."
 						}
 					],
 					"_id": "REPOUSSAGE_STANDARD",
 					"_name": "Repoussage standard",
-					"_short": "Standard"
+					"_short": "Standard",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -459,7 +486,8 @@
 					],
 					"_id": "REPOUSSAGE_CONDITIONNEL",
 					"_name": "Repoussage conditionnel",
-					"_short": "Conditionnel"
+					"_short": "Conditionnel",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -486,7 +514,8 @@
 					],
 					"_id": "ROULAGE_AUTORISE",
 					"_name": "Roulage standard",
-					"_short": "Standard"
+					"_short": "Standard",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -513,7 +542,8 @@
 					],
 					"_id": "TRANSFERT_TOUR1",
 					"_name": "Transfert tour",
-					"_short": "Tr TWR"
+					"_short": "Tr TWR",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -540,7 +570,8 @@
 					],
 					"_id": "ROULAGE_TRAFIC",
 					"_name": "Roulage avec trafic",
-					"_short": "Trafic"
+					"_short": "Trafic",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -567,7 +598,8 @@
 					],
 					"_id": "REMONTEE_PISTE",
 					"_name": "Remontée de piste",
-					"_short": "Remontée"
+					"_short": "Remontée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -614,7 +646,8 @@
 					],
 					"_id": "ALIGNEMENT_APRES_AVION_FINAL",
 					"_name": "Alignement après final",
-					"_short": "Après final"
+					"_short": "Après final",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -641,7 +674,8 @@
 					],
 					"_id": "ALIGNEMENT",
 					"_name": "Alignement simple",
-					"_short": "Simple"
+					"_short": "Simple",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -668,7 +702,8 @@
 					],
 					"_id": "ALIGNEMENT_POS2",
 					"_name": "Alignement position 2",
-					"_short": "Numéro 2"
+					"_short": "Numéro 2",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -695,7 +730,8 @@
 					],
 					"_id": "MAINTIEN_ARRET",
 					"_name": "Maintien point d'attente",
-					"_short": "Maintien"
+					"_short": "Maintien",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -742,7 +778,8 @@
 					],
 					"_id": "DECOLLAGE_IMMEDIAT",
 					"_name": "Décollage immédiat",
-					"_short": "Immédiat"
+					"_short": "Immédiat",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -769,7 +806,8 @@
 					],
 					"_id": "TRANSFERT_SIMPLE",
 					"_name": "Transfert contrôleur",
-					"_short": "Tr APP"
+					"_short": "Tr APP",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -796,7 +834,8 @@
 					],
 					"_id": "TRANSFERT_SIMPLE_CTR",
 					"_name": "Transfert contrôleur",
-					"_short": "Tr CTR"
+					"_short": "Tr CTR",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -823,7 +862,8 @@
 					],
 					"_id": "TRANSFERT_SOL",
 					"_name": "Transfert contrôleur",
-					"_short": "Tr GND"
+					"_short": "Tr GND",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -850,7 +890,8 @@
 					],
 					"_id": "TRANSFERT_TOUR",
 					"_name": "Transfert tour",
-					"_short": "Tr TWR"
+					"_short": "Tr TWR",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -877,7 +918,8 @@
 					],
 					"_id": "TRANSFERT_UNICOM",
 					"_name": "Fin service",
-					"_short": "Fin"
+					"_short": "Fin",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -890,11 +932,22 @@
 							"_lang": "en",
 							"_class": "ATC",
 							"__text": "[CAA], climb via SID level [NIV]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je monte via SID niveau [NIV], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Climbing via SID level [NIV], [CAA]."
 						}
 					],
 					"_id": "CONFIRMATION_SID",
 					"_name": "Confirmation SID",
-					"_short": "Conf SID"
+					"_short": "Conf SID",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -921,7 +974,8 @@
 					],
 					"_id": "DIRECT_WPT",
 					"_name": "Direct waypoint",
-					"_short": "Direct"
+					"_short": "Direct",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -948,7 +1002,8 @@
 					],
 					"_id": "MONTEE_DIFFEREE",
 					"_name": "Montée stoppée",
-					"_short": "Stop"
+					"_short": "Stop",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -975,7 +1030,8 @@
 					],
 					"_id": "NIVEAU",
 					"_name": "Changement de niveau",
-					"_short": "Niveau"
+					"_short": "Niveau",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1002,7 +1058,8 @@
 					],
 					"_id": "DIRECT",
 					"_name": "Direct",
-					"_short": "Direct"
+					"_short": "Direct",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1029,7 +1086,8 @@
 					],
 					"_id": "ROUTE_CONTROLEUR",
 					"_name": "Nouvelle route",
-					"_short": "Route"
+					"_short": "Route",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1056,7 +1114,8 @@
 					],
 					"_id": "ROUTE_POSITIVE",
 					"_name": "Route acceptée",
-					"_short": "Acceptée"
+					"_short": "Acceptée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1083,7 +1142,8 @@
 					],
 					"_id": "ROUTE_NEGATIVE",
 					"_name": "Route refusée",
-					"_short": "Refusée"
+					"_short": "Refusée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1122,7 +1182,8 @@
 					],
 					"_id": "TRAFIC",
 					"_name": "Trafic",
-					"_short": "Trafic"
+					"_short": "Trafic",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1149,7 +1210,8 @@
 					],
 					"_id": "DESCENTE_IMMEDIATE",
 					"_name": "Descente immédiate",
-					"_short": "Descente"
+					"_short": "Descente",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1196,7 +1258,8 @@
 					],
 					"_id": "DESCENTE_DELAI",
 					"_name": "Descente avec délai",
-					"_short": "Délai"
+					"_short": "Délai",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1223,7 +1286,8 @@
 					],
 					"_id": "APPROCHE_STAR",
 					"_name": "Approche STAR",
-					"_short": "STAR"
+					"_short": "STAR",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1250,7 +1314,8 @@
 					],
 					"_id": "APPROCHE_DIRECT",
 					"_name": "Direct dans STAR",
-					"_short": "Direct STAR"
+					"_short": "Direct STAR",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1297,7 +1362,8 @@
 					],
 					"_id": "VITESSE",
 					"_name": "Vitesse",
-					"_short": "Vitesse"
+					"_short": "Vitesse",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1324,7 +1390,8 @@
 					],
 					"_id": "REDUCTION_VITESSE",
 					"_name": "Réduction vitesse",
-					"_short": "Réduire"
+					"_short": "Réduire",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1351,7 +1418,8 @@
 					],
 					"_id": "CHANGEMENT_CAP",
 					"_name": "Nouveau cap",
-					"_short": "Cap"
+					"_short": "Cap",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1378,7 +1446,8 @@
 					],
 					"_id": "CHANGEMENT_NIVEAU_CAP",
 					"_name": "Changements cap et niveau",
-					"_short": "Cap et niveau"
+					"_short": "Cap et niveau",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1405,7 +1474,8 @@
 					],
 					"_id": "INTERCEPTION_ILS",
 					"_name": "Cap d'interception ILS",
-					"_short": "CAP ILS"
+					"_short": "CAP ILS",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1452,7 +1522,8 @@
 					],
 					"_id": "ATTENTE_PUBLIEE",
 					"_name": "Attente publiée",
-					"_short": "Publiée"
+					"_short": "Publiée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1479,7 +1550,8 @@
 					],
 					"_id": "ATTENTE_PARAMETRES",
 					"_name": "Attente non publiée",
-					"_short": "Non publiée"
+					"_short": "Non publiée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1506,7 +1578,8 @@
 					],
 					"_id": "APPROCHE_AUTORISE",
 					"_name": "Approche autorisée",
-					"_short": "Autorisée"
+					"_short": "Autorisée",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1563,7 +1636,8 @@
 					],
 					"_id": "TRAFIC_MVL",
 					"_name": "Accepte avec info trafic",
-					"_short": "Trafic"
+					"_short": "Trafic",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1590,7 +1664,8 @@
 					],
 					"_id": "ACCEPTE_MVL_PILOT",
 					"_name": "Accepte MVL",
-					"_short": "Acceptée"
+					"_short": "Acceptée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1627,7 +1702,8 @@
 					],
 					"_id": "ACCEPTE_MVL_TRAFIC",
 					"_name": "Accepte MVL",
-					"_short": "Trafic"
+					"_short": "Trafic",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1664,7 +1740,8 @@
 					],
 					"_id": "ACCEPTE_MVL",
 					"_name": "Accepte MVL",
-					"_short": "Autorisée"
+					"_short": "Autorisée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1701,7 +1778,8 @@
 					],
 					"_id": "REFUSE_MVL",
 					"_name": "Refuse MVL",
-					"_short": "Refusée"
+					"_short": "Refusée",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1728,7 +1806,8 @@
 					],
 					"_id": "OUVERTURE_VPT",
 					"_name": "Ouverture VPT",
-					"_short": "Ouv VPT"
+					"_short": "Ouv VPT",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1755,7 +1834,8 @@
 					],
 					"_id": "ATTERRISSAGE_AUTORISE",
 					"_name": "Autorisé",
-					"_short": "Autorisée"
+					"_short": "Autorisée",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1782,7 +1862,8 @@
 					],
 					"_id": "ATTERRISSAGE_VITESSE_CONTROLEE",
 					"_name": "Autorisé, dégagement rapide",
-					"_short": "Dégagement"
+					"_short": "Dégagement",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1808,8 +1889,9 @@
 						}
 					],
 					"_id": "REMISE_GAZ",
-					"_name": "Remise des gaz",
-					"_short": "RMG ATC"
+					"_name": "Remise de gaz (ATC)",
+					"_short": "RdG ATC",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1835,8 +1917,9 @@
 						}
 					],
 					"_id": "REMISE_GAZ_PILOTE",
-					"_name": "Remise des gaz",
-					"_short": "RMG Pil"
+					"_name": "Remise de gaz (Pilote)",
+					"_short": "RdG Pilote",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1863,7 +1946,8 @@
 					],
 					"_id": "DEGAGEMENT_STANDARD",
 					"_name": "Dégagement standard",
-					"_short": "Dégagement"
+					"_short": "Dégagement",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1890,7 +1974,8 @@
 					],
 					"_id": "DEGAGEMENT_SORTIE",
 					"_name": "Dégagement particulier",
-					"_short": "Dégagement"
+					"_short": "Dégagement",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1917,7 +2002,8 @@
 					],
 					"_id": "DEGAGEMENT_REMONTEE",
 					"_name": "Remontée et dégagement",
-					"_short": "Remontée dégag"
+					"_short": "Remontée dégag",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1944,7 +2030,8 @@
 					],
 					"_id": "PARKING",
 					"_name": "Parking",
-					"_short": "Parking"
+					"_short": "Parking",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1971,7 +2058,8 @@
 					],
 					"_id": "QUITTER",
 					"_name": "Quitter",
-					"_short": "Quitter"
+					"_short": "Quitter",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -1998,7 +2086,8 @@
 					],
 					"_id": "TRAFIC_SOL",
 					"_name": "Priorité trafic",
-					"_short": "Trafic"
+					"_short": "Trafic",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2025,7 +2114,8 @@
 					],
 					"_id": "TRAVERSER_PISTE",
 					"_name": "Traversée de piste",
-					"_short": "Trav ATC"
+					"_short": "Trav ATC",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2062,7 +2152,8 @@
 					],
 					"_id": "DEMANDE_TRAVERSEE_PISTE",
 					"_name": "Demande de traversée",
-					"_short": "Trav Pil"
+					"_short": "Trav Pil",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2089,7 +2180,8 @@
 					],
 					"_id": "ACCELERER_TRAVERSEE_PISTE",
 					"_name": "Accélérer la traversée",
-					"_short": "Accélérer"
+					"_short": "Accélérer",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2106,7 +2198,8 @@
 					],
 					"_id": "ACCUSEZ",
 					"_name": "Accuser réception",
-					"_short": "Accuser"
+					"_short": "Accuser",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2123,7 +2216,8 @@
 					],
 					"_id": "LENTEMENT",
 					"_name": "Parler lentement",
-					"_short": "Lentement"
+					"_short": "Lentement",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2140,7 +2234,8 @@
 					],
 					"_id": "REPETEA",
 					"_name": "Collationner",
-					"_short": "Collationner"
+					"_short": "Collationner",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2157,7 +2252,8 @@
 					],
 					"_id": "REPETEP",
 					"_name": "Répéter",
-					"_short": "Répéter"
+					"_short": "Répéter",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2184,7 +2280,8 @@
 					],
 					"_id": "ALIGNEMENT_DECO",
 					"_name": "Alignement et décollage",
-					"_short": "Alig + décol"
+					"_short": "Alig + décol",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2211,7 +2308,8 @@
 					],
 					"_id": "DECOL_AUTO",
 					"_name": "Décollage déjà aligné",
-					"_short": "Autorisé"
+					"_short": "Autorisé",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2238,7 +2336,8 @@
 					],
 					"_id": "DECOL_STOPPE",
 					"_name": "Décollage stoppé",
-					"_short": "Stop"
+					"_short": "Stop",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2265,7 +2364,8 @@
 					],
 					"_id": "DECOL_ANNULE",
 					"_name": "Décollage annulé",
-					"_short": "Annulé"
+					"_short": "Annulé",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2282,7 +2382,8 @@
 					],
 					"_id": "DECOL_INTEROMPU",
 					"_name": "Décollage interrompu",
-					"_short": "Interrompu"
+					"_short": "Interrompu",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2299,7 +2400,8 @@
 					],
 					"_id": "DECELERE",
 					"_name": "Décélération roulage",
-					"_short": "Décélération"
+					"_short": "Décélération",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2316,7 +2418,8 @@
 					],
 					"_id": "ACCELERE",
 					"_name": "Accélération roulage",
-					"_short": "Accélération"
+					"_short": "Accélération",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2343,7 +2446,8 @@
 					],
 					"_id": "VISUEL",
 					"_name": "Trafic en vue",
-					"_short": "Trafic"
+					"_short": "Trafic",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2370,7 +2474,8 @@
 					],
 					"_id": "SILLAGE",
 					"_name": "Turbulence de sillage",
-					"_short": "Turbulence"
+					"_short": "Turbulence",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2397,7 +2502,8 @@
 					],
 					"_id": "TAUX_MONTEE",
 					"_name": "Taux de montée",
-					"_short": "Taux mont"
+					"_short": "Taux mont",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2424,7 +2530,47 @@
 					],
 					"_id": "IDENT",
 					"_name": "Identification transpondeur",
-					"_short": "Identification"
+					"_short": "Identification",
+					"_level": "débutant"
+				},
+				{
+					"_id": "MER_SIMPLE",
+					"_name": "MER approuvée",
+					"_short": "Approuvée",
+					"_level": "débutant",
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAL], [POL], mise en route approuvée, départ [STA], montée initiale [NIV], transpondeur [SQU]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Mise en route approuvée, départ [STA], montée initiale [NIV], transpondeur [SQU], [CAA]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAL], correct, rappelez prêt pour le repoussage sur [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAL], [POL], startup approved, [STA] departure, initial climb [NIV], squawk [SQU]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Startup approved, [STA] departure, initial climb [NIV], squawk [SQU], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAL], correct, report ready for push-back [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}."
+						}
+					],
+					"_levelExact": true
 				}
 			],
 			"orTask": [
@@ -2442,6 +2588,12 @@
 						}
 					],
 					"subgraph": [
+						{
+							"call": {
+								"_class": "option",
+								"_refid": "MER_SIMPLE"
+							}
+						},
 						{
 							"call": {
 								"_class": "option",
@@ -2475,7 +2627,8 @@
 					],
 					"_id": "DEMANDE_MISE_EN_ROUTE",
 					"_name": "Mise en route",
-					"_short": "MER"
+					"_short": "MER",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2507,7 +2660,8 @@
 					"_repeat": "FALSE",
 					"_id": "DEMANDE_REPOUSSAGE",
 					"_name": "Repoussage",
-					"_short": "Repoussage"
+					"_short": "Repoussage",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2538,7 +2692,8 @@
 					],
 					"_id": "DEMANDE_ROULAGE",
 					"_name": "Roulage",
-					"_short": "Roulage"
+					"_short": "Roulage",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -2563,7 +2718,8 @@
 					],
 					"_id": "TAXI",
 					"_name": "Circulation",
-					"_short": "Circulation"
+					"_short": "Circulation",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -2582,7 +2738,8 @@
 					],
 					"_id": "TAXI2",
 					"_name": "Circulation",
-					"_short": "Circulation"
+					"_short": "Circulation",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2631,7 +2788,8 @@
 					],
 					"_id": "CONTACT_TOUR1",
 					"_name": "Point d'attente",
-					"_short": "Attente"
+					"_short": "Attente",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -2663,7 +2821,8 @@
 					"_repeat": "FALSE",
 					"_id": "TYPE_ALIGNEMENT",
 					"_name": "Alignement",
-					"_short": "Alignement"
+					"_short": "Alignement",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -2700,7 +2859,8 @@
 					],
 					"_id": "DECOLLAGE",
 					"_name": "Décollage",
-					"_short": "Décollage"
+					"_short": "Décollage",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2713,11 +2873,22 @@
 							"_lang": "en",
 							"_class": "Pilot",
 							"__text": "[FIR] [NCTR], [CAA], direct [WPT] level [NIV]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], [FIR] [NCTR], [POL], identifié, poursuivez."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], [FIR] [NCTR], [POL], identified, continue."
 						}
 					],
 					"_id": "CONTACT_CTR",
 					"_name": "Contact en route",
-					"_short": "Contact CTR"
+					"_short": "Contact CTR",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2754,7 +2925,8 @@
 					],
 					"_id": "CONTACT_APP",
 					"_name": "Contact approche",
-					"_short": "Contact APP"
+					"_short": "Contact APP",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -2767,11 +2939,22 @@
 							"_lang": "en",
 							"_class": "Pilot",
 							"__text": "[DEP] [NTWR], [CAA], final runway [RWY]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], poursuivez approche piste [RWY]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], continue approach runway [RWY]."
 						}
 					],
 					"_id": "CONTACT_TWR",
 					"_name": "Contact tour",
-					"_short": "Contact TWR"
+					"_short": "Contact TWR",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -2790,7 +2973,8 @@
 					],
 					"_id": "ROUTE",
 					"_name": "Nouvelle route",
-					"_short": "Route"
+					"_short": "Route",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2831,7 +3015,8 @@
 					],
 					"_id": "ROUTE_PILOTE",
 					"_name": "Changement route",
-					"_short": "Route"
+					"_short": "Route",
+					"_level": "intermédiaire"
 				},
 				{
 					"subgraph": [
@@ -2850,7 +3035,8 @@
 					],
 					"_id": "TRANSFERT_CTR",
 					"_name": "Transfert en route",
-					"_short": "Tr CTR"
+					"_short": "Tr CTR",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -2869,7 +3055,8 @@
 					],
 					"_id": "TRANSFERT_APP2",
 					"_name": "Transfert approche",
-					"_short": "Tr APP"
+					"_short": "Tr APP",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -2888,7 +3075,8 @@
 					],
 					"_id": "TRANSFERT_APP",
 					"_name": "Transfert approche",
-					"_short": "Tr APP"
+					"_short": "Tr APP",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -2907,7 +3095,8 @@
 					],
 					"_id": "REGULATION",
 					"_name": "Régulation et trafic",
-					"_short": "Régulation"
+					"_short": "Régulation",
+					"_level": "intermédiaire"
 				},
 				{
 					"subgraph": [
@@ -2926,7 +3115,8 @@
 					],
 					"_id": "REGULATIONBIS",
 					"_name": "Régulation et trafic",
-					"_short": "Régulation"
+					"_short": "Régulation",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -2969,7 +3159,8 @@
 					],
 					"_id": "DESCENTE",
 					"_name": "Descente",
-					"_short": "Descente"
+					"_short": "Descente",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -3028,7 +3219,8 @@
 					],
 					"_id": "GUIDAGE_RADAR",
 					"_name": "Guidage",
-					"_short": "Radar"
+					"_short": "Radar",
+					"_level": "intermédiaire"
 				},
 				{
 					"subgraph": [
@@ -3047,7 +3239,8 @@
 					],
 					"_id": "ATTENTE",
 					"_name": "Circuit d'attente",
-					"_short": "Attente"
+					"_short": "Attente",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -3074,7 +3267,8 @@
 					],
 					"_id": "APPROCHE_VPT",
 					"_name": "Approche VPT",
-					"_short": "VPT"
+					"_short": "VPT",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -3111,7 +3305,8 @@
 					],
 					"_id": "APPROCHE_VUE",
 					"_name": "Approche à vue",
-					"_short": "A vue"
+					"_short": "A vue",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -3142,7 +3337,8 @@
 					],
 					"_id": "APPROCHE_VUE_PILOT",
 					"_name": "Approche à vue",
-					"_short": "A vue"
+					"_short": "A vue",
+					"_level": "intermédiaire"
 				},
 				{
 					"subgraph": [
@@ -3161,7 +3357,8 @@
 					],
 					"_id": "APPROCHE",
 					"_name": "Approche standard",
-					"_short": "Approche"
+					"_short": "Approche",
+					"_level": "débutant"
 				},
 				{
 					"subgraph": [
@@ -3198,7 +3395,8 @@
 					],
 					"_id": "ATTERRISSAGE",
 					"_name": "Atterrissage",
-					"_short": "Atterrissage"
+					"_short": "Atterrissage",
+					"_level": "débutant"
 				},
 				{
 					"para": [
@@ -3235,7 +3433,8 @@
 					],
 					"_id": "DEGAGEMENT",
 					"_name": "Vitesse contrôlée",
-					"_short": "Vit contrôlée"
+					"_short": "Vit contrôlée",
+					"_level": "débutant"
 				}
 			]
 		}

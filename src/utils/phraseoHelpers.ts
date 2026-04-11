@@ -72,16 +72,38 @@ export function replacePlaceholders(
   const now = new Date();
   const currentHour = `${now.getUTCHours().toString().padStart(2, '0')} heures ${now.getMinutes().toString().padStart(2, '0')}`;
 
+  // Heure différée : UTC + 20 minutes
+  const deferred = new Date(now.getTime() + 20 * 60 * 1000);
+  const dh = deferred.getUTCHours().toString().padStart(2, '0');
+  const dm = deferred.getUTCMinutes().toString().padStart(2, '0');
+  const hdiffFr = `${dh}_${dm}`;
+  const hdiffEn = `${dh[0]}_${dh[1]}_${dm[0]}_${dm[1]}`;
+
   return text.replace(/\[([^\]]+)\]/g, (_match, p1: string) => {
     switch (p1) {
       case 'POL':
         return POL_STRINGS[getHeure()][lang];
       case 'HOU':
         return currentHour;
+      case 'HDIFF':
+        return lang === 'fr' ? hdiffFr : hdiffEn;
+      case 'HDIFF5M': {
+        const m5 = new Date(deferred.getTime() - 5 * 60 * 1000);
+        return `${m5.getUTCHours().toString().padStart(2, '0')}${m5.getUTCMinutes().toString().padStart(2, '0')}`;
+      }
+      case 'HDIFF10P': {
+        const p10 = new Date(deferred.getTime() + 10 * 60 * 1000);
+        return `${p10.getUTCHours().toString().padStart(2, '0')}${p10.getUTCMinutes().toString().padStart(2, '0')}`;
+      }
       case 'CAA':
         return formStore.form.CAA || 'Station';
       case 'RWY':
         return formStore.formatRunway(formStore.form.RWY, lang);
+      case 'QNH': {
+        const d = weatherStore.metarData?.decoded || weatherStore.metarData;
+        const qnh = d?.altimeter?.value || formStore.form.QNH || '1013';
+        return qnh;
+      }
       case 'MET':
         if (weatherStore.loading) return lang === 'fr' ? 'chargement...' : 'loading...';
         if (weatherStore.metarData) return replaceMetarTag('[MET]', weatherStore.metarData, { lang });

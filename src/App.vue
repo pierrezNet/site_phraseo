@@ -21,7 +21,7 @@
     </div>
 
     <AideModal ref="aideModal" />
-    <ParametresModal ref="parametresModal" />
+    <ParametresModal ref="parametresModal" :currentMode="currentMode" />
     <AboutModal ref="aboutModal" />
   </div>
 </template>
