@@ -1436,12 +1436,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], turn (right) heading [CAP], descend [NIV] feet Q_N_H [Q_N_H]."
+							"__text": "[CAA], turn (right) heading [CAP], descend [NIV] feet Q_N_H [QNH]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Descending [NIV] feet Q_N_H [Q_N_H], turning (right) heading [CAP], [CAA]."
+							"__text": "Descending [NIV] feet Q_N_H [QNH], turning (right) heading [CAP], [CAA]."
 						}
 					],
 					"_id": "CHANGEMENT_NIVEAU_CAP",
@@ -1512,12 +1512,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], descend [NIV] feet, Q_N_H [Q_N_H], estimated approach time 32."
+							"__text": "[CAA], descend [NIV] feet, Q_N_H [QNH], estimated approach time 32."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Descending [NIV] feet, Q_N_H [Q_N_H], estimated approach time 32, [CAA]."
+							"__text": "Descending [NIV] feet, Q_N_H [QNH], estimated approach time 32, [CAA]."
 						}
 					],
 					"_id": "ATTENTE_PUBLIEE",
