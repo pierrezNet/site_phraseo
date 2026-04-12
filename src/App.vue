@@ -8,10 +8,11 @@
     
     <div class="grid grid-cols-10 gap-4">
       <div class="col-span-12 md:col-span-4">
-        <Tabs 
-          ref="tabsRef" 
+        <Tabs
+          ref="tabsRef"
           :phraseoData="currentPhraseoData"
-          @task-selected="updateSelectedTaskTexts" 
+          :currentMode="currentMode"
+          @task-selected="updateSelectedTaskTexts"
         />
       </div>
       

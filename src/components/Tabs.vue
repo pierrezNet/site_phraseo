@@ -21,8 +21,16 @@
       </button>
     </div>
 
+    <!-- Carte interactive VFR débutant (desktop) -->
+    <CircuitMap
+      v-if="showCircuitMap"
+      class="hidden md:block mb-4"
+      :selectedTaskIds="selectedTaskIds"
+      @select-task="onMapSelect"
+    />
+
     <!-- Contenu des tâches par phase -->
-    <div class="grid grid-cols-3 md:grid-cols-1 place-content-between gap-1">
+    <div :class="[showCircuitMap ? 'md:hidden' : '', 'grid grid-cols-3 md:grid-cols-1 place-content-between gap-1']">
       <button
         v-for="task in filteredPhaseTasks"
         :key="task._id"
@@ -91,9 +99,11 @@ import { useWeatherStore } from '../stores/weather';
 import { useSimulatorStore } from '../stores/simulator';
 import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
+import CircuitMap from './CircuitMap.vue';
 
 const props = defineProps<{
   phraseoData: any
+  currentMode?: string
 }>();
 
 const emit = defineEmits(['task-selected']);
@@ -108,6 +118,7 @@ const selectedSubgraphs = ref<any[]>([]);
 const selectedTab = ref('SO');
 const selectedTaskIds = ref<string[]>([]);
 const isReady = ref(false);
+const tabChangedFromMap = ref(false);
 
 
 const tasks = ref<any[]>([]);
@@ -190,6 +201,10 @@ const phaseTabs = computed(() => {
   }));
 });
 
+const showCircuitMap = computed(() =>
+  props.currentMode === 'VFR' && formStore.form.LEVEL === 'débutant' && selectedTab.value !== 'EX'
+);
+
 // Niveaux cumulatifs : débutant < intermédiaire < avancé
 const LEVEL_HIERARCHY = ['débutant', 'intermédiaire', 'avancé'] as const;
 
@@ -228,6 +243,52 @@ const getInitiator = (task: any): string => {
   if (!task?.para?.length) return '';
   const firstFr = task.para.find((p: any) => p._lang === 'fr');
   return firstFr?._class || '';
+};
+
+const onMapSelect = (taskId: string, tab?: string) => {
+  if (tab && tab !== selectedTab.value) {
+    tabChangedFromMap.value = true;
+    selectedTab.value = tab;
+  }
+  // Reset puis sélectionner uniquement ce point
+  selectedTaskIds.value = [taskId];
+  selectedSubgraphs.value = [];
+  simulatorStore.currentTaskId = taskId;
+  const task = tasks.value.find((t: any) => t._id === taskId);
+  if (!task) return;
+
+  // Gestion des subgraphs
+  if (task.subgraph) {
+    const visibleSubgraphs = task.subgraph
+      .map((sub: any) => {
+        const t = findTaskById(sub.call._refid);
+        return {
+          refid: sub.call._refid,
+          _name: t?._name || sub.call._refid,
+          _short: t?._short || t?._name?.slice(0, 3) || sub.call._refid,
+          _color: t?._color || 'orange',
+          fullTask: t
+        };
+      })
+      .filter((sub: any) => isTaskVisible(sub.fullTask));
+
+    if (visibleSubgraphs.length === 1) {
+      selectedSubgraphs.value = [];
+      const single = visibleSubgraphs[0];
+      if (single.fullTask) {
+        selectedTaskIds.value.push(single.refid);
+        const combined = [...(task.para || []), ...(single.fullTask.para || [])];
+        emit('task-selected', combined);
+      } else {
+        emit('task-selected', task.para || []);
+      }
+    } else {
+      selectedSubgraphs.value = visibleSubgraphs;
+      emit('task-selected', task.para || []);
+    }
+  } else {
+    emit('task-selected', task.para || []);
+  }
 };
 
 const findTaskById = (id: string) => {
@@ -311,6 +372,10 @@ onMounted(() => {
 // --- Watchers ---
 
 watch(selectedTab, () => {
+  if (tabChangedFromMap.value) {
+    tabChangedFromMap.value = false;
+    return;
+  }
   resetDisplay();
 });
 

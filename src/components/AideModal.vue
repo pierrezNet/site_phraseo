@@ -33,6 +33,9 @@
             <li>Chevron <strong>&gt;</strong> : ouvre un choix de sous-options</li>
           </ul>
 
+          <h3 class="font-semibold text-base mt-4">Carte interactive (VFR débutant)</h3>
+          <p>En mode VFR débutant sur desktop, une carte du circuit de piste remplace les boutons. Cliquez sur un point numéroté pour afficher la phraséologie correspondante. La phase de vol s'adapte automatiquement.</p>
+
           <h3 class="font-semibold text-base mt-4">Données météo</h3>
           <p>Renseignez le code OACI dans les paramètres (ex : LFPO). Le QNH et les informations météo sont récupérés automatiquement depuis le METAR en temps réel.</p>
 
