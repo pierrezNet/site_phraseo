@@ -134,7 +134,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Demandons paramètres pour le départ."
+							"__text": "[CAA], Demande paramètres pour le départ."
 						},
 						{
 							"_lang": "fr",
@@ -149,7 +149,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Requesting departure information."
+							"__text": "[CAA], Request departure information."
 						},
 						{
 							"_lang": "en",
@@ -159,7 +159,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], Q_N_H [QNH], [CAA]."
+							"__text": "Runway [RWY], Q_N_H [Q_N_H], [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -172,7 +172,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 152, parking aviation générale, demandons consignes roulage pour vol à destination de [ARR] avec information [INF]."
+							"__text": "[CAA], Cessna 152, parking aviation générale, demande consignes roulage pour vol à destination de [ARR] avec information [INF]."
 						},
 						{
 							"_lang": "fr",
@@ -187,7 +187,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 152, general aviation apron, requesting taxi clearance flight to [ARR] with information [INF]."
+							"__text": "[CAA], Cessna 152, general aviation apron, request taxi flight to [ARR] with information [INF]."
 						},
 						{
 							"_lang": "en",
@@ -210,7 +210,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 152, parking aviation générale, demandons consignes roulage pour des tours de piste avec information [INF]."
+							"__text": "[CAA], Cessna 152, parking aviation générale, demande consignes roulage pour des tours de piste avec information [INF]."
 						},
 						{
 							"_lang": "fr",
@@ -225,7 +225,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 152, general aviation apron, requesting taxi clearance for patterns with information [INF]."
+							"__text": "[CAA], Cessna 152, general aviation apron, request taxi for patterns with information [INF]."
 						},
 						{
 							"_lang": "en",
@@ -537,7 +537,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Contactons [DEP] [APP], merci pour le contrôle, [CAA]."
+							"__text": "Je contacte [DEP] [APP], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -547,7 +547,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Contact [DEP] [APP], thanks for control, [CAA]."
+							"__text": "Contact [DEP] [APP], thank you, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -565,7 +565,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Contactons [ARR] [GND], merci pour le contrôle, [CAA]."
+							"__text": "Je contacte [ARR] [GND], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -575,7 +575,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Contact [ARR] [GND], thanks for control, [CAA]."
+							"__text": "Contact [ARR] [GND], thank you, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -593,7 +593,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Contactons [DEP] [TWR], merci pour le contrôle, [CAA]."
+							"__text": "Je contacte [DEP] [TWR], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -603,7 +603,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Contact [DEP] [TWR], thanks for control, [CAA]."
+							"__text": "Contact [DEP] [TWR], thank you, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -621,7 +621,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Auto-information, 122 décimale 8, merci pour le contrôle, [CAA]."
+							"__text": "Auto-information, 122 décimale 8, merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -631,7 +631,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Air-to-air frequency, one hundred twenty two decimal eight, thanks for control, [CAA]."
+							"__text": "Air-to-air frequency, one hundred twenty two decimal eight, thank you, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -822,7 +822,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de vos installations, verticale [SORTIE], [ALT] pieds, avec information [INF], demandons intégration pour un complet."
+							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de vos installations, verticale [SORTIE], [ALT] pieds, avec information [INF], demande intégration pour un complet."
 						},
 						{
 							"_lang": "fr",
@@ -837,7 +837,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], requesting instruction for landing."
+							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request instruction for landing."
 						},
 						{
 							"_lang": "en",
@@ -860,7 +860,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de vos installations, verticale [SORTIE], [ALT] pieds, avec information [INF], demandons intégration pour un toucher."
+							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de vos installations, verticale [SORTIE], [ALT] pieds, avec information [INF], demande intégration pour un toucher."
 						},
 						{
 							"_lang": "fr",
@@ -875,7 +875,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], requesting instruction for a touch and go."
+							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request instruction for a touch and go."
 						},
 						{
 							"_lang": "en",
@@ -987,7 +987,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Roulons parking de l'aviation générale, [CAA]."
+							"__text": "Je roule parking de l'aviation générale, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1122,7 +1122,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de [ARR], verticale [SORTIE], [ALT] pieds, avec information [INF], demandons transit."
+							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de [ARR], verticale [SORTIE], [ALT] pieds, avec information [INF], demande transit."
 						},
 						{
 							"_lang": "fr",
@@ -1137,7 +1137,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], requesting to transit."
+							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request transit."
 						},
 						{
 							"_lang": "en",

@@ -226,12 +226,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Piste [RWY], QNH [QNH], [CAA]."
+							"__text": "Piste [RWY], Q_N_H [QNH], [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NDEL], [POL], requesting departure information, [CAA]."
+							"__text": "[DEP] [NDEL], [POL], request departure information, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -241,7 +241,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], QNH [QNH], [CAA]."
+							"__text": "Runway [RWY], Q_N_H [Q_N_H], [CAA]."
 						}
 					],
 					"_id": "PARAMETRES",
@@ -345,12 +345,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], multidirectional departure, runway [RWY], at (800) ft turn (right) [CAP], climb (3000) feet QNH, squawk [SQU]."
+							"__text": "[CAL], [POL], multidirectional departure, runway [RWY], at (800) ft turn (right) [CAP], climb (3000) feet Q_N_H, squawk [SQU]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Multidirectional departure, runway [RWY], at (800) ft turn (right) [CAP], climb (3000) feet QNH squawk [SQU], [CAA]."
+							"__text": "Multidirectional departure, runway [RWY], at (800) ft turn (right) [CAP], climb (3000) feet Q_N_H squawk [SQU], [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -527,7 +527,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [TWR], merci pour le contrôle, [CAA]."
+							"__text": "[DEP] [TWR], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -537,7 +537,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [TWR], thanks for control, [CAA]."
+							"__text": "[DEP] [TWR], thank you, [CAA]."
 						}
 					],
 					"_id": "TRANSFERT_TOUR1",
@@ -791,7 +791,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [APP], merci pour le contrôle, [CAA]."
+							"__text": "[DEP] [APP], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -801,7 +801,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [APP], thanks for control, [CAA]."
+							"__text": "[DEP] [APP], thank you, [CAA]."
 						}
 					],
 					"_id": "TRANSFERT_SIMPLE",
@@ -819,7 +819,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[FIR] [NCTR], merci pour le contrôle, [CAA]."
+							"__text": "[FIR] [NCTR], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -829,7 +829,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[FIR] [NCTR], thanks for control, [CAA]."
+							"__text": "[FIR] [NCTR], thank you, [CAA]."
 						}
 					],
 					"_id": "TRANSFERT_SIMPLE_CTR",
@@ -847,7 +847,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[ARR] [GND], merci pour le contrôle, [CAA]."
+							"__text": "[ARR] [GND], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -857,7 +857,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[ARR] [GND], thanks for control, [CAA]."
+							"__text": "[ARR] [GND], thank you, [CAA]."
 						}
 					],
 					"_id": "TRANSFERT_SOL",
@@ -875,7 +875,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[ARR] [TWR], merci pour le contrôle, [CAA]."
+							"__text": "[ARR] [TWR], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -885,7 +885,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[ARR] [TWR], thanks for control, [CAA]."
+							"__text": "[ARR] [TWR], thank you, [CAA]."
 						}
 					],
 					"_id": "TRANSFERT_TOUR",
@@ -903,7 +903,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Auto-information, 122 décimale 8, merci pour le contrôle, [CAA]."
+							"__text": "Auto-information, 122 décimale 8, merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -913,7 +913,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Air-to-air frequency, one hundred twenty two decimal eight, thanks for control, [CAA]."
+							"__text": "Air-to-air frequency, one hundred twenty two decimal eight, thank you, [CAA]."
 						}
 					],
 					"_id": "TRANSFERT_UNICOM",
@@ -1426,22 +1426,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], tournez à (droite) cap [CAP], descendez [NIV] pieds QNH [QNH]."
+							"__text": "[CAA], tournez à (droite) cap [CAP], descendez [NIV] pieds Q_N_H [QNH]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je tourne à (droite) cap [CAP], je descends [NIV] pieds QNH [QNH], [CAA]."
+							"__text": "Je tourne à (droite) cap [CAP], je descends [NIV] pieds Q_N_H [QNH], [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], turn (right) heading [CAP], descend [NIV] feet QNH [QNH]."
+							"__text": "[CAA], turn (right) heading [CAP], descend [NIV] feet Q_N_H [Q_N_H]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Descending [NIV] feet QNH [QNH], turning (right) heading [CAP], [CAA]."
+							"__text": "Descending [NIV] feet Q_N_H [Q_N_H], turning (right) heading [CAP], [CAA]."
 						}
 					],
 					"_id": "CHANGEMENT_NIVEAU_CAP",
@@ -1502,22 +1502,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], descendez [NIV] pieds, QNH [QNH], HAP 32."
+							"__text": "[CAA], descendez [NIV] pieds, Q_N_H [QNH], HAP 32."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je descends [NIV] pieds, QNH [QNH], HAP 32, [CAA]."
+							"__text": "Je descends [NIV] pieds, Q_N_H [QNH], HAP 32, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], descend [NIV] feet, QNH [QNH], estimated approach time 32."
+							"__text": "[CAA], descend [NIV] feet, Q_N_H [Q_N_H], estimated approach time 32."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Descending [NIV] feet, QNH [QNH], estimated approach time 32, [CAA]."
+							"__text": "Descending [NIV] feet, Q_N_H [Q_N_H], estimated approach time 32, [CAA]."
 						}
 					],
 					"_id": "ATTENTE_PUBLIEE",
@@ -2137,7 +2137,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], requesting to cross runway (04 left)."
+							"__text": "[CAA], request to cross runway (04 left)."
 						},
 						{
 							"_lang": "en",
@@ -2584,7 +2584,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NDEL], [POL], [CAL] gate [POS], requesting startup to [ARR], [INF] information."
+							"__text": "[DEP] [NDEL], [POL], [CAL] gate [POS], request startup to [ARR], [INF] information."
 						}
 					],
 					"subgraph": [
@@ -2640,7 +2640,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAA], requesting push-back."
+							"__text": "[DEP] [NGND], [CAA], request push-back."
 						}
 					],
 					"subgraph": [
@@ -2673,7 +2673,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], requesting taxi."
+							"__text": "[CAA], request taxi."
 						}
 					],
 					"subgraph": [
@@ -2986,7 +2986,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], requesting route amendement via [WPT]."
+							"__text": "[CAA], request route amendment via [WPT]."
 						},
 						{
 							"_lang": "fr",
@@ -3318,7 +3318,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], requesting visual approach runway [RWY]."
+							"__text": "[CAA], request visual approach runway [RWY]."
 						}
 					],
 					"subgraph": [
