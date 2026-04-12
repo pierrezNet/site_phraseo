@@ -916,7 +916,7 @@
 							"__text": "Expediting vacating runway, [CAA]."
 						}
 					],
-					"_level": "intermédiaire"
+					"_level": "débutant"
 				},
 				{
 					"_id": "DEGAGEMENT_STANDARD",
@@ -972,7 +972,7 @@
 							"__text": "Backtracking runway then first right, [CAA]."
 						}
 					],
-					"_level": "intermédiaire"
+					"_level": "débutant"
 				},
 				{
 					"_id": "PARKING",
@@ -1084,7 +1084,7 @@
 							"__text": "Number 2, Cessna 172 in sight, will report end of downwind runway [RWY], [CAA]."
 						}
 					],
-					"_level": "intermédiaire"
+					"_level": "débutant"
 				},
 				{
 					"_id": "TOUR_PISTE_SIMPLE",
@@ -1686,12 +1686,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "(lieu transit) [NTWR], [CAA], approchons de [SORTIE]."
+							"__text": "[TTWR] [NTWR], [CAA], approchons de [SORTIE]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "(transit location) [NTWR], [CAA], reaching [SORTIE]."
+							"__text": "[TTWR] [NTWR], [CAA], reaching [SORTIE]."
 						}
 					],
 					"subgraph": [
@@ -1754,22 +1754,22 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "(lieu transit) [NTWR] de [CAA], [POL]."
+							"__text": "[TTWR] [NTWR] de [CAA], [POL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "(transit location) [NTWR], [POL] from [CAA]."
+							"__text": "[TTWR] [NTWR], [POL] from [CAA]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "(lieu transit) [NTWR], [POL], j'écoute."
+							"__text": "[TTWR] [NTWR], [POL], j'écoute."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "(transit location) [NTWR], [POL], go ahead."
+							"__text": "[TTWR] [NTWR], [POL], go ahead."
 						}
 					],
 					"subgraph": [

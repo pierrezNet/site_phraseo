@@ -11,17 +11,20 @@
           </button>
         </div>
         <div class="mt-4 space-y-3 text-sm">
+          <p>Ce projet est un outil d'entraînement à la phraséologie aéronautique, conçu pour les pilotes virtuels VFR et IFR.</p>
+          <h3 class="font-semibold text-base mt-4">Utilisation</h3>
+          <p>Le toggle de règle de vol permet de basculer entre les modes de vol VFR et IFR.</p>
+          <p>Choisissez la langue souhaitée pour les échanges entre le pilote et l'ATC.</p>
+          <p>Modifiez le formulaire (menu <strong>Paramètres</strong>), cliquez sur une phase de vol puis sur la tâche correspondante. Les textes de phraséologie s'affichent avec les données de votre vol.</p>
+
           <h3 class="font-semibold text-base">Niveau d'apprentissage</h3>
-          <p>Sélectionnez votre niveau dans la barre de navigation (boutons <strong>Déb</strong> / <strong>Int</strong>) :</p>
+          <p>Sélectionnez votre niveau (boutons <strong>Déb</strong> / <strong>Int</strong>) :</p>
           <ul class="list-disc ml-5 space-y-1">
             <li><strong>Débutant</strong> : phraséologie essentielle pour un vol standard (mise en route, roulage, décollage, circuit, atterrissage). Les situations complexes sont masquées.</li>
             <li><strong>Intermédiaire</strong> : toutes les situations courantes (CTOT, trafic, remise de gaz, approches spéciales, transit, décollage immédiat...).</li>
             <li><strong>Avancé</strong> : à venir.</li>
           </ul>
           <p>Le nombre de tâches et d'options s'adapte automatiquement au niveau choisi.</p>
-
-          <h3 class="font-semibold text-base mt-4">Utilisation</h3>
-          <p>Modifiez le formulaire (menu <strong>Paramètres</strong>), cliquez sur une phase de vol puis sur la tâche correspondante. Les textes de phraséologie s'affichent à droite avec les données de votre vol.</p>
 
           <h3 class="font-semibold text-base mt-4">Icônes des boutons</h3>
           <ul class="list-disc ml-5 space-y-1">

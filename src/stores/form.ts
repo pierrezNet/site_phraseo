@@ -13,6 +13,7 @@ export interface FormData {
   LEVEL: UserLevel
   ALT: string
   SORTIE: string
+  TTWR: string
   FIR: string
   DEP: string
   POS: string
@@ -107,6 +108,7 @@ export const useFormStore = defineStore('form', {
       LEVEL: 'débutant' as UserLevel,
       ALT: '2500',
       SORTIE: 'Melun',
+      TTWR: 'Strasbourg',
       FIR: 'Paris',
       DEP: 'Orly',
       POS: 'D2',

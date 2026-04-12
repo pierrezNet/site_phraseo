@@ -58,6 +58,10 @@
               <label for="ALT" class="label-field">Altitude (pieds)</label>
               <input type="text" id="ALT" v-model="formStore.form.ALT" @change="updateForm" class="input-field">
             </div>
+            <div v-if="isVFR()">
+              <label for="TTWR" class="label-field">Transit (aérodrome)</label>
+              <input type="text" id="TTWR" v-model="formStore.form.TTWR" @change="updateForm" class="input-field">
+            </div>
             <div>
               <label for="VOI" class="label-field">Voies de circulation</label>
               <input type="text" id="VOI" v-model="formStore.form.VOI" @change="updateForm" class="input-field">

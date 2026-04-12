@@ -1,7 +1,7 @@
 <template>
   <div class="p-1 md:p-4" v-if="isReady">
     <!-- Onglets des phases de vol -->
-    <div class="flex justify-between md:justify-start md:gap-2 mb-1 md:mb-5">
+    <div class="flex justify-start gap-4 mb-1 md:mb-5">
       <button
         v-for="(tab, i) in phaseTabs"
         :key="i"
@@ -34,7 +34,7 @@
           ]"
         @click="logTask(task)"
       >
-        <svg v-if="task.subgraph" class="hidden md:block w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        <svg v-if="task.subgraph && !task.para?.length" class="hidden md:block w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
         <PilotIcon v-else-if="getInitiator(task) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
         <AtcIcon v-else-if="getInitiator(task) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
         <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
@@ -53,7 +53,7 @@
     <hr v-if="selectedSubgraphs.length > 0" class="md:hidden border border-blue-800 mt-1 mb-1"/>
     <!-- Boutons correspondants aux subgraph -->
     <div v-if="selectedSubgraphs.length > 0" class="grid grid-cols-3 md:grid-cols-1 place-content-between gap-1">
-      <h2 class="custom-h2">Options</h2>
+      <h2 class="custom-h2 hidden md:flex">Options</h2>
       <button
         v-for="subgraph in selectedSubgraphs"
         :key="subgraph.refid"
@@ -262,7 +262,7 @@ const logTask = (task: any) => {
       })
       .filter((sub: any) => isTaskVisible(sub.fullTask));
 
-    // Si une seule option visible, auto-sélection (plus un choix)
+    // Si une seule option visible, auto-sélection : concaténer les textes
     if (visibleSubgraphs.length === 1) {
       selectedSubgraphs.value = [];
       const single = visibleSubgraphs[0];
@@ -270,16 +270,19 @@ const logTask = (task: any) => {
         if (!selectedTaskIds.value.includes(single.refid)) {
           selectedTaskIds.value.push(single.refid);
         }
-        emit('task-selected', single.fullTask.para || []);
+        const combined = [...(task.para || []), ...(single.fullTask.para || [])];
+        emit('task-selected', combined);
+      } else {
+        emit('task-selected', task.para || []);
       }
     } else {
       selectedSubgraphs.value = visibleSubgraphs;
+      emit('task-selected', task.para || []);
     }
   } else {
     selectedSubgraphs.value = [];
+    emit('task-selected', task.para || []);
   }
-
-  emit('task-selected', task.para || []);
 };
 
 const logSubgraphTask = (subgraph: any) => {
