@@ -107,7 +107,10 @@ export function replacePlaceholders(
       case 'MET':
         if (weatherStore.loading) return lang === 'fr' ? 'chargement...' : 'loading...';
         if (weatherStore.metarData) return replaceMetarTag('[MET]', weatherStore.metarData, { lang });
-        return lang === 'fr' ? 'vent 240/05...' : 'wind 240/05...';
+        // Fallback statique si pas de METAR (API indisponible)
+        return lang === 'fr'
+          ? `vent (240) degrés (10) noeuds, visibilité (10) kilomètres, température (15), Q_N_H ${formStore.form.QNH || '1013'}`
+          : `wind (2_4_0) degrees (1_0) knots, visibility (10) kilometres, temperature (1_5), Q_N_H ${formStore.form.QNH || '1013'}`;
       case 'DEL':
       case 'GND':
       case 'TWR':

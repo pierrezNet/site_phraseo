@@ -109,7 +109,7 @@ describe('replacePlaceholders', () => {
 
   it('retourne le fallback météo si pas de données', () => {
     const result = replacePlaceholders('[MET]', 'fr', formStore as any, weatherStore as any)
-    expect(result).toBe('vent 240/05...')
+    expect(result).toContain('vent (240) degrés (10) noeuds')
   })
 
   it('conserve le placeholder original pour un tag inconnu', () => {
