@@ -1,7 +1,7 @@
 <template>
   <div class="p-1 md:p-4" v-if="isReady">
     <!-- Onglets des phases de vol -->
-    <div class="flex justify-start gap-4 mb-1 md:mb-5">
+    <div class="flex justify-between md:justify-start gap-1 md:gap-4 mb-1 md:mb-5">
       <button
         v-for="(tab, i) in phaseTabs"
         :key="i"
