@@ -63,7 +63,7 @@ describe('TaskTextDisplay', () => {
       global: { plugins: [pinia] },
       props: { selectedTaskTexts: makeTasks('Station [CAA]') },
     })
-    expect(wrapper.text()).toContain('Air Europe 01')
+    expect(wrapper.text()).toContain('AEL001')
   })
 
   it('se met à jour quand la prop selectedTaskTexts change', async () => {

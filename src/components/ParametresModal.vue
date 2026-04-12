@@ -25,16 +25,16 @@
               <input type="text" id="ARR" v-model="formStore.form.ARR" @change="updateForm" class="input-field">
             </div>
             <div>
-              <label for="COM" class="label-field">Nom de la compagnie</label>
+              <label for="COM" class="label-field">Type d'appareil</label>
               <input type="text" id="COM" v-model="formStore.form.COM" @change="updateForm" class="input-field">
             </div>
             <div>
               <label for="CAL" class="label-field">Indicatif d'appel</label>
-              <input type="text" id="CAL" v-model="formStore.form.CAL" @change="updateForm" class="input-field">
+              <input type="text" id="CAL" :value="isVFR() ? formStore.form.CAL_VFR : formStore.form.CAL_IFR" @input="updateCallsign('CAL', $event)" class="input-field">
             </div>
             <div>
-              <label for="CAA" class="label-field">Indicatif d'appel abrégé</label>
-              <input type="text" id="CAA" v-model="formStore.form.CAA" @change="updateForm" class="input-field">
+              <label for="CAA" class="label-field">Indicatif abrégé</label>
+              <input type="text" id="CAA" :value="isVFR() ? formStore.form.CAA_VFR : formStore.form.CAA_IFR" @input="updateCallsign('CAA', $event)" class="input-field">
             </div>
             <div>
               <label for="INF" class="label-field">Information contrôleur</label>
@@ -80,7 +80,7 @@
             </div>
             <div>
               <label for="SQU" class="label-field">Code transpondeur</label>
-              <input type="text" id="SQU" v-model="formStore.form.SQU" @change="updateForm" class="input-field">
+              <input type="text" id="SQU" :value="isVFR() ? formStore.form.SQU_VFR : formStore.form.SQU_IFR" @input="updateSquawk($event)" class="input-field">
             </div>
           </div>
           <div>
@@ -257,6 +257,25 @@ export default defineComponent({
       isOpen.value = false
     }
 
+    const updateCallsign = (field: 'CAL' | 'CAA', event: Event) => {
+      const value = (event.target as HTMLInputElement).value
+      const suffix = props.currentMode === 'VFR' ? '_VFR' : '_IFR'
+      formStore.form[field + suffix] = value
+      formStore.form[field] = value
+      updateForm()
+    }
+
+    const updateSquawk = (event: Event) => {
+      const value = (event.target as HTMLInputElement).value
+      if (props.currentMode === 'VFR') {
+        formStore.form.SQU_VFR = value
+      } else {
+        formStore.form.SQU_IFR = value
+      }
+      formStore.form.SQU = value
+      updateForm()
+    }
+
     const updateForm = () => {
       formStore.updateFormData(formStore.form);
     }
@@ -268,6 +287,8 @@ export default defineComponent({
       open,
       close,
       clearInput,
+      updateCallsign,
+      updateSquawk,
       updateForm
     }
   }

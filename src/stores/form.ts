@@ -21,6 +21,10 @@ export interface FormData {
   COM: string
   CAL: string
   CAA: string
+  CAL_VFR: string
+  CAA_VFR: string
+  CAL_IFR: string
+  CAA_IFR: string
   INF: string
   WPT: string
   STA: string
@@ -29,6 +33,8 @@ export interface FormData {
   QNH: string
   RWY: string
   SQU: string
+  SQU_VFR: string
+  SQU_IFR: string
   NIV: string
   VIT: string
   CAP: string
@@ -114,8 +120,12 @@ export const useFormStore = defineStore('form', {
       POS: 'D2',
       ARR: 'Strasbourg',
       COM: 'Air Europe',
-      CAL: 'AEL001',
-      CAA: 'Air Europe 01',
+      CAL: 'Air Europe 01',
+      CAA: 'AEL001',
+      CAL_VFR: 'F-EPST',
+      CAA_VFR: 'F S T',
+      CAL_IFR: 'AEL001',
+      CAA_IFR: 'Air Europe 01',
       INF: 'L',
       WPT: 'BUBLI',
       STA: 'Bubli_3_Papa',
@@ -125,6 +135,8 @@ export const useFormStore = defineStore('form', {
       QNH: '1013',
       RWY: '26L',
       SQU: '1000',
+      SQU_VFR: '7001',
+      SQU_IFR: '1000',
       NIV: '110',
       VIT: '360',
       CAP: '360',

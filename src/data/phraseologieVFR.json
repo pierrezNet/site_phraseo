@@ -182,7 +182,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Transpondeur [SQU], je roule au point d'attente piste [RWY] via [HLD] et rappelerai prêt, [CAA]."
+							"__text": "Transpondeur [SQU], je roule au point d'attente piste [RWY] via [HLD] et rappellerai prêt, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -372,7 +372,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "Report on final runway [RWY], [CAA]."
+							"__text": "[CAA], report final runway [RWY]."
 						},
 						{
 							"_lang": "en",
@@ -410,7 +410,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "Report on final runway [RWY], [CAA]."
+							"__text": "[CAA], report final runway [RWY]."
 						},
 						{
 							"_lang": "en",
@@ -720,7 +720,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], (number X), cleared to land runway [RWY]."
+							"__text": "[CAA], (number X), cleared to land runway [RWY], wind 0_6_0 degrees 10 knots."
 						},
 						{
 							"_lang": "en",
@@ -992,7 +992,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], taxi."
+							"__text": "[CAA], taxi general aviation apron."
 						},
 						{
 							"_lang": "en",
@@ -1020,12 +1020,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], hold position before next intersection to give way to an Cessna 172 from right to left."
+							"__text": "[CAA], hold position before next intersection to give way to a Cessna 172 from right to left."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Holding position before next intersection to give way to an Cessna 172 from right to left, [CAA]."
+							"__text": "Holding position before next intersection to give way to a Cessna 172 from right to left, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -1170,7 +1170,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je rappellerai verticale [SORTIE]."
+							"__text": "Je rappellerai verticale [SORTIE], [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1764,7 +1764,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[TTWR] [NTWR], [POL], j'écoute."
+							"__text": "[TTWR] [NTWR], [POL], transmettez."
 						},
 						{
 							"_lang": "en",

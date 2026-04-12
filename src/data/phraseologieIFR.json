@@ -330,7 +330,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], départ omnidirectionnel, piste [RWY], à (800) pieds tournez à (droite) cap [CAP] en montée vers (3000) pieds QNH, transpondeur [SQU]."
+							"__text": "[CAL], [POL], départ omnidirectionnel, piste [RWY], à (800) pieds tournez à (droite) cap [CAP] en montée vers (3000) pieds Q_N_H, transpondeur [SQU]."
 						},
 						{
 							"_lang": "fr",
@@ -392,7 +392,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Startup approved, C_TOT [HDIFF], [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "Startup approved, C_TOT [HDIFF], [STA] departure, initial climb [NIV], squawk [SQU], [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -461,7 +461,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je repousse en fonction du Boeing 737 en vue, [CAA]{Ordre ?}."
+							"__text": "Je repousse en fonction du Boeing 737 en vue, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -517,7 +517,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [TWR], merci, [CAA]."
+							"__text": "Je contacte [DEP] [TWR], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -710,7 +710,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], hold short of runway [RWY], taxiway [HLD], [CAA]."
+							"__text": "[CAA], hold short of runway [RWY], taxiway [HLD]."
 						},
 						{
 							"_lang": "en",
@@ -763,7 +763,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Lining up runway [RWY] and cleared for take-off, [CAA]."
+							"__text": "Lining up runway [RWY] and taking-off, [CAA]."
 						}
 					],
 					"_id": "DECOLLAGE_IMMEDIAT",
@@ -781,7 +781,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [APP], merci, [CAA]."
+							"__text": "Je contacte [DEP] [APP], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -809,7 +809,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[FIR] [NCTR], merci, [CAA]."
+							"__text": "Je contacte [FIR] [NCTR], merci, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -987,7 +987,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Stopping climb  level [NIV], [CAA]."
+							"__text": "Stopping climb level [NIV], [CAA]."
 						}
 					],
 					"_id": "MONTEE_DIFFEREE",
@@ -2061,7 +2061,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je maintiens position avant la prochaine intersectione, [CAA]."
+							"__text": "Je maintiens position avant la prochaine intersection, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -2132,7 +2132,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], crossing runway (04 left)."
+							"__text": "[CAA], cross runway (04 left)."
 						},
 						{
 							"_lang": "en",
@@ -2293,7 +2293,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], cleared for take-off, [CAA]."
+							"__text": "Runway [RWY], taking-off, [CAA]."
 						}
 					],
 					"_id": "DECOL_AUTO",
@@ -2306,7 +2306,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], stoppez immédiatement, [CAA], stoppez immédiatement, un véhicule sur la piste.."
+							"__text": "[CAA], stoppez immédiatement, [CAA], stoppez immédiatement, un véhicule sur la piste."
 						},
 						{
 							"_lang": "en",
@@ -2574,7 +2574,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NDEL], [POL], [CAL] gate [POS], request startup to [ARR], [INF] information."
+							"__text": "[DEP] [NDEL], [POL], [CAL] gate [POS], request startup to [ARR], information [INF]."
 						}
 					],
 					"subgraph": [
