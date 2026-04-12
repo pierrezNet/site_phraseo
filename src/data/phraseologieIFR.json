@@ -221,7 +221,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], piste [RWY], [MET], il est [HOU]."
+							"__text": "[CAA], piste [RWY], [MET], niveau de transition (6_0), il est [HOU]."
 						},
 						{
 							"_lang": "fr",
@@ -236,12 +236,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "Runway [RWY], [MET], time [HOU]."
+							"__text": "Runway [RWY], [MET], transition level (6_0), time [HOU]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], Q_N_H [Q_N_H], [CAA]."
+							"__text": "Runway [RWY], Q_N_H [QNH], [CAA]."
 						}
 					],
 					"_id": "PARAMETRES",

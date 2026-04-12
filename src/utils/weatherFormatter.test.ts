@@ -19,7 +19,7 @@ describe('formatMetarData', () => {
 
   it('formate les données météo complètes en anglais', () => {
     const result = formatMetarData(makeMetar(), { lang: 'en' })
-    expect(result).toBe('wind 240 degrees 12 knots, temperature 18, QNH 1015')
+    expect(result).toBe('wind 240 degrees 12 knots, temperature 18, Q_N_H 1015')
   })
 
   it('utilise les valeurs par défaut si les champs sont absents', () => {
