@@ -19,6 +19,8 @@ export interface FormData {
   POS: string
   ARR: string
   COM: string
+  COM_VFR: string
+  COM_IFR: string
   CAL: string
   CAA: string
   CAL_VFR: string
@@ -120,12 +122,14 @@ export const useFormStore = defineStore('form', {
       POS: 'D2',
       ARR: 'Strasbourg',
       COM: 'Air Europe',
+      COM_VFR: 'Cessna 172',
+      COM_IFR: 'Air Europe',
       CAL: 'Air Europe 01',
       CAA: 'AEL001',
       CAL_VFR: 'F-EPST',
       CAA_VFR: 'F S T',
-      CAL_IFR: 'AEL001',
-      CAA_IFR: 'Air Europe 01',
+      CAL_IFR: 'Air Europe 01',
+      CAA_IFR: 'AEL001',
       INF: 'L',
       WPT: 'BUBLI',
       STA: 'Bubli_3_Papa',

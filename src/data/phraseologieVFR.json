@@ -172,7 +172,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 152, parking aviation générale, demande consignes roulage pour vol à destination de [ARR] avec information [INF]."
+							"__text": "[CAA], [COM], parking aviation générale, demande consignes roulage pour vol à destination de [ARR] avec information [INF]."
 						},
 						{
 							"_lang": "fr",
@@ -187,7 +187,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 152, general aviation apron, request taxi flight to [ARR] with information [INF]."
+							"__text": "[CAA], [COM], general aviation apron, request taxi flight to [ARR] with information [INF]."
 						},
 						{
 							"_lang": "en",
@@ -210,7 +210,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 152, parking aviation générale, demande consignes roulage pour des tours de piste avec information [INF]."
+							"__text": "[CAA], [COM], parking aviation générale, demande consignes roulage pour des tours de piste avec information [INF]."
 						},
 						{
 							"_lang": "fr",
@@ -225,7 +225,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 152, general aviation apron, request taxi for patterns with information [INF]."
+							"__text": "[CAA], [COM], general aviation apron, request taxi for patterns with information [INF]."
 						},
 						{
 							"_lang": "en",
@@ -1420,22 +1420,22 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NDEL], [POL], [CAA]."
+							"__text": "[DEP] [NDEL], [POL], [CAL]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], [POL], transmettez."
+							"__text": "[CAL], [POL], transmettez."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NDEL], [POL], [CAA]."
+							"__text": "[DEP] [NDEL], [POL], [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], [POL], go ahead."
+							"__text": "[CAL], [POL], go ahead."
 						}
 					],
 					"subgraph": [

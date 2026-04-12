@@ -113,6 +113,7 @@ const toggleFlightMode = () => {
   // Synchroniser transpondeur et indicatifs avec le mode
   const isVfr = flightMode.value === 'VFR'
   formStore.form.SQU = isVfr ? formStore.form.SQU_VFR : formStore.form.SQU_IFR
+  formStore.form.COM = isVfr ? formStore.form.COM_VFR : formStore.form.COM_IFR
   formStore.form.CAL = isVfr ? formStore.form.CAL_VFR : formStore.form.CAL_IFR
   formStore.form.CAA = isVfr ? formStore.form.CAA_VFR : formStore.form.CAA_IFR
   formStore.updateFormData(formStore.form)

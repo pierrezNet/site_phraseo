@@ -25,8 +25,8 @@
               <input type="text" id="ARR" v-model="formStore.form.ARR" @change="updateForm" class="input-field">
             </div>
             <div>
-              <label for="COM" class="label-field">Type d'appareil</label>
-              <input type="text" id="COM" v-model="formStore.form.COM" @change="updateForm" class="input-field">
+              <label for="COM" class="label-field">{{ isVFR() ? "Type d'appareil" : "Compagnie" }}</label>
+              <input type="text" id="COM" :value="isVFR() ? formStore.form.COM_VFR : formStore.form.COM_IFR" @input="updateCallsign('COM', $event)" class="input-field">
             </div>
             <div>
               <label for="CAL" class="label-field">Indicatif d'appel</label>
@@ -257,7 +257,7 @@ export default defineComponent({
       isOpen.value = false
     }
 
-    const updateCallsign = (field: 'CAL' | 'CAA', event: Event) => {
+    const updateCallsign = (field: 'CAL' | 'CAA' | 'COM', event: Event) => {
       const value = (event.target as HTMLInputElement).value
       const suffix = props.currentMode === 'VFR' ? '_VFR' : '_IFR'
       formStore.form[field + suffix] = value
