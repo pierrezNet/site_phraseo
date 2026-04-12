@@ -182,7 +182,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Transpondeur [SQU], roulons point d'attente piste [RWY] via [HLD] et rappelons prêt, [CAA]."
+							"__text": "Transpondeur [SQU], je roule au point d'attente piste [RWY] via [HLD] et rappelerai prêt, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -220,7 +220,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Transpondeur [SQU], roulons point d'attente piste [RWY] via [HLD] et rappelons prêt, [CAA]."
+							"__text": "Transpondeur [SQU], je roule au point d'attente piste [RWY] via [HLD] et rappellerai prêt, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -263,7 +263,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Transpondeur [SQU], roulons point d'attente piste [RWY] intersection [HLD] et rappelons prêt, [CAA]."
+							"__text": "Transpondeur [SQU], je roule au point d'attente piste [RWY] intersection [HLD] et rappellerai prêt, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -367,7 +367,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Rappellerons finale piste [RWY], [CAA]."
+							"__text": "Je rappellerai finale piste [RWY], [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -405,7 +405,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Rappellerons finale piste [RWY], [CAA]."
+							"__text": "Je rappellerai finale piste [RWY], [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -471,7 +471,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Derrière A_T_R en finale, nous alignerons et attendrons piste [RWY] derrière, [CAA]."
+							"__text": "Derrière A_T_R en finale, je m'aligne et attendrai piste [RWY] derrière, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -771,7 +771,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Remettons les gaz, [CAA]."
+							"__text": "Je remets les gaz, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -794,7 +794,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], remettons les gaz."
+							"__text": "[CAA], je remets les gaz."
 						},
 						{
 							"_lang": "fr",
@@ -832,7 +832,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Rappellerons verticale (point intermédiaire), [CAA]."
+							"__text": "Je rappellerai verticale (point intermédiaire), [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -870,7 +870,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Rappellerons verticale (point intermédiaire), [CAA]."
+							"__text": "Je rappellerai verticale (point intermédiaire), [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -903,7 +903,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Dégageons rapidement la piste, [CAA]."
+							"__text": "Piste dégagée, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -913,7 +913,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Expediting vacating runway, [CAA]."
+							"__text": "Runway vacated, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -959,7 +959,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Remontons la piste puis première à droite, [CAA]."
+							"__text": "Je remonte la piste puis première à droite, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1015,7 +1015,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Maintenons position avant la prochaine intersection pour laisser passer un Cessna 172 droite vers la gauche, [CAA]."
+							"__text": "Je maintiens position avant la prochaine intersection pour laisser passer un Cessna 172 droite vers la gauche, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1043,7 +1043,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Traversons piste 04 gauche, [CAA]."
+							"__text": "Je traverse piste 04 gauche, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1071,7 +1071,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Numéro 2, Cessna 172 en vue, rappellerons fin de vent arrière, [CAA]."
+							"__text": "Numéro 2, Cessna 172 en vue, je rappellerai fin de vent arrière, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1099,7 +1099,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Rappellerons fin de vent arrière, [CAA]."
+							"__text": "Je rappellerai fin de vent arrière, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1132,7 +1132,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Rappellerons verticale terrain, [CAA]."
+							"__text": "Je rappellerai verticale terrain, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1170,7 +1170,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Rappellerons verticale [SORTIE]."
+							"__text": "Je rappellerai verticale [SORTIE]."
 						},
 						{
 							"_lang": "en",
@@ -1308,7 +1308,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Interrompons décollage."
+							"__text": "[CAA], J'interromps le décollage."
 						},
 						{
 							"_lang": "en",
@@ -1570,12 +1570,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NTWR], [CAA], nous sommes au point d'attente piste [RWY], prêt au départ."
+							"__text": "[DEP] [NTWR], [CAA], au point d'attente piste [RWY], prêt au départ."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NTWR], [CAA], we are at holding point runway [RWY], ready for departure."
+							"__text": "[DEP] [NTWR], [CAA], holding point runway [RWY], ready for departure."
 						}
 					],
 					"subgraph": [
@@ -1660,7 +1660,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NTWR], [CAA], approchons de [SORTIE]."
+							"__text": "[DEP] [NTWR], [CAA], j'approche de [SORTIE]."
 						},
 						{
 							"_lang": "en",
@@ -1686,7 +1686,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR], [CAA], approchons de [SORTIE]."
+							"__text": "[TTWR] [NTWR], [CAA], j'approche de [SORTIE]."
 						},
 						{
 							"_lang": "en",
@@ -1796,7 +1796,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NAPP], [CAA], départ [STA], montons niveau [NIV]."
+							"__text": "[DEP] [NAPP], [CAA], départ [STA], je monte niveau [NIV]."
 						},
 						{
 							"_lang": "en",

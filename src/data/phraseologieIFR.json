@@ -416,16 +416,6 @@
 							"_lang": "en",
 							"_class": "ATC",
 							"__text": "[CAA], expect start-up time [HDIFF] due inbound traffic."
-						},
-						{
-							"_lang": "fr",
-							"_class": "Pilot",
-							"__text": "Prévoyons mise en route [HDIFF], [CAA]."
-						},
-						{
-							"_lang": "en",
-							"_class": "Pilot",
-							"__text": "Expecting start-up [HDIFF], [CAA]."
 						}
 					],
 					"_id": "MER_DIFFEREE",
