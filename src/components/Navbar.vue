@@ -57,6 +57,8 @@
           <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','aide')">Aide</a>
           <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','parametres')">Paramètres</a>
           <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','about')">À propos</a>
+          <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','feedback')">Retour</a>
+          <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" class="cursor-pointer hover:text-gray-200 font-medium">Discord</a>
         </div>
       </div>
     </div>
@@ -88,6 +90,8 @@
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','aide')">Aide</a>
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','parametres')">Paramètres</a>
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','about')">À propos</a>
+      <a class="block py-1 text-blue-100" @click="$emit('open-modal','feedback')">J'ai un retour</a>
+      <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" class="block py-1 text-blue-100 font-medium">Rejoindre le Discord</a>
     </DisclosurePanel>
   </Disclosure>
 </template>

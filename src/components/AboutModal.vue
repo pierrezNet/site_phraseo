@@ -23,7 +23,7 @@
             </a>
             <p>Ces textes sont regroupés sur deux <a href="https://github.com/pierrezNet/site_phraseo/tree/main/src/data" target="_blank" rel="noopener noreferrer">fichiers en langage JSON</a>. Ils constituent le référentiel de phraséologie aéronautique.</p>
             <h3 class="text-lg font-semibold mt-3">Utilisation</h3>
-            <p>Aucune information saisie dans ce formulaire n'est envoyée sur le réseau. Aucune exploitation n'est faite de vos adresses IP. Le service de phraséologie peut être utilisé librement mais il convient de le réserver à la simulation de vol.</p>
+            <p>Aucune information saisie dans le formulaire de vol n'est envoyée sur le réseau : vos paramètres restent sur votre appareil. Une mesure d'audience anonyme et sans cookie (Cloudflare Web Analytics) est utilisée pour comprendre l'usage du service, sans exploitation de vos adresses IP. Les retours que vous envoyez volontairement via le formulaire « J'ai un retour » sont transmis à notre <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer">salon Discord</a>. Le service de phraséologie peut être utilisé librement mais il convient de le réserver à la simulation de vol.</p>
 		    </div>
         <div class="mt-6 flex justify-end">
           <button @click="close" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">

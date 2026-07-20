@@ -24,6 +24,7 @@
     <AideModal ref="aideModal" />
     <ParametresModal ref="parametresModal" :currentMode="currentMode" />
     <AboutModal ref="aboutModal" />
+    <FeedbackModal ref="feedbackModal" />
   </div>
 </template>
 
@@ -35,6 +36,7 @@ import TaskTextDisplay from '@/components/TaskTextDisplay.vue';
 import AideModal from '@/components/AideModal.vue';
 import ParametresModal from '@/components/ParametresModal.vue';
 import AboutModal from '@/components/AboutModal.vue';
+import FeedbackModal from '@/components/FeedbackModal.vue';
 
 // Import des deux bases de données
 import phraseoIFR from '@/data/phraseologieIFR.json';
@@ -78,6 +80,7 @@ const handleModeChange = (newMode: string) => {
 const aideModal = ref<ModalInstance | null>(null);
 const parametresModal = ref<ModalInstance | null>(null);
 const aboutModal = ref<ModalInstance | null>(null);
+const feedbackModal = ref<ModalInstance | null>(null);
 const tabsRef = ref<TabsInstance | null>(null);
 
 /**
@@ -93,6 +96,7 @@ const openModal = (modalName: string) => {
   if (modalName === 'aide') aideModal.value?.open();
   if (modalName === 'parametres') parametresModal.value?.open();
   if (modalName === 'about') aboutModal.value?.open();
+  if (modalName === 'feedback') feedbackModal.value?.open();
 };
 
 const selectTask = (tabCode: string, taskId: string) => {
