@@ -40,6 +40,20 @@
                 {{ level.short }}
               </button>
             </div>
+
+            <template v-if="quizAvailable">
+              <div class="h-6 w-px bg-blue-700 mx-2"></div>
+              <button
+                @click="quizStore.toggle()"
+                :class="[
+                  'px-2 py-0.5 rounded text-xs font-medium transition-colors',
+                  quizStore.enabled ? 'bg-green-500 text-white' : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+                ]"
+                title="Mode quiz : masque les réponses pilote pour s'entraîner"
+              >
+                Quiz {{ quizStore.enabled ? 'ON' : 'OFF' }}
+              </button>
+            </template>
           </div>
         </div>
 
@@ -57,7 +71,11 @@
           <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','aide')">Aide</a>
           <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','parametres')">Paramètres</a>
           <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','about')">À propos</a>
-          <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','feedback')">Retour</a>
+          <a class="cursor-pointer hover:text-gray-200 flex items-center" @click="$emit('open-modal','feedback')" title="J'ai un retour" aria-label="J'ai un retour">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.84L3 20l1.09-3.27A7.94 7.94 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </a>
           <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" class="cursor-pointer hover:text-gray-200 font-medium">Discord</a>
         </div>
       </div>
@@ -86,6 +104,18 @@
           {{ level.short }}
         </button>
       </div>
+      <div v-if="quizAvailable" class="flex items-center space-x-2 py-1">
+        <span class="text-blue-200 text-sm">Quiz :</span>
+        <button
+          @click="quizStore.toggle()"
+          :class="[
+            'px-2 py-0.5 rounded text-xs font-medium transition-colors',
+            quizStore.enabled ? 'bg-green-500 text-white' : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+          ]"
+        >
+          {{ quizStore.enabled ? 'Activé' : 'Désactivé' }}
+        </button>
+      </div>
       <hr class="border-blue-700 my-2">
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','aide')">Aide</a>
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','parametres')">Paramètres</a>
@@ -100,16 +130,26 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { useLangStore } from '../stores/lang'
 import { useFormStore, type UserLevel } from '../stores/form'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useQuizStore } from '../stores/quiz'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps(['currentMode'])
 const emit = defineEmits(['update:mode', 'open-modal', 'select-task'])
 
 const langStore = useLangStore()
 const formStore = useFormStore()
+const quizStore = useQuizStore()
 
 // Gestion du mode de vol (IFR/VFR)
 const flightMode = ref(localStorage.getItem('flightMode') || 'IFR')
+
+// Le mode quiz n'est proposé qu'en VFR débutant pour l'instant
+const quizAvailable = computed(
+  () => flightMode.value === 'VFR' && formStore.form.LEVEL === 'débutant'
+)
+watch(quizAvailable, (available) => {
+  if (!available) quizStore.disable()
+})
 
 const toggleFlightMode = () => {
   flightMode.value = flightMode.value === 'IFR' ? 'VFR' : 'IFR'

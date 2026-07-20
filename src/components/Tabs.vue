@@ -106,7 +106,7 @@ const props = defineProps<{
   currentMode?: string
 }>();
 
-const emit = defineEmits(['task-selected']);
+const emit = defineEmits(['task-selected', 'update:context']);
 
 const langStore = useLangStore();
 const formStore = useFormStore();
@@ -119,6 +119,12 @@ const selectedTab = ref('SO');
 const selectedTaskIds = ref<string[]>([]);
 const isReady = ref(false);
 const tabChangedFromMap = ref(false);
+
+// Contexte affiché (fil d'Ariane) : étape principale + option choisie
+const currentStep = ref('');
+const currentOption = ref('');
+const emitContext = () =>
+  emit('update:context', { step: currentStep.value, option: currentOption.value });
 
 
 const tasks = ref<any[]>([]);
@@ -257,6 +263,9 @@ const onMapSelect = (taskId: string, tab?: string) => {
   const task = tasks.value.find((t: any) => t._id === taskId);
   if (!task) return;
 
+  currentStep.value = task._name;
+  currentOption.value = '';
+
   // Gestion des subgraphs
   if (task.subgraph) {
     const visibleSubgraphs = task.subgraph
@@ -277,6 +286,7 @@ const onMapSelect = (taskId: string, tab?: string) => {
       const single = visibleSubgraphs[0];
       if (single.fullTask) {
         selectedTaskIds.value.push(single.refid);
+        currentOption.value = single._name;
         const combined = [...(task.para || []), ...(single.fullTask.para || [])];
         emit('task-selected', combined);
       } else {
@@ -289,6 +299,7 @@ const onMapSelect = (taskId: string, tab?: string) => {
   } else {
     emit('task-selected', task.para || []);
   }
+  emitContext();
 };
 
 const findTaskById = (id: string) => {
@@ -307,6 +318,8 @@ const logTask = (task: any) => {
 
   // 2. Mise à jour de l'état global
   simulatorStore.currentTaskId = task._id;
+  currentStep.value = task._name;
+  currentOption.value = '';
 
   // 3. Gestion des options (Subgraphs) — filtrage par niveau
   if (task.subgraph) {
@@ -331,6 +344,7 @@ const logTask = (task: any) => {
         if (!selectedTaskIds.value.includes(single.refid)) {
           selectedTaskIds.value.push(single.refid);
         }
+        currentOption.value = single._name;
         const combined = [...(task.para || []), ...(single.fullTask.para || [])];
         emit('task-selected', combined);
       } else {
@@ -344,6 +358,7 @@ const logTask = (task: any) => {
     selectedSubgraphs.value = [];
     emit('task-selected', task.para || []);
   }
+  emitContext();
 };
 
 const logSubgraphTask = (subgraph: any) => {
@@ -351,7 +366,9 @@ const logSubgraphTask = (subgraph: any) => {
     selectedTaskIds.value.push(subgraph.refid);
   }
   if (subgraph.fullTask) {
+    currentOption.value = subgraph._name;
     emit('task-selected', subgraph.fullTask.para || []);
+    emitContext();
   }
 };
 
@@ -360,6 +377,9 @@ const resetDisplay = () => {
   selectedSubgraphs.value = [];
   emit('task-selected', []);
   simulatorStore.currentTaskId = null;
+  currentStep.value = '';
+  currentOption.value = '';
+  emitContext();
 };
 
 // --- Lifecycle ---

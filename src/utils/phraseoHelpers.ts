@@ -60,6 +60,30 @@ export function resolveStation(
   return formStore.frequencyLabels[stationKey]?.[lang] || freqType;
 }
 
+/** Hiérarchie fréquence → station pour le nom de la première station de contact. */
+export const STATION_NAME_HIERARCHY: ReadonlyArray<{ freq: string; station: string }> = [
+  { freq: 'DEL', station: 'NDEL' },
+  { freq: 'GND', station: 'NGND' },
+  { freq: 'TWR', station: 'NTWR' },
+  { freq: 'APP', station: 'NAPP' },
+  { freq: 'CTR', station: 'NCTR' },
+]
+
+/**
+ * Renvoie le NOM de la première station de contact disponible (fréquence renseignée),
+ * en cascadant Prévol → Sol → Tour → Approche → Contrôle.
+ * Repli sur la Tour si aucune fréquence n'est renseignée.
+ */
+export function resolveStationName(lang: Language, formStore: FormStoreType): string {
+  for (const { freq, station } of STATION_NAME_HIERARCHY) {
+    const val = formStore.form[freq]
+    if (typeof val === 'string' && val.trim() !== '') {
+      return formStore.frequencyLabels[station]?.[lang] || station
+    }
+  }
+  return formStore.frequencyLabels['NTWR']?.[lang] || 'NTWR'
+}
+
 /**
  * Remplace tous les placeholders [TAG] d'un texte de phraséologie.
  */
@@ -117,6 +141,8 @@ export function replacePlaceholders(
       case 'APP':
       case 'CTR':
         return resolveStation(p1, lang, formStore);
+      case 'NSTA':
+        return resolveStationName(lang, formStore);
       case 'NDEL':
       case 'NGND':
       case 'NTWR':

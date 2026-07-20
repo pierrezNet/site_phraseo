@@ -6,6 +6,12 @@
       @update:mode="handleModeChange" 
     />
     
+    <FlightStrip
+      v-if="showFlightStrip"
+      class="mx-1 md:mx-3 mt-2"
+      @edit="openModal('parametres')"
+    />
+
     <div class="grid grid-cols-10 gap-4">
       <div class="col-span-12 md:col-span-4">
         <Tabs
@@ -13,11 +19,12 @@
           :phraseoData="currentPhraseoData"
           :currentMode="currentMode"
           @task-selected="updateSelectedTaskTexts"
+          @update:context="updateContext"
         />
       </div>
       
       <div id="instructions" class="col-span-12 md:col-span-6 m-1 md:mt-3 md:ml-3">
-        <TaskTextDisplay :selectedTaskTexts="selectedTaskTexts" />
+        <TaskTextDisplay :selectedTaskTexts="selectedTaskTexts" :context="taskContext" />
       </div>
     </div>
 
@@ -37,6 +44,8 @@ import AideModal from '@/components/AideModal.vue';
 import ParametresModal from '@/components/ParametresModal.vue';
 import AboutModal from '@/components/AboutModal.vue';
 import FeedbackModal from '@/components/FeedbackModal.vue';
+import FlightStrip from '@/components/FlightStrip.vue';
+import { useFormStore } from '@/stores/form';
 
 // Import des deux bases de données
 import phraseoIFR from '@/data/phraseologieIFR.json';
@@ -72,6 +81,11 @@ const currentPhraseoData = computed(() => {
 
 provide('phraseoData', currentPhraseoData);
 
+const formStore = useFormStore();
+const showFlightStrip = computed(
+  () => currentMode.value === 'VFR' && formStore.form.LEVEL === 'débutant'
+);
+
 const handleModeChange = (newMode: string) => {
   currentMode.value = newMode;
   selectedTaskTexts.value = [];
@@ -90,6 +104,11 @@ const selectedTaskTexts = ref<PhraseoLine[]>([]);
 
 const updateSelectedTaskTexts = (texts: any[]) => {
   selectedTaskTexts.value = texts;
+};
+
+const taskContext = ref<{ step: string; option: string }>({ step: '', option: '' });
+const updateContext = (ctx: { step: string; option: string }) => {
+  taskContext.value = ctx;
 };
 
 const openModal = (modalName: string) => {

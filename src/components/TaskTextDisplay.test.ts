@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import TaskTextDisplay from './TaskTextDisplay.vue'
+import { useQuizStore } from '../stores/quiz'
+import { useWeatherStore } from '../stores/weather'
 
 const makeTasks = (text: string, lang = 'fr', cls = 'ATC') => [
   { __text: text, _lang: lang, _class: cls, icon: null },
@@ -82,5 +84,36 @@ describe('TaskTextDisplay', () => {
       props: { selectedTaskTexts: [] },
     })
     expect(wrapper.findAll('.rounded-md')).toHaveLength(0)
+  })
+
+  it('mode quiz : affiche une saisie pour le pilote et garde les lignes ATC (tâche PARAMETRES)', () => {
+    const quiz = useQuizStore()
+    quiz.enabled = true
+    const tasks = [
+      { __text: '[CAA], Demande paramètres pour le départ.', _lang: 'fr', _class: 'Pilot' },
+      { __text: '[CAA], piste [RWY], niveau de transition (6_0).', _lang: 'fr', _class: 'ATC' },
+      { __text: 'Piste [RWY], Q_N_H [QNH], [CAA].', _lang: 'fr', _class: 'Pilot' },
+    ]
+    const wrapper = mount(TaskTextDisplay, {
+      global: { plugins: [pinia] },
+      props: { selectedTaskTexts: tasks },
+    })
+    // 3 blocs affichés (2 saisies pilote + 1 ATC), pas d'écran vide
+    expect(wrapper.findAll('.rounded-md')).toHaveLength(3)
+    expect(wrapper.findAll('textarea')).toHaveLength(2)
+    expect(wrapper.text()).toContain('À vous')
+  })
+
+  it('affiche une tâche avec [QNH] même si le METAR renvoie un altimètre numérique', () => {
+    // Régression : altimeter.value en nombre (METAR) faisait planter buildCriticals
+    const weather = useWeatherStore()
+    weather.metarData = { altimeter: { value: 1013 } }
+    const wrapper = mount(TaskTextDisplay, {
+      global: { plugins: [pinia] },
+      props: { selectedTaskTexts: makeTasks('Piste [RWY], Q_N_H [QNH], [CAA].', 'fr', 'Pilot') },
+    })
+    // Le panneau ne doit pas être vide
+    expect(wrapper.findAll('.rounded-md')).toHaveLength(1)
+    expect(wrapper.text()).toContain('1013')
   })
 })

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { getHeure, POL_STRINGS, replacePlaceholders, resolveStation } from './phraseoHelpers'
+import { getHeure, POL_STRINGS, replacePlaceholders, resolveStation, resolveStationName } from './phraseoHelpers'
 
 const makeFormStore = (overrides = {}) => ({
   form: {
@@ -157,5 +157,41 @@ describe('resolveStation', () => {
     const store = makeFormStore({ TWR: '', APP: '', CTR: '' })
     const result = resolveStation('TWR', 'fr', store as any)
     expect(result).toBe('Tour')
+  })
+})
+
+// ── resolveStationName ([NSTA]) ────────────────────────────────────────────────
+
+describe('resolveStationName', () => {
+  it('renvoie Prévol quand la fréquence Prévol est renseignée', () => {
+    const store = makeFormStore()
+    expect(resolveStationName('fr', store as any)).toBe('Prévol')
+  })
+
+  it('cascade vers Sol si Prévol est vide', () => {
+    const store = makeFormStore({ DEL: '' })
+    expect(resolveStationName('fr', store as any)).toBe('Sol')
+  })
+
+  it('cascade vers Tour si Prévol et Sol sont vides', () => {
+    const store = makeFormStore({ DEL: '', GND: '' })
+    expect(resolveStationName('fr', store as any)).toBe('Tour')
+  })
+
+  it('renvoie le nom en anglais', () => {
+    const store = makeFormStore({ DEL: '', GND: '' })
+    expect(resolveStationName('en', store as any)).toBe('Tower')
+  })
+
+  it('repli sur la Tour si aucune fréquence renseignée', () => {
+    const store = makeFormStore({ DEL: '', GND: '', TWR: '', APP: '', CTR: '' })
+    expect(resolveStationName('fr', store as any)).toBe('Tour')
+  })
+
+  it('[NSTA] est remplacé dans un texte', () => {
+    const store = makeFormStore({ DEL: '', GND: '' })
+    const weather = makeWeatherStore()
+    const result = replacePlaceholders('[DEP] [NSTA], [POL], [CAL].', 'fr', store as any, weather as any)
+    expect(result).toContain('Tour')
   })
 })

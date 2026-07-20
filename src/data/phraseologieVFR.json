@@ -162,7 +162,7 @@
 							"__text": "Runway [RWY], Q_N_H [QNH], [CAA]."
 						}
 					],
-					"_level": "débutant"
+					"_level": "intermédiaire"
 				},
 				{
 					"_id": "DESTINATION",
@@ -1420,7 +1420,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NDEL], [POL], [CAL]."
+							"__text": "[DEP] [NSTA], [POL], [CAL]."
 						},
 						{
 							"_lang": "fr",
@@ -1430,7 +1430,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NDEL], [POL], [CAL]."
+							"__text": "[DEP] [NSTA], [POL], [CAL]."
 						},
 						{
 							"_lang": "en",
