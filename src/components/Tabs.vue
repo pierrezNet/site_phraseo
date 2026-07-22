@@ -29,33 +29,51 @@
       @select-task="onMapSelect"
     />
 
-    <!-- Contenu des tâches par phase -->
-    <div :class="[showCircuitMap ? 'md:hidden' : '', 'grid grid-cols-3 md:grid-cols-1 place-content-between gap-1']">
-      <button
-        v-for="task in filteredPhaseTasks"
-        :key="task._id"
-        :class="[
-          'md:w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
-          selectedTaskIds.includes(task._id)
-              ? `hover:bg-green-800 text-white bg-green-700`
-              : `hover:bg-${task._color}-800 bg-${task._color}-700`
-          ]"
-        @click="logTask(task)"
-      >
-        <svg v-if="task.subgraph && !task.para?.length" class="hidden md:block w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
-        <PilotIcon v-else-if="getInitiator(task) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
-        <AtcIcon v-else-if="getInitiator(task) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
-        <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
-        <span class="hidden md:inline flex-1">{{ task._name }}</span>
-        <span class="inline md:hidden">{{ task._short }}</span>
-        <span
-          v-if="selectedTaskIds.includes(task._id)"
-          class="hidden md:block w-4 shrink-0 text-white"
+    <!-- Contenu des tâches par phase — accordéon par sous-thème -->
+    <div :class="[showCircuitMap ? 'md:hidden' : '']">
+      <template v-for="grp in displayGroups" :key="grp.name">
+        <!-- En-tête repliable — seulement pour les groupes multi-tâches (hors débutant) -->
+        <button
+          v-if="grp.header"
+          type="button"
+          @click="toggleGroup(grp.name)"
+          class="w-full flex items-center justify-between px-2 py-1.5 mt-2 mb-1 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold"
         >
-          ✓
-        </span>
-        <span v-else class="hidden md:block w-4 shrink-0"></span>
-      </button>
+          <span>{{ grp.name }}</span>
+          <span class="text-xs font-normal opacity-70">{{ grp.tasks.length }}&nbsp;{{ openGroup === grp.name ? '▾' : '▸' }}</span>
+        </button>
+
+        <div
+          v-show="grp.alwaysOpen || openGroup === grp.name"
+          class="grid grid-cols-3 md:grid-cols-1 place-content-between gap-1"
+        >
+          <button
+            v-for="task in grp.tasks"
+            :key="task._id"
+            :class="[
+              'md:w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
+              selectedTaskIds.includes(task._id)
+                  ? `hover:bg-green-800 text-white bg-green-700`
+                  : `hover:bg-${task._color}-800 bg-${task._color}-700`
+              ]"
+            @click="logTask(task)"
+          >
+            <svg v-if="task.subgraph && !task.para?.length" class="hidden md:block w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+            <PilotIcon v-else-if="getInitiator(task) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
+            <AtcIcon v-else-if="getInitiator(task) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
+            <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
+            <span class="hidden md:inline flex-1">{{ task._name }}</span>
+            <span class="inline md:hidden">{{ task._short }}</span>
+            <span
+              v-if="selectedTaskIds.includes(task._id)"
+              class="hidden md:block w-4 shrink-0 text-white"
+            >
+              ✓
+            </span>
+            <span v-else class="hidden md:block w-4 shrink-0"></span>
+          </button>
+        </div>
+      </template>
     </div>
 
     <hr v-if="selectedSubgraphs.length > 0" class="md:hidden border border-blue-800 mt-1 mb-1"/>
@@ -100,6 +118,7 @@ import { useSimulatorStore } from '../stores/simulator';
 import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
 import CircuitMap from './CircuitMap.vue';
+import { groupOf, groupOrder } from '../utils/taskGroups';
 
 const props = defineProps<{
   phraseoData: any
@@ -242,6 +261,49 @@ const filteredPhaseTasks = computed(() => {
     .map(ref => tasks.value.find(task => task._id === ref))
     .filter(task => task && isTaskVisible(task) && hasVisibleContent(task));
 });
+
+// --- Regroupement par sous-thème (accordéon) ---
+const groupedPhaseTasks = computed(() => {
+  const map = new Map<string, any[]>();
+  filteredPhaseTasks.value.forEach((t: any) => {
+    const g = groupOf(t, selectedTab.value);
+    if (!map.has(g)) map.set(g, []);
+    map.get(g)!.push(t);
+  });
+  const groups: { name: string; tasks: any[] }[] = [];
+  groupOrder(selectedTab.value).forEach((name) => {
+    if (map.has(name)) { groups.push({ name, tasks: map.get(name)! }); map.delete(name); }
+  });
+  map.forEach((tasks, name) => groups.push({ name, tasks }));
+  return groups;
+});
+
+const isBeginnerLevel = computed(() => formStore.form.LEVEL === 'débutant');
+
+// Groupes affichés : liste plate en débutant ; sinon accordéon pour les groupes
+// multi-tâches, affichage direct (sans en-tête) pour les groupes à une seule tâche.
+const displayGroups = computed(() => {
+  if (isBeginnerLevel.value) {
+    return [{ name: '__flat__', tasks: filteredPhaseTasks.value, header: false, alwaysOpen: true }];
+  }
+  return groupedPhaseTasks.value.map((g) => ({
+    name: g.name,
+    tasks: g.tasks,
+    header: g.tasks.length > 1,
+    alwaysOpen: g.tasks.length === 1,
+  }));
+});
+
+// Accordéon exclusif : un seul groupe ouvert à la fois
+const openGroup = ref<string | null>(null);
+const toggleGroup = (name: string) => {
+  openGroup.value = openGroup.value === name ? null : name;
+};
+// À l'ouverture d'une phase : ouvrir le 1er groupe multi-tâches, fermer les autres
+const resetOpenGroups = () => {
+  const first = groupedPhaseTasks.value.find((g) => g.tasks.length > 1);
+  openGroup.value = first ? first.name : null;
+};
 
 // --- Methods ---
 
@@ -387,11 +449,13 @@ const resetDisplay = () => {
 onMounted(() => {
   langStore.loadLanguage();
   initializeTasks();
+  resetOpenGroups();
 });
 
 // --- Watchers ---
 
 watch(selectedTab, () => {
+  resetOpenGroups();
   if (tabChangedFromMap.value) {
     tabChangedFromMap.value = false;
     return;
@@ -409,12 +473,14 @@ watch(() => formStore.form.MET, (newIcao) => {
 // Changement de niveau : réinitialiser l'affichage
 watch(() => formStore.form.LEVEL, () => {
   resetDisplay();
+  resetOpenGroups();
 });
 
 // Watch props change to re-init tasks if data changes (e.g. mode switch)
 watch(() => props.phraseoData, () => {
   initializeTasks();
   resetDisplay();
+  resetOpenGroups();
 });
 </script>
   
