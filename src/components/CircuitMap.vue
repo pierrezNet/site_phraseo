@@ -43,6 +43,11 @@
 
       <!-- Points interactifs -->
       <g v-for="point in points" :key="point.id" class="cursor-pointer" @click="$emit('select-task', point.id, point.tab)">
+        <!-- Anneau clignotant sur le 1er point tant que rien n'est sélectionné -->
+        <circle v-if="!hasSelection && point.num === 1" :cx="point.x" :cy="point.y" r="14" fill="none" stroke="#22c55e" stroke-width="3">
+          <animate attributeName="r" values="14;24;14" dur="1.6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.9;0;0.9" dur="1.6s" repeatCount="indefinite"/>
+        </circle>
         <circle :cx="point.x" :cy="point.y" r="17" fill="none" :stroke="isActive(point.id) ? '#22c55e' : 'none'" stroke-width="3"/>
         <circle :cx="point.x" :cy="point.y" r="14" :fill="point.color" opacity="0.9" class="hover:opacity-100 transition"/>
         <text :x="point.x" :y="point.y + 5" text-anchor="middle" fill="white" font-size="1em" font-weight="bold">{{ point.num }}</text>
@@ -56,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 
 const props = defineProps<{
   selectedTaskIds: string[]
@@ -64,6 +70,7 @@ const props = defineProps<{
 defineEmits(['select-task']);
 
 const isActive = (taskId: string) => props.selectedTaskIds.includes(taskId);
+const hasSelection = computed(() => props.selectedTaskIds.length > 0);
 
 const points = [
   { id: 'MISE_EN_ROUTE',    tab: 'SO', num: 1, x: 200, y: 305, lx: 130, ly: 308, color: '#f97316', label: 'Mise en route' },

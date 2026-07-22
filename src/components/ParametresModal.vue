@@ -26,15 +26,15 @@
             </div>
             <div>
               <label for="COM" class="label-field">{{ isVFR() ? "Type d'appareil" : "Compagnie" }}</label>
-              <input type="text" id="COM" :value="isVFR() ? formStore.form.COM_VFR : formStore.form.COM_IFR" @input="updateCallsign('COM', $event)" class="input-field">
+              <input type="text" id="COM" v-model="formStore.form.COM" @change="updateForm" class="input-field">
             </div>
             <div>
               <label for="CAL" class="label-field">Indicatif d'appel</label>
-              <input type="text" id="CAL" :value="isVFR() ? formStore.form.CAL_VFR : formStore.form.CAL_IFR" @input="updateCallsign('CAL', $event)" class="input-field">
+              <input type="text" id="CAL" v-model="formStore.form.CAL" @change="updateForm" class="input-field">
             </div>
             <div>
               <label for="CAA" class="label-field">Indicatif abrégé</label>
-              <input type="text" id="CAA" :value="isVFR() ? formStore.form.CAA_VFR : formStore.form.CAA_IFR" @input="updateCallsign('CAA', $event)" class="input-field">
+              <input type="text" id="CAA" v-model="formStore.form.CAA" @change="updateForm" class="input-field">
             </div>
             <div>
               <label for="INF" class="label-field">Information contrôleur</label>
@@ -67,7 +67,7 @@
               <input type="text" id="VOI" v-model="formStore.form.VOI" @change="updateForm" class="input-field">
             </div>
             <div>
-              <label for="HLD" class="label-field">Point d'arrêt</label>
+              <label for="HLD" class="label-field">Point d'attente</label>
               <input type="text" id="HLD" v-model="formStore.form.HLD" @change="updateForm" class="input-field">
             </div>
             <div>
@@ -80,7 +80,7 @@
             </div>
             <div>
               <label for="SQU" class="label-field">Code transpondeur</label>
-              <input type="text" id="SQU" :value="isVFR() ? formStore.form.SQU_VFR : formStore.form.SQU_IFR" @input="updateSquawk($event)" class="input-field">
+              <input type="text" id="SQU" v-model="formStore.form.SQU" @change="updateForm" class="input-field">
             </div>
           </div>
           <div>
@@ -88,7 +88,7 @@
               <label for="NIV" class="label-field">Niveau</label>
               <input type="text" id="NIV" v-model="formStore.form.NIV" @change="updateForm" class="input-field">
             </div>
-            <div>
+            <div v-if="!isVFR()">
               <label for="VIT" class="label-field">Vitesse</label>
               <input type="text" id="VIT" v-model="formStore.form.VIT" @change="updateForm" class="input-field">
             </div>
@@ -188,7 +188,7 @@
                 </svg>
               </button>
             </div>
-            <div class="relative mb-4">
+            <div v-if="!isVFR()" class="relative mb-4">
               <label for="CTR" class="label-field">En route</label>
               <input
                 type="text"
@@ -257,25 +257,6 @@ export default defineComponent({
       isOpen.value = false
     }
 
-    const updateCallsign = (field: 'CAL' | 'CAA' | 'COM', event: Event) => {
-      const value = (event.target as HTMLInputElement).value
-      const suffix = props.currentMode === 'VFR' ? '_VFR' : '_IFR'
-      formStore.form[field + suffix] = value
-      formStore.form[field] = value
-      updateForm()
-    }
-
-    const updateSquawk = (event: Event) => {
-      const value = (event.target as HTMLInputElement).value
-      if (props.currentMode === 'VFR') {
-        formStore.form.SQU_VFR = value
-      } else {
-        formStore.form.SQU_IFR = value
-      }
-      formStore.form.SQU = value
-      updateForm()
-    }
-
     const updateForm = () => {
       formStore.updateFormData(formStore.form);
     }
@@ -287,8 +268,6 @@ export default defineComponent({
       open,
       close,
       clearInput,
-      updateCallsign,
-      updateSquawk,
       updateForm
     }
   }

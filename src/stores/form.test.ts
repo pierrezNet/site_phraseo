@@ -87,4 +87,41 @@ describe('formStore', () => {
       expect(store.formatFrequency('abc', 'en')).toBe('INVALID INPUT')
     })
   })
+
+  // ── paramètres indépendants par mode ──────────────────────────────────────────
+
+  describe('switchMode — paramètres par mode', () => {
+    it('conserve des valeurs de piste distinctes en VFR et IFR', () => {
+      store.switchMode('IFR')
+      store.updateFormData({ RWY: '09' })
+
+      store.switchMode('VFR')
+      expect(store.form.RWY).toBe('23') // défaut VFR intact
+      store.updateFormData({ RWY: '05' })
+
+      store.switchMode('IFR')
+      expect(store.form.RWY).toBe('09') // valeur IFR retrouvée
+
+      store.switchMode('VFR')
+      expect(store.form.RWY).toBe('05') // valeur VFR retrouvée
+    })
+
+    it('COM et SQU diffèrent par défaut selon le mode', () => {
+      store.switchMode('IFR')
+      expect(store.form.COM).toBe('Boeing 737')
+      expect(store.form.SQU).toBe('1000')
+
+      store.switchMode('VFR')
+      expect(store.form.COM).toBe('Cessna 172')
+      expect(store.form.SQU).toBe('7001')
+    })
+
+    it('LEVEL reste partagé entre les modes', () => {
+      store.updateFormData({ LEVEL: 'intermédiaire' })
+      store.switchMode('VFR')
+      expect(store.form.LEVEL).toBe('intermédiaire')
+      store.switchMode('IFR')
+      expect(store.form.LEVEL).toBe('intermédiaire')
+    })
+  })
 })

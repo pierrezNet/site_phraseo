@@ -39,13 +39,21 @@
 
 /* Le reste peut rester en dehors de @layer s'il s'agit de CSS standard */
 div#instructions > div:not(:has(div)):after {
-    content: "Sélectionner une instruction ou une option";
+    /* Mobile : les étapes sont au-dessus du dialogue → doigt vers le haut */
+    content: "👆 Cliquez sur une étape ou une option pour afficher le dialogue.";
     font-size: 1.5rem;
     font-stretch: expanded;
     position: relative;
     top: 0;
     left: 0;
     pointer-events: none;
+}
+
+/* Desktop : les étapes sont à gauche du dialogue → doigt vers la gauche */
+@media (min-width: 768px) {
+    div#instructions > div:not(:has(div)):after {
+        content: "👈 Cliquez sur une étape ou une option pour afficher le dialogue.";
+    }
 }
 
 .modal a {

@@ -62,21 +62,39 @@
           <span v-else class="text-2xl">✕</span>
         </DisclosureButton>
 
-        <div class="hidden md:flex space-x-4 items-center">
-          <a :class="langStore.current==='fr'? 'font-bold underline underline-offset-4':'hover:text-gray-200 cursor-pointer'" @click.prevent="changeLanguage('fr')">Français</a>
-          <a :class="langStore.current==='en'? 'font-bold underline underline-offset-4':'hover:text-gray-200 cursor-pointer'" @click.prevent="changeLanguage('en')">English</a>
-          
-          <div class="h-6 w-px bg-blue-700 mx-2"></div>
+        <div class="hidden md:flex space-x-3 items-center">
+          <a :class="langStore.current==='fr'? 'font-bold underline underline-offset-4':'hover:text-gray-200 cursor-pointer'" @click.prevent="changeLanguage('fr')" title="Français">FR</a>
+          <a :class="langStore.current==='en'? 'font-bold underline underline-offset-4':'hover:text-gray-200 cursor-pointer'" @click.prevent="changeLanguage('en')" title="English">EN</a>
 
-          <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','aide')">Aide</a>
-          <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','parametres')">Paramètres</a>
-          <a class="cursor-pointer hover:text-gray-200" @click="$emit('open-modal','about')">À propos</a>
-          <a class="cursor-pointer hover:text-gray-200 flex items-center" @click="$emit('open-modal','feedback')" title="J'ai un retour" aria-label="J'ai un retour">
+          <div class="h-6 w-px bg-blue-700 mx-1"></div>
+
+          <a class="cursor-pointer hover:text-gray-200 flex items-center gap-1" @click="$emit('open-modal','parametres')" title="Paramètres du vol">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.84L3 20l1.09-3.27A7.94 7.94 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
+            <span>Paramètres</span>
           </a>
-          <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" class="cursor-pointer hover:text-gray-200 font-medium">Discord</a>
+
+          <Menu as="div" class="relative">
+            <MenuButton class="cursor-pointer hover:text-gray-200 flex items-center gap-1 focus:outline-none">
+              Plus <span class="text-xs">▾</span>
+            </MenuButton>
+            <MenuItems class="absolute right-0 mt-2 w-44 bg-white text-gray-800 rounded-md shadow-lg py-1 z-50 focus:outline-none">
+              <MenuItem v-slot="{ active }">
+                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-gray-100' : '']" @click="$emit('open-modal','aide')">Aide</button>
+              </MenuItem>
+              <MenuItem v-slot="{ active }">
+                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-gray-100' : '']" @click="$emit('open-modal','about')">À propos</button>
+              </MenuItem>
+              <MenuItem v-slot="{ active }">
+                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-gray-100' : '']" @click="$emit('open-modal','feedback')">J'ai un retour</button>
+              </MenuItem>
+              <MenuItem v-slot="{ active }">
+                <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" :class="['block px-4 py-2 font-medium', active ? 'bg-gray-100' : '']">Discord</a>
+              </MenuItem>
+            </MenuItems>
+          </Menu>
         </div>
       </div>
     </div>
@@ -127,11 +145,11 @@
 </template>
 
 <script setup lang="ts">
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useLangStore } from '../stores/lang'
 import { useFormStore, type UserLevel } from '../stores/form'
 import { useQuizStore } from '../stores/quiz'
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps(['currentMode'])
 const emit = defineEmits(['update:mode', 'open-modal', 'select-task'])
@@ -143,24 +161,14 @@ const quizStore = useQuizStore()
 // Gestion du mode de vol (IFR/VFR)
 const flightMode = ref(localStorage.getItem('flightMode') || 'IFR')
 
-// Le mode quiz n'est proposé qu'en VFR débutant pour l'instant
-const quizAvailable = computed(
-  () => flightMode.value === 'VFR' && formStore.form.LEVEL === 'débutant'
-)
-watch(quizAvailable, (available) => {
-  if (!available) quizStore.disable()
-})
+// Le mode quiz est disponible dans tous les modes et niveaux
+const quizAvailable = computed(() => true)
 
 const toggleFlightMode = () => {
   flightMode.value = flightMode.value === 'IFR' ? 'VFR' : 'IFR'
   localStorage.setItem('flightMode', flightMode.value)
-  // Synchroniser transpondeur et indicatifs avec le mode
-  const isVfr = flightMode.value === 'VFR'
-  formStore.form.SQU = isVfr ? formStore.form.SQU_VFR : formStore.form.SQU_IFR
-  formStore.form.COM = isVfr ? formStore.form.COM_VFR : formStore.form.COM_IFR
-  formStore.form.CAL = isVfr ? formStore.form.CAL_VFR : formStore.form.CAL_IFR
-  formStore.form.CAA = isVfr ? formStore.form.CAA_VFR : formStore.form.CAA_IFR
-  formStore.updateFormData(formStore.form)
+  // Paramètres indépendants par mode : on échange l'instantané VFR/IFR
+  formStore.switchMode(flightMode.value as 'VFR' | 'IFR')
   emit('update:mode', flightMode.value)
 }
 

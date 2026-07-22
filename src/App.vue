@@ -6,11 +6,9 @@
       @update:mode="handleModeChange" 
     />
     
-    <FlightStrip
-      v-if="showFlightStrip"
-      class="mx-1 md:mx-3 mt-2"
-      @edit="openModal('parametres')"
-    />
+    <div v-if="showFlightStrip" class="px-2 md:px-4 pt-2">
+      <FlightStrip @edit="openModal('parametres')" />
+    </div>
 
     <div class="grid grid-cols-10 gap-4">
       <div class="col-span-12 md:col-span-4">
@@ -46,6 +44,7 @@ import AboutModal from '@/components/AboutModal.vue';
 import FeedbackModal from '@/components/FeedbackModal.vue';
 import FlightStrip from '@/components/FlightStrip.vue';
 import { useFormStore } from '@/stores/form';
+import { useQuizStore } from '@/stores/quiz';
 
 // Import des deux bases de données
 import phraseoIFR from '@/data/phraseologieIFR.json';
@@ -82,8 +81,11 @@ const currentPhraseoData = computed(() => {
 provide('phraseoData', currentPhraseoData);
 
 const formStore = useFormStore();
+const quizStore = useQuizStore();
 const showFlightStrip = computed(
-  () => currentMode.value === 'VFR' && formStore.form.LEVEL === 'débutant'
+  () =>
+    (currentMode.value === 'VFR' && formStore.form.LEVEL === 'débutant') ||
+    quizStore.enabled
 );
 
 const handleModeChange = (newMode: string) => {

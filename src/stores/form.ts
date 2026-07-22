@@ -7,6 +7,7 @@ export type StationType = 'NDEL' | 'NGND' | 'NTWR' | 'NAPP' | 'NCTR'
 export type RunwaySuffix = 'L' | 'R' | 'C'
 
 export type UserLevel = 'débutant' | 'intermédiaire' | 'avancé'
+export type FlightMode = 'VFR' | 'IFR'
 
 export interface FormData {
   [key: string]: string | undefined
@@ -19,14 +20,8 @@ export interface FormData {
   POS: string
   ARR: string
   COM: string
-  COM_VFR: string
-  COM_IFR: string
   CAL: string
   CAA: string
-  CAL_VFR: string
-  CAA_VFR: string
-  CAL_IFR: string
-  CAA_IFR: string
   INF: string
   WPT: string
   STA: string
@@ -35,8 +30,6 @@ export interface FormData {
   QNH: string
   RWY: string
   SQU: string
-  SQU_VFR: string
-  SQU_IFR: string
   NIV: string
   VIT: string
   CAP: string
@@ -63,7 +56,9 @@ export interface FrequencyLabels {
 }
 
 export interface FormStoreState {
+  mode: FlightMode
   form: FormData
+  snapshots: Record<FlightMode, FormData>
   frequencyLabels: FrequencyLabels
 }
 
@@ -84,7 +79,7 @@ const FREQUENCY_TO_STATION_MAP: Record<FrequencyType, StationType> = {
 const RUNWAY_TRANSLATIONS = {
   fr: {
     'L': 'Gauche',
-    'R': 'Droite', 
+    'R': 'Droite',
     'C': 'Centrale'
   } as Record<RunwaySuffix, string>,
   en: {
@@ -110,60 +105,106 @@ const ERROR_MESSAGES = {
 const MAX_FREQUENCY_LENGTH = 7
 const DECIMAL_PRECISION = 1000
 
+// Noms des stations (identiques aux deux modes)
+const STATION_NAMES = {
+  NDEL: 'Prévol',
+  NGND: 'Sol',
+  NTWR: 'Tour',
+  NAPP: 'Approche',
+  NCTR: 'Contrôle'
+}
+
+// Valeurs par défaut spécifiques à chaque mode. LEVEL est partagé (non basculé).
+const VFR_DEFAULTS: FormData = {
+  LEVEL: 'débutant',
+  FIR: 'REIMS',
+  DEP: 'Strasbourg',
+  POS: 'Aviation générale',
+  ARR: 'Colmar',
+  COM: 'Cessna 172',
+  CAL: 'F-EPST',
+  CAA: 'F S T',
+  INF: 'C',
+  WPT: 'BUBLI',
+  STA: 'Bubli_3_Papa',
+  NIV: '110',
+  SORTIE: 'Melun',
+  ALT: '2500',
+  TTWR: 'Strasbourg',
+  VOI: 'P3',
+  HLD: 'F',
+  MET: 'LFST',
+  RWY: '23',
+  SQU: '7001',
+  VIT: '360',
+  CAP: '360',
+  DEL: '',
+  GND: '121.8',
+  TWR: '119.250',
+  APP: '120.700',
+  CTR: '125.100',
+  QNH: '1013',
+  ...STATION_NAMES
+}
+
+const IFR_DEFAULTS: FormData = {
+  LEVEL: 'débutant',
+  FIR: 'Paris',
+  DEP: 'Orly',
+  POS: 'D2',
+  ARR: 'Strasbourg',
+  COM: 'Boeing 737',
+  CAL: 'Air Europe 01',
+  CAA: 'AEL001',
+  INF: 'E',
+  WPT: 'BUBLI',
+  STA: 'Bubli_3_Papa',
+  NIV: '110',
+  SORTIE: 'Melun',
+  ALT: '2500',
+  TTWR: 'Strasbourg',
+  VOI: 'W3 W4',
+  HLD: 'W41',
+  MET: 'LFPO',
+  RWY: '26L',
+  SQU: '1000',
+  VIT: '360',
+  CAP: '360',
+  DEL: '121.050',
+  GND: '121.825',
+  TWR: '118.700',
+  APP: '123.875',
+  CTR: '125.100',
+  QNH: '1013',
+  ...STATION_NAMES
+}
+
+const defaultSnapshots = (): Record<FlightMode, FormData> => ({
+  VFR: { ...VFR_DEFAULTS },
+  IFR: { ...IFR_DEFAULTS }
+})
+
+const initialMode = (): FlightMode =>
+  (localStorage.getItem('flightMode') as FlightMode) || 'IFR'
+
 export const useFormStore = defineStore('form', {
-  state: (): FormStoreState => ({
-    form: {
-      LEVEL: 'débutant' as UserLevel,
-      ALT: '2500',
-      SORTIE: 'Melun',
-      TTWR: 'Strasbourg',
-      FIR: 'Paris',
-      DEP: 'Orly',
-      POS: 'D2',
-      ARR: 'Strasbourg',
-      COM: 'Air Europe',
-      COM_VFR: 'Cessna 172',
-      COM_IFR: 'Air Europe',
-      CAL: 'Air Europe 01',
-      CAA: 'AEL001',
-      CAL_VFR: 'F-EPST',
-      CAA_VFR: 'F S T',
-      CAL_IFR: 'Air Europe 01',
-      CAA_IFR: 'AEL001',
-      INF: 'L',
-      WPT: 'BUBLI',
-      STA: 'Bubli_3_Papa',
-      VOI: 'W3 W4',
-      HLD: 'W41',
-      MET: 'LFPO',
-      QNH: '1013',
-      RWY: '26L',
-      SQU: '1000',
-      SQU_VFR: '7001',
-      SQU_IFR: '1000',
-      NIV: '110',
-      VIT: '360',
-      CAP: '360',
-      DEL: '121.050',
-      GND: '121.825',
-      TWR: '118.700',
-      APP: '123.875',
-      CTR: '125.100',
-      NDEL: "Prévol",
-      NGND: "Sol",
-      NTWR: "Tour",
-      NAPP: "Approche",
-      NCTR: "Contrôle"
-    },
-    frequencyLabels: {
-      NDEL: { frequency: '', fr: "Prévol", en: "Delivery" },
-      NGND: { frequency: '', fr: "Sol", en: "Ground" },
-      NTWR: { frequency: '', fr: "Tour", en: "Tower" },
-      NAPP: { frequency: '', fr: "Approche", en: "Approach" },
-      NCTR: { frequency: '', fr: "Contrôle", en: "Control" },
-      NUNI: { frequency: '122.800', fr: "UNICOM", en: "UNICOM" }
+  state: (): FormStoreState => {
+    const snapshots = defaultSnapshots()
+    const mode = initialMode()
+    return {
+      mode,
+      form: { ...snapshots[mode] },
+      snapshots,
+      frequencyLabels: {
+        NDEL: { frequency: '', fr: "Prévol", en: "Delivery" },
+        NGND: { frequency: '', fr: "Sol", en: "Ground" },
+        NTWR: { frequency: '', fr: "Tour", en: "Tower" },
+        NAPP: { frequency: '', fr: "Approche", en: "Approach" },
+        NCTR: { frequency: '', fr: "Contrôle", en: "Control" },
+        NUNI: { frequency: '122.800', fr: "UNICOM", en: "UNICOM" }
+      }
     }
-  }),
+  },
 
   getters: {
     // Optimisation : Accès direct formaté pour l'UI
@@ -176,12 +217,28 @@ export const useFormStore = defineStore('form', {
 
   actions: {
     /**
-     * Updates form data and synchronizes frequency labels
+     * Met à jour le formulaire actif et synchronise l'instantané du mode courant.
      */
     updateFormData(payload: Partial<FormData>): void {
-      // Le spread operator permet de ne mettre à jour que ce qui a changé
       this.form = { ...this.form, ...payload }
-      
+      this.snapshots[this.mode] = { ...this.snapshots[this.mode], ...this.form }
+
+      this.saveToLocalStorage()
+      this.syncFrequencyLabels()
+    },
+
+    /**
+     * Bascule VFR/IFR en conservant des paramètres indépendants par mode.
+     * LEVEL reste partagé entre les deux modes.
+     */
+    switchMode(newMode: FlightMode): void {
+      if (newMode === this.mode) return
+      // On range le mode courant, puis on restaure le nouveau
+      this.snapshots[this.mode] = { ...this.snapshots[this.mode], ...this.form }
+      const level = this.form.LEVEL
+      this.mode = newMode
+      this.form = { ...this.snapshots[newMode], LEVEL: level }
+
       this.saveToLocalStorage()
       this.syncFrequencyLabels()
     },
@@ -191,7 +248,10 @@ export const useFormStore = defineStore('form', {
      */
     saveToLocalStorage(): void {
       try {
-        localStorage.setItem('formData', JSON.stringify(this.form))
+        localStorage.setItem(
+          'phraseoForm',
+          JSON.stringify({ mode: this.mode, form: this.form, snapshots: this.snapshots })
+        )
       } catch (error) {
         console.error('Failed to save form data to localStorage:', error)
       }
@@ -215,16 +275,37 @@ export const useFormStore = defineStore('form', {
      * Initializes form data from localStorage with error handling
      */
     initializeFormData(): void {
-      const saved = localStorage.getItem('formData')
+      const saved = localStorage.getItem('phraseoForm')
       if (saved) {
         try {
-          const parsed = JSON.parse(saved)
-          this.form = { ...this.form, ...parsed } // Merge pour éviter de casser si le schéma change
-          this.syncFrequencyLabels()
+          const p = JSON.parse(saved)
+          if (p.snapshots?.VFR) this.snapshots.VFR = { ...this.snapshots.VFR, ...p.snapshots.VFR }
+          if (p.snapshots?.IFR) this.snapshots.IFR = { ...this.snapshots.IFR, ...p.snapshots.IFR }
+          // Le formulaire persisté appartient à son mode
+          if (p.form && p.mode) this.snapshots[p.mode as FlightMode] = { ...this.snapshots[p.mode as FlightMode], ...p.form }
         } catch (e) {
           console.error("Storage corrompu")
         }
+      } else {
+        // Migration depuis l'ancien format à clé unique
+        const old = localStorage.getItem('formData')
+        if (old) {
+          try {
+            const parsed = JSON.parse(old)
+            this.snapshots.VFR = { ...this.snapshots.VFR, ...parsed }
+            this.snapshots.IFR = { ...this.snapshots.IFR, ...parsed }
+          } catch (e) {
+            console.error("Storage corrompu")
+          }
+        }
       }
+
+      // Le mode actif suit le toggle (localStorage 'flightMode')
+      const mode = (localStorage.getItem('flightMode') as FlightMode) || this.mode
+      this.mode = mode
+      const level = this.form.LEVEL
+      this.form = { ...this.snapshots[mode], LEVEL: level }
+      this.syncFrequencyLabels()
     },
 
     /**
@@ -281,7 +362,7 @@ export const useFormStore = defineStore('form', {
       const frequencyType = this.getFrequencyTypeFromStation(stationType)
       const frequency = frequencyType ? (this.form[frequencyType] ?? '') : ''
 
-      return frequency 
+      return frequency
         ? `${label}, ${this.formatFrequency(frequency, lang)}`
         : label
     },
@@ -311,7 +392,7 @@ export const useFormStore = defineStore('form', {
       }
 
       const cleanFreq = this.cleanFrequencyInput(freq)
-      
+
       if (!this.isValidFrequency(cleanFreq)) {
         return ERROR_MESSAGES[lang].INVALID_INPUT
       }
@@ -354,7 +435,7 @@ export const useFormStore = defineStore('form', {
       const decimalPart = parts[1] || '0'
       const decimalValue = parseInt(decimalPart) / DECIMAL_PRECISION
 
-      return lang === 'fr' 
+      return lang === 'fr'
         ? this.formatFrequencyFrench(integerPart, decimalPart, decimalValue)
         : this.formatFrequencyEnglish(integerPart, decimalPart, decimalValue)
     },
@@ -415,14 +496,14 @@ export const useFormStore = defineStore('form', {
       }
 
       const [, number, suffix] = match
-      
+
       if (!suffix) {
         return number // Just the number if no suffix
       }
 
       const suffixUpper = suffix.toUpperCase() as RunwaySuffix
       const translations = RUNWAY_TRANSLATIONS[lang]
-      
+
       return `${number} ${translations[suffixUpper] || suffix}`
     }
   }
