@@ -307,7 +307,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], startup approved, (BASIP 5Z) departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], [POL], start-up approved, (BASIP 5Z) departure, initial climb [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
@@ -387,7 +387,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], startup approved, C_TOT [HDIFF]{Slot time, take off between [HDIFF5M] and [HDIFF10P]}, [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], [POL], start-up approved, C_TOT [HDIFF]{Slot time, take off between [HDIFF5M] and [HDIFF10P]}, [STA] departure, initial climb [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
@@ -466,12 +466,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], according to Boeing 7 3 7 taxiing behind you, pushback approved."
+							"__text": "[CAL], according to Boeing 737 taxiing behind you, pushback approved."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Push-back approved, according to 737 in sight, [CAL]."
+							"__text": "Pushing back, according to 737 in sight, [CAL]."
 						}
 					],
 					"_id": "REPOUSSAGE_CONDITIONNEL",
@@ -715,7 +715,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Maintaining short of runway [RWY], taxiway [HLD], [CAL]."
+							"__text": "Holding short of runway [RWY], taxiway [HLD], [CAL]."
 						}
 					],
 					"_id": "MAINTIEN_ARRET",
@@ -1071,7 +1071,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Route amendement, [WPT], [CAL]."
+							"__text": "Route amendment, [WPT], [CAL]."
 						}
 					],
 					"_id": "ROUTE_CONTROLEUR",
@@ -1094,7 +1094,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], direct [WPT] approuved."
+							"__text": "[CAL], direct [WPT] approved."
 						},
 						{
 							"_lang": "en",
@@ -1122,7 +1122,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL],route amendment unable due flow control."
+							"__text": "[CAL], unable new route due flow control."
 						},
 						{
 							"_lang": "en",
@@ -1492,22 +1492,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], descendez [NIV] pieds, Q_N_H [QNH], HAP 32."
+							"__text": "[CAL], descendez [NIV] pieds, Q_N_H [QNH], H_A_P 32."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je descends [NIV] pieds, Q_N_H [QNH], HAP 32, [CAL]."
+							"__text": "Je descends [NIV] pieds, Q_N_H [QNH], H_A_P 32, [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], descend [NIV] feet, Q_N_H [QNH], estimated approach time 32."
+							"__text": "[CAL], descend [NIV] feet, Q_N_H [QNH], expected approach time 32."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Descending [NIV] feet, Q_N_H [QNH], estimated approach time 32, [CAL]."
+							"__text": "Descending [NIV] feet, Q_N_H [QNH], expected approach time 32, [CAL]."
 						}
 					],
 					"_id": "ATTENTE_PUBLIEE",
@@ -1926,7 +1926,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], report runway vacating."
+							"__text": "[CAL], report runway vacated."
 						},
 						{
 							"_lang": "en",
@@ -2038,7 +2038,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAL], au parking, pour quitter."
+							"__text": "[DEP] [NGND], [CAL], at the apron, leaving the frequency."
 						},
 						{
 							"_lang": "en",
@@ -2547,7 +2547,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], startup approved, [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], [POL], start-up approved, [STA] departure, initial climb [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
@@ -2574,7 +2574,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NDEL], [POL], [CAL] gate [POS], request startup to [ARR], information [INF]."
+							"__text": "[DEP] [NDEL], [POL], [CAL] stand [POS], request start-up destination [ARR], information [INF]."
 						}
 					],
 					"subgraph": [
@@ -3172,7 +3172,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Approach cancelled, maintening [NIV], expecting vectoring I_L_S runway, [CAL]."
+							"__text": "Approach cancelled, maintaining [NIV], expecting vectoring I_L_S runway [RWY], [CAL]."
 						}
 					],
 					"subgraph": [

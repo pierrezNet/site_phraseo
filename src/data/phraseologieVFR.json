@@ -687,7 +687,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Autorisé toucher piste [RWY], (numéro 2) [CAA]."
+							"__text": "Toucher piste [RWY], (numéro 2) [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -697,7 +697,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Cleared to touch and go runway [RWY], (number X) [CAA]."
+							"__text": "Touch and go runway [RWY], (number X) [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -743,7 +743,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "(numéro X), autorisé option piste [RWY], [CAA]."
+							"__text": "(numéro X), Option piste [RWY], [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -753,7 +753,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "(number X), cleared option runway [RWY], [CAA]."
+							"__text": "(number X), Option runway [RWY], [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
