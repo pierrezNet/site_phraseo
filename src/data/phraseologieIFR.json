@@ -264,7 +264,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], roger, mise en route approuvée, prévoyez un départ conventionnel [STA], montée initiale [NIV], transpondeur [SQU]."
+							"__text": "[CAL], roger, mise en route approuvée, prévoyez un départ conventionnel [STA], niveau [NIV], transpondeur [SQU]."
 						},
 						{
 							"_lang": "en",
@@ -279,7 +279,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], roger, start-up approved, expect [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], roger, start-up approved, expect [STA] departure, level [NIV], squawk [SQU]."
 						}
 					],
 					"_id": "EST_IL_RNAV",
@@ -292,7 +292,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], mise en route approuvée, départ (BASIP 5Z), montée initiale [NIV], transpondeur [SQU]."
+							"__text": "[CAL], [POL], mise en route approuvée, départ (BASIP 5Z), niveau [NIV], transpondeur [SQU]."
 						},
 						{
 							"_lang": "fr",
@@ -302,12 +302,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], roger, mise en route approuvée, prévoyez un départ conventionnel [STA], montée initiale [NIV], transpondeur [SQU]."
+							"__text": "[CAL], roger, mise en route approuvée, prévoyez un départ conventionnel [STA], niveau [NIV], transpondeur [SQU]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], start-up approved, (BASIP 5Z) departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], [POL], start-up approved, (BASIP 5Z) departure, level [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
@@ -317,7 +317,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], roger, start-up approved, expect [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], roger, start-up approved, expect [STA] departure, level [NIV], squawk [SQU]."
 						}
 					],
 					"_id": "NON_RNAV",
@@ -372,12 +372,12 @@
 							},
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], mise en route approuvée, CTOT [HDIFF]{Créneau de Départ, décollage entre [HDIFF5M] et [HDIFF10P]}, départ [STA], montée initiale [NIV], transpondeur [SQU]."
+							"__text": "[CAL], [POL], mise en route approuvée, CTOT [HDIFF]{Créneau de Départ, décollage entre [HDIFF5M] et [HDIFF10P]}, départ [STA], niveau [NIV], transpondeur [SQU]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Mise en route approuvée, CTOT [HDIFF], départ [STA], montée initiale [NIV], transpondeur [SQU], [CAL]."
+							"__text": "Mise en route approuvée, CTOT [HDIFF], départ [STA], niveau [NIV], transpondeur [SQU], [CAL]."
 						},
 						{
 							"_lang": "fr",
@@ -387,12 +387,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], start-up approved, C_TOT [HDIFF]{Slot time, take off between [HDIFF5M] and [HDIFF10P]}, [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], [POL], start-up approved, C_TOT [HDIFF]{Slot time, take off between [HDIFF5M] and [HDIFF10P]}, [STA] departure, level [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Startup approved, C_TOT [HDIFF], [STA] departure, initial climb [NIV], squawk [SQU], [CAL]."
+							"__text": "Startup approved, C_TOT [HDIFF], [STA] departure, level [NIV], squawk [SQU], [CAL]."
 						},
 						{
 							"_lang": "en",
@@ -410,12 +410,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], prévoyez mise en route [HDIFF] cause trafic à l'arrivée."
+							"__text": "[CAL], prévoyez mise en route à [HDIFF] cause trafic à l'arrivée."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], expect start-up time [HDIFF] due inbound traffic."
+							"__text": "[CAL], expect start-up at [HDIFF] due inbound traffic."
 						}
 					],
 					"_id": "MER_DIFFEREE",
@@ -700,22 +700,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], maintenez avant piste [RWY] taxiway [HLD]."
+							"__text": "[CAL], maintenez avant point d'attente piste [RWY] [HLD]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je maintiens avant piste [RWY] taxiway [HLD], [CAL]."
+							"__text": "Je maintiens avant point d'attente piste [RWY] [HLD], [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], hold short of runway [RWY], taxiway [HLD]."
+							"__text": "[CAL], hold short of holding point runway [RWY] [HLD]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Holding short of runway [RWY], taxiway [HLD], [CAL]."
+							"__text": "Holding short of holding point runway [RWY] [HLD], [CAL]."
 						}
 					],
 					"_id": "MAINTIEN_ARRET",
@@ -748,7 +748,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], say if ready for immediate departure."
+							"__text": "[CAL], are you ready for immediate departure?"
 						},
 						{
 							"_lang": "en",
@@ -758,7 +758,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], line up runway [RWY] and cleared for immediate take-off, wind 0_5_0 degrees, 10 knots."
+							"__text": "[CAL], line up runway [RWY], cleared for immediate take-off, wind 0_5_0 degrees, 10 knots."
 						},
 						{
 							"_lang": "en",
@@ -982,7 +982,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], stop climbing level [NIV]."
+							"__text": "[CAL], stop climb level [NIV]."
 						},
 						{
 							"_lang": "en",
@@ -994,6 +994,34 @@
 					"_name": "Montée stoppée",
 					"_short": "Stop",
 					"_level": "débutant"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAL], montez niveau [NIV], initialement."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je monte niveau [NIV], initialement, [CAL]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAL], climb level [NIV], initially."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Climbing level [NIV], initially, [CAL]."
+						}
+					],
+					"_id": "MONTEE_INITIALE",
+					"_name": "Montée intermédiaire",
+					"_short": "Interm.",
+					"_level": "intermédiaire"
 				},
 				{
 					"para": [
@@ -1312,7 +1340,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], quelle est votre vitesse ?"
+							"__text": "[CAL], indiquez votre vitesse."
 						},
 						{
 							"_lang": "fr",
@@ -1332,7 +1360,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], say speed?"
+							"__text": "[CAL], report speed."
 						},
 						{
 							"_lang": "en",
@@ -1360,7 +1388,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], réduisez vitesse mini en lisse."
+							"__text": "[CAL], réduisez vitesse minimale en lisse."
 						},
 						{
 							"_lang": "fr",
@@ -1591,7 +1619,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], autorisé approche à vue piste [RWY], assurez votre séparation avec (Fokker 70) devant vous."
+							"__text": "[CAL], autorisé approche à vue piste [RWY], assurez votre séparation avec (Fokker 70) vous précédant."
 						},
 						{
 							"_lang": "fr",
@@ -1606,7 +1634,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], have you visual contact on preceding traffic ?"
+							"__text": "[CAL], do you have visual contact on preceding traffic ?"
 						},
 						{
 							"_lang": "en",
@@ -1667,7 +1695,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], autorisé approche à vue piste [RWY], assurez votre séparation avec A 320 devant vous."
+							"__text": "[CAL], autorisé approche à vue piste [RWY], assurez votre séparation avec A 320 vous précédant."
 						},
 						{
 							"_lang": "fr",
@@ -2426,7 +2454,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], have you visual contact on preceding traffic?"
+							"__text": "[CAL], do you have visual contact on preceding traffic?"
 						},
 						{
 							"_lang": "en",
@@ -2532,12 +2560,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], mise en route approuvée, départ [STA], montée initiale [NIV], transpondeur [SQU]."
+							"__text": "[CAL], [POL], mise en route approuvée, départ [STA], niveau [NIV], transpondeur [SQU]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Mise en route approuvée, départ [STA], montée initiale [NIV], transpondeur [SQU], [CAL]."
+							"__text": "Mise en route approuvée, départ [STA], niveau [NIV], transpondeur [SQU], [CAL]."
 						},
 						{
 							"_lang": "fr",
@@ -2547,12 +2575,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], start-up approved, [STA] departure, initial climb [NIV], squawk [SQU]."
+							"__text": "[CAL], [POL], start-up approved, [STA] departure, level [NIV], squawk [SQU]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Startup approved, [STA] departure, initial climb [NIV], squawk [SQU], [CAL]."
+							"__text": "Startup approved, [STA] departure, level [NIV], squawk [SQU], [CAL]."
 						},
 						{
 							"_lang": "en",
@@ -2910,6 +2938,12 @@
 							"call": {
 								"_class": "option",
 								"_refid": "MONTEE_DIFFEREE"
+							}
+						},
+						{
+							"call": {
+								"_class": "option",
+								"_refid": "MONTEE_INITIALE"
 							}
 						}
 					],

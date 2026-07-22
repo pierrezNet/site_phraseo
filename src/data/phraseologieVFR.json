@@ -428,22 +428,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], alignez-vous piste [RWY], autorisé décollage, vent 0_60 degrés 10 nœuds, rappelez verticale terrain [ALT] pieds."
+							"__text": "[CAA], alignez-vous piste [RWY], autorisé décollage, vent 0_60 degrés 10 nœuds, rappelez verticale aérodrome [ALT] pieds."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je m'aligne piste [RWY] et je décolle, rappellerai verticale terrain [ALT] pieds, [CAA]."
+							"__text": "Je m'aligne piste [RWY] et je décolle, rappellerai verticale aérodrome [ALT] pieds, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], line up runway [RWY], cleared for take-off, wind 0_6_0 degrees, 10 knots, report over airfield [ALT] feet."
+							"__text": "[CAA], line up runway [RWY], cleared for take-off, wind 0_6_0 degrees, 10 knots, report over aerodrome [ALT] feet."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Lining up runway [RWY] and taking-off, will report over airfield [ALT] feet, [CAA]."
+							"__text": "Lining up runway [RWY] and taking-off, will report over aerodrome [ALT] feet, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -471,7 +471,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Derrière A_T_R en finale, je m'aligne et attendrai piste [RWY] derrière, [CAA]."
+							"__text": "Derrière A_T_R en finale, je m'aligne et attends piste [RWY] derrière, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -491,7 +491,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Behind A_T_R on final, will line up and wait runway [RWY] behind, [CAA]."
+							"__text": "Behind A_T_R on final, lining up and waiting runway [RWY], [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -1066,7 +1066,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], numéro 2 derrière un Cessna 172 en base main gauche, rappelez fin de vent arrière piste [RWY]."
+							"__text": "[CAA], numéro 2, suivez un Cessna 172 en base main gauche, rappelez fin de vent arrière piste [RWY]."
 						},
 						{
 							"_lang": "fr",
@@ -1076,7 +1076,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], number 2 behind Cessna 172 on left hand base, report end of downwind runway [RWY]."
+							"__text": "[CAA], number 2, follow Cessna 172 on left-hand base, report end of downwind runway [RWY]."
 						},
 						{
 							"_lang": "en",
@@ -1127,12 +1127,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], rappelez verticale terrain."
+							"__text": "[CAA], rappelez verticale aérodrome."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je rappellerai verticale terrain, [CAA]."
+							"__text": "Je rappellerai verticale aérodrome, [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -1142,25 +1142,25 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], report over airfield."
+							"__text": "[CAA], report over aerodrome."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Will report over airfield, [CAA]."
+							"__text": "Will report over aerodrome, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
 				},
 				{
 					"_id": "TRANSIT_VERTICALE",
-					"_name": "Verticale terrain",
+					"_name": "Verticale aérodrome",
 					"_short": "Verticale",
 					"para": [
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], verticale terrain."
+							"__text": "[CAA], verticale aérodrome."
 						},
 						{
 							"_lang": "fr",
@@ -1175,17 +1175,17 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], over airfield."
+							"__text": "[CAA], over aerodrome."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], report over airfield."
+							"__text": "[CAA], report over aerodrome."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Will report over airfield, [CAA]."
+							"__text": "Will report over aerodrome, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -1608,12 +1608,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], En vent arrière, main gauche, piste [RWY]."
+							"__text": "[CAA], vent arrière main gauche piste [RWY]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], left hand, downwind, runway [RWY]."
+							"__text": "[CAA], left-hand downwind runway [RWY]."
 						}
 					],
 					"subgraph": [
