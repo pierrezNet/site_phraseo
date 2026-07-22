@@ -122,6 +122,56 @@
 						"_class": "option",
 						"_tab": "EX",
 						"_refid": "VISUEL"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "CLOTURE_PLAN_VOL"
+					},
+					{
+						"_class": "option",
+						"_tab": "AP",
+						"_refid": "ALLONGEZ_VENT_ARRIERE"
+					},
+					{
+						"_class": "option",
+						"_tab": "AP",
+						"_refid": "CONTINUEZ_APPROCHE"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "INTEGRATION_DIRECTE"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "INTEGRATION_BASE"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "ENTREE_SANS_ATIS"
+					},
+					{
+						"_class": "option",
+						"_tab": "AP",
+						"_refid": "TROIS_SOIXANTE"
+					},
+					{
+						"_class": "option",
+						"_tab": "AT",
+						"_refid": "CLOTURE_PLAN_VOL_2"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "TRANSIT_CLAIRANCE_IFR"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "TRANSIT_POURSUITE_SORTIE"
 					}
 				]
 			},
@@ -1409,6 +1459,296 @@
 						}
 					],
 					"_level": "débutant"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[FIR] [NCTR], [CAA], passe [WPT] et clôture plan de vol."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], plan de vol clôturé."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[FIR] [NCTR], [CAA], passing [WPT], closing flight plan."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], flight plan closed."
+						}
+					],
+					"_id": "CLOTURE_PLAN_VOL",
+					"_name": "Clôture plan de vol",
+					"_short": "Clôture PLN",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], allongez vent arrière."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "J'allonge vent arrière, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], extend downwind."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Extending downwind, [CAA]."
+						}
+					],
+					"_id": "ALLONGEZ_VENT_ARRIERE",
+					"_name": "Allonger vent arrière",
+					"_short": "Allonger VA",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], continuez approche, A_T_R 72 dégageant la piste."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je continue l'approche, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], continue approach, A_T_R 72 vacating runway."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Continuing approach, [CAA]."
+						}
+					],
+					"_id": "CONTINUEZ_APPROCHE",
+					"_name": "Continuez approche",
+					"_short": "Continuez",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], exécutez approche directe piste [RWY], rappelez longue finale."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "J'exécute approche directe piste [RWY], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], make straight-in approach runway [RWY], report long final."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Making straight-in approach runway [RWY], [CAA]."
+						}
+					],
+					"_id": "INTEGRATION_DIRECTE",
+					"_name": "Approche directe",
+					"_short": "Directe",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], entrez base main droite piste [RWY]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "J'entre base main droite piste [RWY], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], join right-hand base runway [RWY]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Joining right-hand base runway [RWY], [CAA]."
+						}
+					],
+					"_id": "INTEGRATION_BASE",
+					"_name": "Entrée en base",
+					"_short": "Base",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], piste en service [RWY], vent 0_6_0 degrés 10 nœuds, [QNH], entrez vent arrière main gauche piste [RWY], rappelez vent arrière."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Piste [RWY], [QNH], j'entre vent arrière main gauche piste [RWY], je rappellerai vent arrière, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], runway in use [RWY], wind 0_6_0 degrees 10 knots, [QNH], join left-hand downwind runway [RWY], report downwind."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Runway [RWY], [QNH], joining left-hand downwind runway [RWY], will report downwind, [CAA]."
+						}
+					],
+					"_id": "ENTREE_SANS_ATIS",
+					"_name": "Entrée sans ATIS",
+					"_short": "Sans ATIS",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], faites un 360 par la droite."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je fais un 360 par la droite, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], make a 360 by the right."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Making a 360 by the right, [CAA]."
+						}
+					],
+					"_id": "TROIS_SOIXANTE",
+					"_name": "360 par la droite",
+					"_short": "360",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[ARR] [NSTA], [CAA], heure estimée d'arrivée 1_5_5_5, je clôture plan de vol."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], plan de vol clôturé."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[ARR] [NSTA], [CAA], estimated time of arrival 1_5_5_5, closing flight plan."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], flight plan closed."
+						}
+					],
+					"_id": "CLOTURE_PLAN_VOL_2",
+					"_name": "Clôture plan de vol (vol connu)",
+					"_short": "Clôture PLN",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[TTWR] [NTWR], [CAA], demande transit V_F_R, [ALT] pieds, de (W H) à (E N), j'estime (W) à [HOU]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], transitez via (W H), (W D), puis (E N), maintenez [ALT] pieds, et rappelez avant (W D)."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Roger, je transite via (W H), (W D), puis (E N), maintiens [ALT] pieds, et rappelle avant (W D), [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[TTWR] [NTWR], [CAA], request V_F_R transit, [ALT] feet, from (W H) to (E N), estimating (W) at [HOU]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], transit via (W H), (W D), then (E N), maintain [ALT] feet and report before (W D)."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Roger, transiting via (W H), (W D), then (E N), maintaining [ALT] feet, calling back before (W D), [CAA]."
+						}
+					],
+					"_id": "TRANSIT_CLAIRANCE_IFR",
+					"_name": "Clairance transit VFR",
+					"_short": "Transit clairance",
+					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], poursuivez transit vers [SORTIE], rappelez [SORTIE] pour quitter."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je poursuis transit vers [SORTIE], et rappelle [SORTIE] pour quitter, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], continue transit [SORTIE], report [SORTIE] to leave."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Continuing transit [SORTIE], reporting [SORTIE] to leave, [CAA]."
+						}
+					],
+					"_id": "TRANSIT_POURSUITE_SORTIE",
+					"_name": "Poursuite et sortie transit",
+					"_short": "Poursuite transit",
+					"_level": "intermédiaire"
 				}
 			],
 			"orTask": [
