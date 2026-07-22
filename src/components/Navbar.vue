@@ -175,7 +175,7 @@ const toggleFlightMode = () => {
 const levels = [
   { value: 'débutant' as UserLevel, label: 'Débutant', short: 'Déb', disabled: false },
   { value: 'intermédiaire' as UserLevel, label: 'Intermédiaire', short: 'Int', disabled: false },
-  { value: 'avancé' as UserLevel, label: 'Avancé', short: 'Av', disabled: true }
+  { value: 'avancé' as UserLevel, label: 'Avancé', short: 'Av', disabled: false }
 ]
 
 const setLevel = (level: UserLevel) => {

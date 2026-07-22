@@ -172,6 +172,56 @@
 						"_class": "option",
 						"_tab": "CR",
 						"_refid": "TRANSIT_POURSUITE_SORTIE"
+					},
+					{
+						"_class": "option",
+						"_tab": "AP",
+						"_refid": "SEQUENCEMENT_CIRCUIT"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "ATTENTE_A_VUE"
+					},
+					{
+						"_class": "option",
+						"_tab": "AP",
+						"_refid": "CONTINUEZ_APPROCHE_DEPART"
+					},
+					{
+						"_class": "option",
+						"_tab": "AT",
+						"_refid": "CLOTURE_PLAN_VOL_NON_CONNU"
+					},
+					{
+						"_class": "option",
+						"_tab": "SO",
+						"_refid": "VFR_SPECIAL_DEPART"
+					},
+					{
+						"_class": "option",
+						"_tab": "SO",
+						"_refid": "VFR_SPECIAL_REFUS"
+					},
+					{
+						"_class": "option",
+						"_tab": "AP",
+						"_refid": "VFR_SPECIAL_ARRIVEE"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "VFR_SPECIAL_TRANSIT_PUBLIE"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "VFR_SPECIAL_TRANSIT_HORS_PUBLIE"
+					},
+					{
+						"_class": "option",
+						"_tab": "CR",
+						"_refid": "TRANSIT_IFR_CONTACT_VISUEL"
 					}
 				]
 			},
@@ -1749,6 +1799,386 @@
 					"_name": "Poursuite et sortie transit",
 					"_short": "Poursuite transit",
 					"_level": "intermédiaire"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[CAA], vent arrière main droite piste [RWY]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], numéro 3, suivez un Cessna 172 en base, rappelez base main droite piste [RWY]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Numéro 3, trafic en vue, je rappelle base main droite piste [RWY], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[CAA], right-hand downwind runway [RWY]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], number 3, follow Cessna 172 on base, report right-hand base runway [RWY]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Number 3, traffic in sight, reporting right-hand base runway [RWY], [CAA]."
+						}
+					],
+					"_id": "SEQUENCEMENT_CIRCUIT",
+					"_name": "Séquencement circuit",
+					"_short": "Séquence",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], attendez à vue 5 minutes verticale [SORTIE]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "J'attends verticale [SORTIE], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], hold visual 5 minutes over [SORTIE]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Holding over [SORTIE], [CAA]."
+						}
+					],
+					"_id": "ATTENTE_A_VUE",
+					"_name": "Attente à vue verticale",
+					"_short": "Attente vue",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], continuez approche, Boeing 737 au départ."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je continue l'approche, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], continue approach, Boeing 737 departing."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Continuing approach, [CAA]."
+						}
+					],
+					"_id": "CONTINUEZ_APPROCHE_DEPART",
+					"_name": "Continuez approche (départ)",
+					"_short": "Cont. départ",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[ARR] [NSTA], [POL], [CAL]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], [POL], [ARR] [NSTA], j'écoute."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[CAL], V_F_R de [DEP] vers [ARR], heure estimée d'arrivée 1_5_5_5, je clôture plan de vol."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], plan de vol clôturé."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[ARR] [NSTA], [POL], [CAL]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], [POL], [ARR] [NSTA], pass your message."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[CAL], V_F_R from [DEP] to [ARR], estimated time of arrival 1_5_5_5, closing flight plan."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], flight plan closed."
+						}
+					],
+					"_id": "CLOTURE_PLAN_VOL_NON_CONNU",
+					"_name": "Clôture plan de vol (vol non connu)",
+					"_short": "Clôture non connu",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[DEP] [NGND], [CAA], demande départ V_F_R spécial."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], autorisé départ V_F_R spécial (S A), [ALT] pieds, transpondeur [SQU], roulez point d'attente piste [RWY]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je roule point d'attente piste [RWY], (S A 1), [ALT] pieds, transpondeur [SQU], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[DEP] [NGND], [CAA], request special V_F_R departure."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], cleared special V_F_R departure (S A), [ALT] feet, squawk [SQU], taxi holding point runway [RWY]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Taxiing holding point runway [RWY], (S A 1), [ALT] feet, squawking [SQU], [CAA]."
+						}
+					],
+					"_id": "VFR_SPECIAL_DEPART",
+					"_name": "Départ VFR spécial",
+					"_short": "VFR spécial départ",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[DEP] [NGND], [CAA], demande départ V_F_R spécial."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], négatif, visibilité inférieure à 1300 mètres."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Roger, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[DEP] [NGND], [CAA], request special V_F_R."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], negative, visibility less than 1300 metres."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Roger, [CAA]."
+						}
+					],
+					"_id": "VFR_SPECIAL_REFUS",
+					"_name": "Refus VFR spécial (visibilité)",
+					"_short": "VFR spécial refusé",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[ARR] [NTWR], [CAA], demande arrivée V_F_R spécial."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], autorisé arrivée V_F_R spécial (N A 1), [ALT] pieds, transpondeur [SQU], rappelez [SORTIE]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Autorisé arrivée V_F_R spécial (N A 1), [ALT] pieds, transpondeur [SQU], je rappelle [SORTIE], [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[ARR] [NTWR], [CAA], request special V_F_R arrival."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], cleared special V_F_R arrival (N A 1), [ALT] feet, squawk [SQU], report [SORTIE]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Cleared special V_F_R arrival (N A 1), [ALT] feet, squawking [SQU], reporting [SORTIE], [CAA]."
+						}
+					],
+					"_id": "VFR_SPECIAL_ARRIVEE",
+					"_name": "Arrivée VFR spécial",
+					"_short": "VFR spécial arrivée",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[TTWR] [NTWR], [CAA], demande transit V_F_R spécial, [ALT] pieds, via (W H 1), verticale aérodrome, (E N 1), sortie [SORTIE]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], autorisé V_F_R spécial, (W H 1), verticale aérodrome, (E N 1), [ALT] pieds, rappelez (W D)."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Autorisé transit (W H 1), verticale aérodrome, (E N 1), [ALT] pieds, je rappelle (W D), [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[TTWR] [NTWR], [CAA], request special V_F_R transit, [ALT] feet, via (W H 1), overhead airfield, (E N 1), [SORTIE]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], cleared special V_F_R, (W H 1), overhead airfield, to (E N 1), [ALT] feet, report (W D)."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Transiting (W H 1), overhead airfield, (E N 1), [ALT] feet, reporting (W D), [CAA]."
+						}
+					],
+					"_id": "VFR_SPECIAL_TRANSIT_PUBLIE",
+					"_name": "Transit VFR spécial (itinéraire publié)",
+					"_short": "VFR spé. publié",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "[TTWR] [NTWR], [CAA], demande V_F_R spécial, [ALT] pieds, (Hénin) vers (Armentières), (Hénin) à [HOU]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], autorisé V_F_R spécial, [ALT] pieds, (Hénin Armentières) direct, rappelez (Hénin)."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "(Hénin Armentières), autorisé transit V_F_R spécial [ALT] pieds, je rappelle (Hénin), [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[TTWR] [NTWR], [CAA], request special V_F_R, [ALT] feet, from (Hénin) to (Armentières) direct, (Hénin) time [HOU]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], cleared special V_F_R, [ALT] feet, (Hénin Armentières), report (Hénin)."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "(Hénin Armentières), [ALT] feet, reporting (Hénin), [CAA]."
+						}
+					],
+					"_id": "VFR_SPECIAL_TRANSIT_HORS_PUBLIE",
+					"_name": "Transit VFR spécial (hors itinéraire)",
+					"_short": "VFR spé. direct",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "J'approche (W D), [CAA]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], avez-vous visuel sur un (Airbus 320) au départ ?"
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Affirme, (Airbus 320) en vue, [CAA]. (<i>si pas de contact :</i> Négatif, pas de contact visuel, [CAA].)"
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], poursuivez transit vers [SORTIE], rappelez [SORTIE] pour quitter. (<i>si pas de contact :</i> faites un 360 de retardement à (W D), je vous rappelle pour poursuivre.)"
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Approaching (W D), [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], do you have visual contact with (Airbus 320) departing?"
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Affirm, (Airbus 320) in sight, [CAA]. (<i>if no contact:</i> Negative, no visual contact, [CAA].)"
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], continue transit [SORTIE], report [SORTIE] to leave. (<i>if no contact:</i> make a 360 delaying action at (W D), I call you back to continue.)"
+						}
+					],
+					"_id": "TRANSIT_IFR_CONTACT_VISUEL",
+					"_name": "Transit / IFR : contact visuel et 360",
+					"_short": "Transit / IFR",
+					"_level": "avancé"
 				}
 			],
 			"orTask": [
