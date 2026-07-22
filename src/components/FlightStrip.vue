@@ -16,9 +16,11 @@
       <span class="font-medium">{{ callsign }}</span>
       <span class="opacity-70"> · {{ type }}</span>
       <span class="opacity-70"> · {{ dep }} → {{ arr }}</span>
+      <span class="opacity-70"> · Parking {{ pos }}</span>
       <span class="opacity-70"> · Piste {{ rwy }}</span>
       <span class="opacity-70"> · QNH {{ qnh }}</span>
       <span class="opacity-70"> · Info {{ inf }}</span>
+      <span class="opacity-70"> · {{ extraLabel }} {{ extraValue }}</span>
     </span>
     <span class="shrink-0 text-sm text-blue-600 font-medium whitespace-nowrap">✎ Modifier</span>
   </button>
@@ -40,8 +42,14 @@ const callsign = computed(() => orDash(formStore.form.CAL));
 const type = computed(() => orDash(formStore.form.COM));
 const dep = computed(() => orDash(formStore.form.DEP));
 const arr = computed(() => orDash(formStore.form.ARR));
+const pos = computed(() => orDash(formStore.form.POS));
 const rwy = computed(() => orDash(formStore.form.RWY));
 const inf = computed(() => orDash(formStore.form.INF));
+
+// Champ spécifique au mode : Niveau en IFR, Point de sortie en VFR
+const isVFR = computed(() => formStore.mode === 'VFR');
+const extraLabel = computed(() => (isVFR.value ? 'Sortie' : 'Niveau'));
+const extraValue = computed(() => orDash(isVFR.value ? formStore.form.SORTIE : formStore.form.NIV));
 const qnh = computed(() => {
   const d = weatherStore.metarData?.decoded || weatherStore.metarData;
   return String(d?.altimeter?.value ?? formStore.form.QNH ?? '1013');

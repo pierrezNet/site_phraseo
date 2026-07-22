@@ -72,7 +72,7 @@
           <div class="flex justify-end">
             <button
               @click="retry(index)"
-              class="px-3 py-1 text-sm rounded border border-blue-500 text-blue-700 hover:bg-blue-50"
+              class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
             >
               Réessayer
             </button>
