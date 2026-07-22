@@ -297,7 +297,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Impossible R_N_P zone terminale{La zone terminale correspond au Terminal Manoeuvring Area (TMA)}, [CAL]."
+							"__text": "Départ R_N_P impossible, [CAL]."
 						},
 						{
 							"_lang": "fr",
@@ -312,7 +312,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Unable R_N_P terminal area{La zone terminale correspond au Terminal Manoeuvring Area (TMA)}, [CAL]."
+							"__text": "Unable R_N_P departure, [CAL]."
 						},
 						{
 							"_lang": "en",
@@ -1246,7 +1246,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAL], libère le niveau XXX en descente au niveau [NIV]."
+							"__text": "[CAL], libère niveau (310) en descente niveau [NIV]."
 						},
 						{
 							"_lang": "fr",
@@ -1266,7 +1266,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAL], leaving level XXX, descending level [NIV]."
+							"__text": "[CAL], leaving level (310), descending level [NIV]."
 						},
 						{
 							"_lang": "en",
@@ -1444,22 +1444,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], tournez à (droite) cap [CAP], descendez [NIV] pieds Q_N_H [QNH]."
+							"__text": "[CAL], tournez à (droite) cap [CAP], descendez (4000) pieds Q_N_H [QNH]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je tourne à (droite) cap [CAP], je descends [NIV] pieds Q_N_H [QNH], [CAL]."
+							"__text": "Je tourne à (droite) cap [CAP], je descends (4000) pieds Q_N_H [QNH], [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], turn (right) heading [CAP], descend [NIV] feet Q_N_H [QNH]."
+							"__text": "[CAL], turn (right) heading [CAP], descend (4000) feet Q_N_H [QNH]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Descending [NIV] feet Q_N_H [QNH], turning (right) heading [CAP], [CAL]."
+							"__text": "Descending (4000) feet Q_N_H [QNH], turning (right) heading [CAP], [CAL]."
 						}
 					],
 					"_id": "CHANGEMENT_NIVEAU_CAP",
@@ -1520,22 +1520,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], descendez [NIV] pieds, Q_N_H [QNH], H_A_P 32."
+							"__text": "[CAL], descendez (4000) pieds, Q_N_H [QNH], H_A_P 32."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je descends [NIV] pieds, Q_N_H [QNH], H_A_P 32, [CAL]."
+							"__text": "Je descends (4000) pieds, Q_N_H [QNH], H_A_P 32, [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], descend [NIV] feet, Q_N_H [QNH], expected approach time 32."
+							"__text": "[CAL], descend (4000) feet, Q_N_H [QNH], expected approach time 32."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Descending [NIV] feet, Q_N_H [QNH], expected approach time 32, [CAL]."
+							"__text": "Descending (4000) feet, Q_N_H [QNH], expected approach time 32, [CAL]."
 						}
 					],
 					"_id": "ATTENTE_PUBLIEE",
@@ -1888,22 +1888,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], remettez les gaz, tournez à (droite) cap 220, montez à [NIV] pieds."
+							"__text": "[CAL], remettez les gaz, tournez à (droite) cap 220, montez à (4000) pieds."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je remets les gaz, tourne à (droite) cap 220 et monte à [NIV] pieds, [CAL]."
+							"__text": "Je remets les gaz, tourne à (droite) cap 220 et monte à (4000) pieds, [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], go around, turn (right) 220 degrees, climb [NIV] feet."
+							"__text": "[CAL], go around, turn (right) 220 degrees, climb (4000) feet."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Going around, turning (right) 220 degrees, climbing [NIV] feet, [CAL]."
+							"__text": "Going around, turning (right) 220 degrees, climbing (4000) feet, [CAL]."
 						}
 					],
 					"_id": "REMISE_GAZ",
@@ -1921,7 +1921,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], rappelez à [NIV] pieds."
+							"__text": "[CAL], rappelez à (4000) pieds."
 						},
 						{
 							"_lang": "en",
@@ -1931,7 +1931,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], report [NIV] feet."
+							"__text": "[CAL], report (4000) feet."
 						}
 					],
 					"_id": "REMISE_GAZ_PILOTE",
@@ -1952,6 +1952,11 @@
 							"__text": "Roger, [CAL]."
 						},
 						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Piste dégagée, [CAL]."
+						},
+						{
 							"_lang": "en",
 							"_class": "ATC",
 							"__text": "[CAL], report runway vacated."
@@ -1960,6 +1965,11 @@
 							"_lang": "en",
 							"_class": "Pilot",
 							"__text": "Roger, [CAL]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Runway vacated, [CAL]."
 						}
 					],
 					"_id": "DEGAGEMENT_STANDARD",
