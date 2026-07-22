@@ -43,7 +43,6 @@ import ParametresModal from '@/components/ParametresModal.vue';
 import AboutModal from '@/components/AboutModal.vue';
 import FeedbackModal from '@/components/FeedbackModal.vue';
 import FlightStrip from '@/components/FlightStrip.vue';
-import { useFormStore } from '@/stores/form';
 import { useQuizStore } from '@/stores/quiz';
 
 // Import des deux bases de données
@@ -80,13 +79,9 @@ const currentPhraseoData = computed(() => {
 
 provide('phraseoData', currentPhraseoData);
 
-const formStore = useFormStore();
 const quizStore = useQuizStore();
-const showFlightStrip = computed(
-  () =>
-    (currentMode.value === 'VFR' && formStore.form.LEVEL === 'débutant') ||
-    quizStore.enabled
-);
+// Le bandeau de vol n'apparaît qu'en mode quiz (rappel des paramètres)
+const showFlightStrip = computed(() => quizStore.enabled);
 
 const handleModeChange = (newMode: string) => {
   currentMode.value = newMode;

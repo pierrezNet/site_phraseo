@@ -82,16 +82,16 @@
             </MenuButton>
             <MenuItems class="absolute right-0 mt-2 w-44 bg-white text-gray-800 rounded-md shadow-lg py-1 z-50 focus:outline-none">
               <MenuItem v-slot="{ active }">
-                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-gray-100' : '']" @click="$emit('open-modal','aide')">Aide</button>
+                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-blue-600 text-white' : '']" @click="$emit('open-modal','aide')">Aide</button>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-gray-100' : '']" @click="$emit('open-modal','about')">À propos</button>
+                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-blue-600 text-white' : '']" @click="$emit('open-modal','about')">À propos</button>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-gray-100' : '']" @click="$emit('open-modal','feedback')">J'ai un retour</button>
+                <button :class="['block w-full text-left px-4 py-2', active ? 'bg-blue-600 text-white' : '']" @click="$emit('open-modal','feedback')">J'ai un retour</button>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" :class="['block px-4 py-2 font-medium', active ? 'bg-gray-100' : '']">Discord</a>
+                <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" :class="['block px-4 py-2 font-medium', active ? 'bg-blue-600 text-white' : '']">Discord</a>
               </MenuItem>
             </MenuItems>
           </Menu>

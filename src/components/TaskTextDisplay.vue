@@ -7,8 +7,8 @@
       <span class="opacity-60">Étape : </span>{{ context.step }}<span v-if="context.option" class="opacity-60"> › </span>{{ context.option }}
     </p>
 
-    <!-- Rappel du mode quiz -->
-    <div v-if="quizStore.enabled" class="text-sm mb-3 px-3 py-2 rounded bg-blue-50 border border-blue-200 text-blue-900">
+    <!-- Rappel du mode quiz (seulement quand une étape/option est sélectionnée) -->
+    <div v-if="quizStore.enabled && renderedLines.length > 0" class="text-sm mb-3 px-3 py-2 rounded bg-blue-50 border border-blue-200 text-blue-900">
       🎯 Mode quiz : reproduisez la phrase du pilote, puis vérifiez.
     </div>
 
