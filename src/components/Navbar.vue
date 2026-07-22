@@ -1,7 +1,7 @@
 <template>
-  <Disclosure as="nav" class="bg-blue-900 text-white" v-slot="{ open }">
+  <Disclosure as="nav" class="bg-blue-900 text-white shrink-0" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
+      <div class="flex items-center justify-between h-12 md:h-16">
 
         <div class="flex items-center space-x-3 bg-blue-800/50">
           <span class="text-2xl font-bold">Phraséologie</span><span class="text-2xl font-bold hidden md:flex"> aéronautique </span>

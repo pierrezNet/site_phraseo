@@ -59,3 +59,21 @@ div#instructions > div:not(:has(div)):after {
 .modal a {
     @apply text-blue-600 hover:underline;
 }
+/* Fondu dynamique haut/bas sur les zones scrollables en mobile.
+   La directive v-scroll-fade pose data-fade = top | bottom | both | none
+   selon la position de scroll : pas de fondu au bout, fondu du côté où il
+   reste du contenu à faire défiler. */
+@media (max-width: 767px) {
+    .scroll-fade[data-fade="both"] {
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 24px, black calc(100% - 24px), transparent 100%);
+                mask-image: linear-gradient(to bottom, transparent 0, black 24px, black calc(100% - 24px), transparent 100%);
+    }
+    .scroll-fade[data-fade="top"] {
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 24px, black 100%);
+                mask-image: linear-gradient(to bottom, transparent 0, black 24px, black 100%);
+    }
+    .scroll-fade[data-fade="bottom"] {
+        -webkit-mask-image: linear-gradient(to bottom, black 0, black calc(100% - 24px), transparent 100%);
+                mask-image: linear-gradient(to bottom, black 0, black calc(100% - 24px), transparent 100%);
+    }
+}

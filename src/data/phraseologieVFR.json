@@ -551,7 +551,7 @@
 				{
 					"_id": "ALIGNEMENT_APRES_AVION_FINAL",
 					"_name": "Alignement après final",
-					"_short": "Alignement final",
+					"_short": "Align. final",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1105,7 +1105,7 @@
 				{
 					"_id": "TRAFIC_SOL",
 					"_name": "Priorité trafic",
-					"_short": "Priorité trafic",
+					"_short": "Prio trafic",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1133,7 +1133,7 @@
 				{
 					"_id": "TRAVERSER_PISTE",
 					"_name": "Traversée de piste",
-					"_short": "Traversée piste",
+					"_short": "Trav. piste",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1769,7 +1769,7 @@
 					],
 					"_id": "TRANSIT_CLAIRANCE_IFR",
 					"_name": "Clairance transit VFR",
-					"_short": "Transit clairance",
+					"_short": "Clairance TR",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1797,7 +1797,7 @@
 					],
 					"_id": "TRANSIT_POURSUITE_SORTIE",
 					"_name": "Poursuite et sortie transit",
-					"_short": "Poursuite transit",
+					"_short": "Poursuite TR",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1939,7 +1939,7 @@
 					],
 					"_id": "CLOTURE_PLAN_VOL_NON_CONNU",
 					"_name": "Clôture plan de vol (vol non connu)",
-					"_short": "Clôture non connu",
+					"_short": "Clôture NC",
 					"_level": "avancé"
 				},
 				{
@@ -1977,7 +1977,7 @@
 					],
 					"_id": "VFR_SPECIAL_DEPART",
 					"_name": "Départ VFR spécial",
-					"_short": "VFR spécial départ",
+					"_short": "Départ spé",
 					"_level": "avancé"
 				},
 				{
@@ -2015,7 +2015,7 @@
 					],
 					"_id": "VFR_SPECIAL_REFUS",
 					"_name": "Refus VFR spécial (visibilité)",
-					"_short": "VFR spécial refusé",
+					"_short": "Refus spé",
 					"_level": "avancé"
 				},
 				{
@@ -2053,7 +2053,7 @@
 					],
 					"_id": "VFR_SPECIAL_ARRIVEE",
 					"_name": "Arrivée VFR spécial",
-					"_short": "VFR spécial arrivée",
+					"_short": "Arrivée spé",
 					"_level": "avancé"
 				},
 				{
@@ -2091,7 +2091,7 @@
 					],
 					"_id": "VFR_SPECIAL_TRANSIT_PUBLIE",
 					"_name": "Transit VFR spécial (itinéraire publié)",
-					"_short": "VFR spé. publié",
+					"_short": "TR publié",
 					"_level": "avancé"
 				},
 				{
@@ -2129,7 +2129,7 @@
 					],
 					"_id": "VFR_SPECIAL_TRANSIT_HORS_PUBLIE",
 					"_name": "Transit VFR spécial (hors itinéraire)",
-					"_short": "VFR spé. direct",
+					"_short": "TR direct",
 					"_level": "avancé"
 				},
 				{
@@ -2405,7 +2405,7 @@
 				{
 					"_id": "FIN_VENT_ARRIERE",
 					"_name": "Fin de vent arrière",
-					"_short": "Fin vent arrière",
+					"_short": "Fin vent arr",
 					"subgraph": [
 						{
 							"call": {
@@ -2561,7 +2561,7 @@
 				{
 					"_id": "CONTACT_APP",
 					"_name": "Contact approche",
-					"_short": "Contact approche",
+					"_short": "Contact APP",
 					"para": [
 						{
 							"_lang": "fr",

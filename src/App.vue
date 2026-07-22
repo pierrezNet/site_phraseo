@@ -1,17 +1,17 @@
 <template>
-  <div id="app" :class="[currentMode === 'IFR' ? 'theme-ifr' : 'theme-vfr']" class="min-h-screen transition-colors duration-500">
+  <div id="app" :class="[currentMode === 'IFR' ? 'theme-ifr' : 'theme-vfr']" class="h-[100dvh] md:h-auto md:min-h-screen flex flex-col transition-colors duration-500">
     <Navbar 
       @open-modal="openModal" 
       @select-task="selectTask" 
       @update:mode="handleModeChange" 
     />
     
-    <div v-if="showFlightStrip" class="px-2 md:px-4 pt-2">
+    <div v-if="showFlightStrip" class="shrink-0 px-2 md:px-4 pt-2">
       <FlightStrip @edit="openModal('parametres')" />
     </div>
 
-    <div class="grid grid-cols-10 gap-4">
-      <div class="col-span-12 md:col-span-4">
+    <div class="flex-1 min-h-0 flex flex-col overflow-hidden md:overflow-visible md:grid md:grid-cols-10 md:gap-4">
+      <div v-scroll-fade class="col-span-12 md:col-span-4 max-h-[40%] md:max-h-none overflow-y-auto md:overflow-visible scroll-fade">
         <Tabs
           ref="tabsRef"
           :phraseoData="currentPhraseoData"
@@ -20,8 +20,8 @@
           @update:context="updateContext"
         />
       </div>
-      
-      <div id="instructions" class="col-span-12 md:col-span-6 m-1 md:mt-3 md:ml-3">
+
+      <div id="instructions" v-scroll-fade class="col-span-12 md:col-span-6 m-1 md:mt-3 md:ml-3 flex-1 min-h-0 overflow-y-auto md:overflow-visible scroll-fade">
         <TaskTextDisplay :selectedTaskTexts="selectedTaskTexts" :context="taskContext" />
       </div>
     </div>
@@ -48,6 +48,32 @@ import { useQuizStore } from '@/stores/quiz';
 // Import des deux bases de données
 import phraseoIFR from '@/data/phraseologieIFR.json';
 import phraseoVFR from '@/data/phraseologieVFR.json';
+
+// Directive : fondu de scroll dynamique (mobile). Pose data-fade selon la
+// position (top/bottom/both/none) → pas de fondu au bout du défilement.
+const vScrollFade = {
+  mounted(el: HTMLElement) {
+    const update = () => {
+      const up = el.scrollTop > 1;
+      const down = el.scrollTop + el.clientHeight < el.scrollHeight - 1;
+      el.dataset.fade = up && down ? 'both' : up ? 'top' : down ? 'bottom' : 'none';
+    };
+    (el as any)._sf = update;
+    el.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    requestAnimationFrame(update);
+  },
+  updated(el: HTMLElement) {
+    if ((el as any)._sf) requestAnimationFrame((el as any)._sf);
+  },
+  unmounted(el: HTMLElement) {
+    const fn = (el as any)._sf;
+    if (fn) {
+      el.removeEventListener('scroll', fn);
+      window.removeEventListener('resize', fn);
+    }
+  },
+};
 
 /** * 1. ON DÉFINIT UNE INTERFACE LOCALE POUR ÉVITER LE CONFLIT
  * On ne l'appelle pas TextItem, on l'appelle PhraseoLine

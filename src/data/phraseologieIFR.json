@@ -3368,7 +3368,7 @@
 					],
 					"_id": "DECOL_IMMEDIAT_OU_DEGAGE",
 					"_name": "Décollage immédiat ou dégagez",
-					"_short": "Immédiat/dégage",
+					"_short": "Décol. imm.",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4288,7 +4288,7 @@
 					],
 					"_id": "TRAVERSEE_PISTE_CONTACT_SOL",
 					"_name": "Traversée puis contact Sol",
-					"_short": "Traversée + Sol",
+					"_short": "Traversée Sol",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4420,7 +4420,7 @@
 					],
 					"_id": "ROULAGE_PRIORITE_CHEMINEMENT",
 					"_name": "Roulage priorité et cheminement",
-					"_short": "Roulage priorité",
+					"_short": "Roulage prio",
 					"_level": "avancé"
 				},
 				{
@@ -4576,7 +4576,7 @@
 					],
 					"_id": "INSPECTION_PISTE_FLYCO",
 					"_name": "Inspection de piste (FLYCO)",
-					"_short": "Inspection piste",
+					"_short": "Inspection",
 					"_level": "avancé"
 				},
 				{
@@ -4700,7 +4700,7 @@
 					],
 					"_id": "DECOL_ANNULE_PUIS_IMMEDIAT",
 					"_name": "Décollage annulé puis immédiat",
-					"_short": "Annulé/immédiat",
+					"_short": "Annulé/imm.",
 					"_level": "avancé"
 				},
 				{
@@ -6064,7 +6064,7 @@
 					],
 					"_id": "APPROCHE_ANNULEE_STOP_DESCENTE",
 					"_name": "Approche annulée, stoppez la descente",
-					"_short": "Approche annulée",
+					"_short": "App. annulée",
 					"_level": "avancé"
 				},
 				{
@@ -6092,7 +6092,7 @@
 					],
 					"_id": "INSTRUCTION_ANTICIPEE_REMISE_GAZ",
 					"_name": "Instruction anticipée remise de gaz",
-					"_short": "Si approche interrompue",
+					"_short": "RG anticipée",
 					"_level": "avancé"
 				}
 			],

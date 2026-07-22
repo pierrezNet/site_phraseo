@@ -32,12 +32,14 @@
     <!-- Contenu des tâches par phase — accordéon par sous-thème -->
     <div :class="[showCircuitMap ? 'md:hidden' : '']">
       <template v-for="grp in displayGroups" :key="grp.name">
+        <!-- Groupe accordéon dans un panneau ; groupe libre sans cadre -->
+        <div :class="grp.header ? 'mt-2 rounded-md border border-gray-300 overflow-hidden' : 'mt-2'">
         <!-- En-tête repliable — seulement pour les groupes multi-tâches (hors débutant) -->
         <button
           v-if="grp.header"
           type="button"
           @click="toggleGroup(grp.name)"
-          class="w-full flex items-center justify-between px-2 py-1.5 mt-2 mb-1 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold"
+          class="w-full flex items-center justify-between px-2 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold"
         >
           <span>{{ grp.name }}</span>
           <span class="text-xs font-normal opacity-70">{{ grp.tasks.length }}&nbsp;{{ openGroup === grp.name ? '▾' : '▸' }}</span>
@@ -45,13 +47,13 @@
 
         <div
           v-show="grp.alwaysOpen || openGroup === grp.name"
-          class="grid grid-cols-3 md:grid-cols-1 place-content-between gap-1"
+          :class="['flex flex-wrap md:grid md:grid-cols-1 gap-1', grp.header ? 'bg-gray-500/10 px-1 pb-1 pt-1' : '']"
         >
           <button
             v-for="task in grp.tasks"
             :key="task._id"
             :class="[
-              'md:w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
+              'md:w-full text-white rounded-md px-3 py-1.5 my-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
               selectedTaskIds.includes(task._id)
                   ? `hover:bg-green-800 text-white bg-green-700`
                   : `hover:bg-${task._color}-800 bg-${task._color}-700`
@@ -63,7 +65,7 @@
             <AtcIcon v-else-if="getInitiator(task) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
             <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
             <span class="hidden md:inline flex-1">{{ task._name }}</span>
-            <span class="inline md:hidden">{{ task._short }}</span>
+            <span class="inline md:hidden whitespace-nowrap">{{ task._short }}</span>
             <span
               v-if="selectedTaskIds.includes(task._id)"
               class="hidden md:block w-4 shrink-0 text-white"
@@ -73,37 +75,40 @@
             <span v-else class="hidden md:block w-4 shrink-0"></span>
           </button>
         </div>
-      </template>
-    </div>
+        </div>
 
-    <hr v-if="selectedSubgraphs.length > 0" class="md:hidden border border-blue-800 mt-1 mb-1"/>
-    <!-- Boutons correspondants aux subgraph -->
-    <div v-if="selectedSubgraphs.length > 0" class="grid grid-cols-3 md:grid-cols-1 place-content-between gap-1">
-      <h2 class="custom-h2 hidden md:flex">Options</h2>
-      <button
-        v-for="subgraph in selectedSubgraphs"
-        :key="subgraph.refid"
-        :class="[
-          'w-full text-white rounded-md m-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
-          selectedTaskIds.includes(subgraph.refid)
-            ? `hover:bg-green-800 text-white bg-green-700`
-            : `bg-orange-700 hover:bg-orange-800`
-        ]"
-          @click="logSubgraphTask(subgraph)"
-      >
-        <PilotIcon v-if="getInitiator(subgraph.fullTask) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
-        <AtcIcon v-else-if="getInitiator(subgraph.fullTask) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
-        <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
-        <span class="hidden md:inline flex-1">{{ subgraph._name }}</span>
-        <span class="inline md:hidden">{{ subgraph._short }}</span>
-        <span
-          v-if="selectedTaskIds.includes(subgraph.refid)"
-          class="hidden md:block w-4 shrink-0 text-white"
-        >
-          ✓
-        </span>
-        <span v-else class="hidden md:block w-4 shrink-0"></span>
-      </button>
+        <!-- Options rattachées au groupe de la tâche active (juste sous son accordéon) -->
+        <template v-if="selectedSubgraphs.length > 0 && grp.tasks.some((t) => t._id === simulatorStore.currentTaskId)">
+          <hr class="md:hidden border border-blue-800 mt-1 mb-1" />
+          <div class="flex flex-wrap md:grid md:grid-cols-1 gap-1 mt-1">
+            <h2 class="custom-h2 hidden md:flex w-full">Options</h2>
+            <button
+              v-for="subgraph in selectedSubgraphs"
+              :key="subgraph.refid"
+              :class="[
+                'md:w-full text-white rounded-md px-3 py-1.5 my-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
+                selectedTaskIds.includes(subgraph.refid)
+                  ? `hover:bg-green-800 text-white bg-green-700`
+                  : `bg-orange-700 hover:bg-orange-800`
+              ]"
+              @click="logSubgraphTask(subgraph)"
+            >
+              <PilotIcon v-if="getInitiator(subgraph.fullTask) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
+              <AtcIcon v-else-if="getInitiator(subgraph.fullTask) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
+              <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
+              <span class="hidden md:inline flex-1">{{ subgraph._name }}</span>
+              <span class="inline md:hidden whitespace-nowrap">{{ subgraph._short }}</span>
+              <span
+                v-if="selectedTaskIds.includes(subgraph.refid)"
+                class="hidden md:block w-4 shrink-0 text-white"
+              >
+                ✓
+              </span>
+              <span v-else class="hidden md:block w-4 shrink-0"></span>
+            </button>
+          </div>
+        </template>
+      </template>
     </div>
   </div>
 </template>
@@ -280,8 +285,8 @@ const groupedPhaseTasks = computed(() => {
 
 const isBeginnerLevel = computed(() => formStore.form.LEVEL === 'débutant');
 
-// Groupes affichés : liste plate en débutant ; sinon accordéon pour les groupes
-// multi-tâches, affichage direct (sans en-tête) pour les groupes à une seule tâche.
+// Groupes affichés : liste plate en débutant ; sinon TOUT en accordéon
+// (même les groupes à une seule tâche), pour une lecture uniforme.
 const displayGroups = computed(() => {
   if (isBeginnerLevel.value) {
     return [{ name: '__flat__', tasks: filteredPhaseTasks.value, header: false, alwaysOpen: true }];
@@ -289,8 +294,8 @@ const displayGroups = computed(() => {
   return groupedPhaseTasks.value.map((g) => ({
     name: g.name,
     tasks: g.tasks,
-    header: g.tasks.length > 1,
-    alwaysOpen: g.tasks.length === 1,
+    header: true,
+    alwaysOpen: false,
   }));
 });
 
@@ -299,10 +304,9 @@ const openGroup = ref<string | null>(null);
 const toggleGroup = (name: string) => {
   openGroup.value = openGroup.value === name ? null : name;
 };
-// À l'ouverture d'une phase : ouvrir le 1er groupe multi-tâches, fermer les autres
+// À l'ouverture d'une phase : ouvrir le 1er groupe, fermer les autres
 const resetOpenGroups = () => {
-  const first = groupedPhaseTasks.value.find((g) => g.tasks.length > 1);
-  openGroup.value = first ? first.name : null;
+  openGroup.value = groupedPhaseTasks.value[0]?.name ?? null;
 };
 
 // --- Methods ---
