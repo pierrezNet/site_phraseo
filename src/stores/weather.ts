@@ -1,23 +1,34 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import { get } from '../utils/api'; // Importe ton utilitaire fetch
+import { computed, ref } from 'vue';
+import { get } from '../utils/api';
+import { metarFields, type Metar } from '../types/metar';
+import { API_BASE } from '../utils/relay';
+
+const METAR_TTL_MS = 30 * 60 * 1000;
 
 export const useWeatherStore = defineStore('weather', () => {
-  const metarData = ref<any>(null);
+  const metarData = ref<Metar | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
   const lastUpdated = ref<number | null>(null);
+  const lastIcao = ref<string | null>(null);
+
+  /** QNH du METAR sous forme de chaîne, ou null si indisponible */
+  const metarQnh = computed(() => {
+    const value = metarData.value ? metarFields(metarData.value).altimeter?.value : null;
+    return value ? String(value) : null;
+  });
 
   const updateMetar = async (icao: string, force = false) => {
-    if (!icao || icao.length < 4) return;
+    if (!/^[A-Za-z]{4}$/.test(icao)) return;
+    const code = icao.toUpperCase();
 
-    // Vérification du délai de 30 minutes (30 * 60 * 1000 ms)
-    const now = Date.now();
-    const isExpired = lastUpdated.value ? (now - lastUpdated.value > 1800000) : true;
- 
-    // On ne lance l'appel que si c'est expiré, si c'est un nouvel OACI, ou si on force
-    if (!isExpired && !force && metarData.value?.icao === icao) {
-      console.log("METAR encore frais, pas de mise à jour nécessaire.");
+    // On ne relance l'appel que si le METAR a expiré, si l'OACI change, ou si on force
+    const isExpired = !lastUpdated.value || Date.now() - lastUpdated.value > METAR_TTL_MS;
+    if (!isExpired && !force && lastIcao.value === code) return;
+
+    if (!API_BASE) {
+      error.value = 'VITE_API_BASE manquant : METAR indisponible.';
       return;
     }
 
@@ -25,19 +36,16 @@ export const useWeatherStore = defineStore('weather', () => {
     error.value = null;
 
     try {
-      const data = await get<any>(`https://avwx.rest/api/metar/${icao}`, {
-        headers: { 'Authorization': import.meta.env.VITE_AVWX_API_KEY }
-      });
-      metarData.value = data;
-      lastUpdated.value = Date.now(); // On mémorise l'heure du succès
-      console.log("METAR mis à jour à :", new Date().toLocaleTimeString());
-    } catch (err: any) {
-      error.value = err.message;
-      console.error("Erreur METAR AVWX:", err);
+      metarData.value = await get<Metar>(`${API_BASE}/metar/${code}`);
+      lastIcao.value = code;
+      lastUpdated.value = Date.now();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : String(err);
+      console.error("Erreur METAR:", err);
     } finally {
       loading.value = false;
     }
   };
 
-  return { metarData, loading, error, updateMetar, lastUpdated };
+  return { metarData, metarQnh, loading, error, updateMetar, lastUpdated };
 });

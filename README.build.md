@@ -2,10 +2,10 @@
 
 Ce dépôt contient la version **statique buildée** du site *Phraséo*, dédiée à la phraseologie aéronautique (FR/EN).
 
-Le site est généré en amont (build) puis déployé tel quel, sans backend ni runtime serveur.
+Le site est généré en amont (build) puis déployé tel quel sur GitHub Pages. Seul un petit relais (Cloudflare Worker, dossier `worker/`) détient les secrets : METAR et retours Discord.
 
 🌍 Site en ligne :  
-https://phraseo.aeronautiqe.xyz/
+https://phraseo.aeronautique.xyz/
 
 ## Stack
 - HTML statique
@@ -14,8 +14,8 @@ https://phraseo.aeronautiqe.xyz/
 - Build via Vite
 
 ## Philosophie
-- Zéro serveur
-- Zéro dépendance backend
+- Site 100 % statique, aucun secret dans le bundle
+- Un relais minimal pour les seuls appels qui en ont besoin
 - Performance maximale
 - Hébergement simple et robuste
 

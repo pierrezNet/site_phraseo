@@ -239,6 +239,11 @@ export const useFormStore = defineStore('form', {
       this.mode = newMode
       this.form = { ...this.snapshots[newMode], LEVEL: level }
 
+      try {
+        localStorage.setItem('flightMode', newMode)
+      } catch (error) {
+        console.error('Failed to save flight mode to localStorage:', error)
+      }
       this.saveToLocalStorage()
       this.syncFrequencyLabels()
     },

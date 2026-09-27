@@ -135,11 +135,8 @@ const resolveCriticalValue = (tag: string, lang: 'fr' | 'en'): string => {
   switch (tag) {
     case 'RWY':
       return formStore.formatRunway(formStore.form.RWY, lang);
-    case 'QNH': {
-      const d = weatherStore.metarData?.decoded || weatherStore.metarData;
-      // altimeter.value peut être un nombre (METAR) → on force la chaîne
-      return String(d?.altimeter?.value ?? formStore.form.QNH ?? '1013');
-    }
+    case 'QNH':
+      return weatherStore.metarQnh ?? formStore.form.QNH ?? '1013';
     case 'ALT':
       return formStore.form.ALT || '';
     case 'NIV':

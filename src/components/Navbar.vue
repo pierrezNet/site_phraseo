@@ -151,24 +151,21 @@ import { useFormStore, type UserLevel } from '../stores/form'
 import { useQuizStore } from '../stores/quiz'
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 
-const props = defineProps(['currentMode'])
 const emit = defineEmits(['update:mode', 'open-modal', 'select-task'])
 
 const langStore = useLangStore()
 const formStore = useFormStore()
 const quizStore = useQuizStore()
 
-// Gestion du mode de vol (IFR/VFR)
-const flightMode = ref(localStorage.getItem('flightMode') || 'IFR')
+// Gestion du mode de vol (IFR/VFR), porté par le store du formulaire
+const flightMode = computed(() => formStore.mode)
 
 // Le mode quiz est disponible dans tous les modes et niveaux
 const quizAvailable = computed(() => true)
 
 const toggleFlightMode = () => {
-  flightMode.value = flightMode.value === 'IFR' ? 'VFR' : 'IFR'
-  localStorage.setItem('flightMode', flightMode.value)
   // Paramètres indépendants par mode : on échange l'instantané VFR/IFR
-  formStore.switchMode(flightMode.value as 'VFR' | 'IFR')
+  formStore.switchMode(flightMode.value === 'IFR' ? 'VFR' : 'IFR')
   emit('update:mode', flightMode.value)
 }
 

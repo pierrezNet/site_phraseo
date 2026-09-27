@@ -44,6 +44,7 @@ import AboutModal from '@/components/AboutModal.vue';
 import FeedbackModal from '@/components/FeedbackModal.vue';
 import FlightStrip from '@/components/FlightStrip.vue';
 import { useQuizStore } from '@/stores/quiz';
+import { useFormStore } from '@/stores/form';
 
 // Import des deux bases de données
 import phraseoIFR from '@/data/phraseologieIFR.json';
@@ -95,8 +96,9 @@ interface TabsInstance {
   logTask: (task: any) => void;
 }
 
-// État réactif du mode
-const currentMode = ref(localStorage.getItem('flightMode') || 'IFR');
+// Le mode de vol est porté par le store du formulaire (persisté dans localStorage)
+const formStore = useFormStore();
+const currentMode = computed(() => formStore.mode);
 
 // Données calculées en fonction du mode
 const currentPhraseoData = computed(() => {
@@ -109,8 +111,7 @@ const quizStore = useQuizStore();
 // Le bandeau de vol n'apparaît qu'en mode quiz (rappel des paramètres)
 const showFlightStrip = computed(() => quizStore.enabled);
 
-const handleModeChange = (newMode: string) => {
-  currentMode.value = newMode;
+const handleModeChange = () => {
   selectedTaskTexts.value = [];
 };
 

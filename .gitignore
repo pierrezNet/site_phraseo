@@ -33,7 +33,11 @@ Manuel_Phraseologie.pdf
 src/**/*.js
 src/**/*.d.ts
 !src/shim-vue.d.ts
-!src/vuex.d.ts
 vite.config.js
 vite.config.d.ts
 *.tsbuildinfo
+.claude/settings.local.json
+# Cloudflare Worker
+worker/node_modules
+worker/.wrangler
+worker/.dev.vars

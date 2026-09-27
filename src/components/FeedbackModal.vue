@@ -83,98 +83,66 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
+import { postJson } from '../utils/api';
+import { API_BASE } from '../utils/relay';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
-export default defineComponent({
-  name: 'FeedbackModal',
-  setup() {
-    const formStore = useFormStore();
-    const langStore = useLangStore();
+const formStore = useFormStore();
+const langStore = useLangStore();
 
-    const isOpen = ref(false);
-    const status = ref<Status>('idle');
-    const type = ref('Erreur de phraséologie');
-    const message = ref('');
-    const contact = ref('');
+const isOpen = ref(false);
+const status = ref<Status>('idle');
+const type = ref('Erreur de phraséologie');
+const message = ref('');
+const contact = ref('');
 
-    const open = () => {
-      // Réinitialise l'état à chaque ouverture
-      status.value = 'idle';
-      message.value = '';
-      contact.value = '';
-      isOpen.value = true;
-    };
+const open = () => {
+  // Réinitialise l'état à chaque ouverture
+  status.value = 'idle';
+  message.value = '';
+  contact.value = '';
+  isOpen.value = true;
+};
 
-    const close = () => {
-      isOpen.value = false;
-    };
+const close = () => {
+  isOpen.value = false;
+};
 
-    const submit = async () => {
-      if (!message.value.trim()) return;
+const submit = async () => {
+  if (!message.value.trim()) return;
 
-      const webhookUrl = import.meta.env.VITE_DISCORD_WEBHOOK_URL as string | undefined;
-      if (!webhookUrl) {
-        console.warn('VITE_DISCORD_WEBHOOK_URL manquant : feedback non envoyé.');
-        status.value = 'error';
-        return;
-      }
+  if (!API_BASE) {
+    console.warn('VITE_API_BASE manquant : feedback non envoyé.');
+    status.value = 'error';
+    return;
+  }
 
-      status.value = 'sending';
+  status.value = 'sending';
 
-      // Contexte technique ajouté automatiquement pour faciliter le tri
-      const mode = localStorage.getItem('flightMode') || 'IFR';
-      const level = formStore.form.LEVEL || '—';
-      const lang = langStore.current;
+  // Le relais construit le message Discord ; on n'envoie que les champs utiles.
+  // Le contexte technique (mode, niveau, langue) facilite le tri.
+  try {
+    await postJson(`${API_BASE}/feedback`, {
+      type: type.value,
+      message: message.value.slice(0, 1800),
+      contact: contact.value.trim(),
+      mode: formStore.mode,
+      level: formStore.form.LEVEL || '',
+      lang: langStore.current,
+    });
+    status.value = 'success';
+  } catch (err) {
+    console.error('Échec envoi feedback :', err);
+    status.value = 'error';
+  }
+};
 
-      const payload = {
-        username: 'Phraséo — Feedback',
-        embeds: [
-          {
-            title: `Nouveau retour — ${type.value}`,
-            description: message.value.slice(0, 1800),
-            color: 0x1e40af,
-            fields: [
-              { name: 'Mode', value: String(mode), inline: true },
-              { name: 'Niveau', value: String(level), inline: true },
-              { name: 'Langue', value: String(lang), inline: true },
-              { name: 'Contact', value: contact.value.trim() || '—', inline: false },
-            ],
-          },
-        ],
-      };
-
-      try {
-        const res = await fetch(webhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        // Discord renvoie 204 No Content en cas de succès
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        status.value = 'success';
-      } catch (err) {
-        console.error('Échec envoi feedback Discord :', err);
-        status.value = 'error';
-      }
-    };
-
-    return {
-      isOpen,
-      status,
-      type,
-      message,
-      contact,
-      open,
-      close,
-      submit,
-    };
-  },
-});
+defineExpose({ open, close });
 </script>
 
 <style scoped>

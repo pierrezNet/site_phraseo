@@ -30,8 +30,9 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          VITE_AVWX_API_KEY: ${{ secrets.VITE_AVWX_API_KEY }}
-          VITE_DISCORD_WEBHOOK_URL: ${{ secrets.VITE_DISCORD_WEBHOOK_URL }}
+          # URL publique du relais (worker/) : une variable, pas un secret.
+          # Tout ce qui est préfixé VITE_ finit en clair dans le bundle publié.
+          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
 
       - uses: actions/configure-pages@v5
 

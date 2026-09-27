@@ -50,10 +50,7 @@ const inf = computed(() => orDash(formStore.form.INF));
 const isVFR = computed(() => formStore.mode === 'VFR');
 const extraLabel = computed(() => (isVFR.value ? 'Sortie' : 'Niveau'));
 const extraValue = computed(() => orDash(isVFR.value ? formStore.form.SORTIE : formStore.form.NIV));
-const qnh = computed(() => {
-  const d = weatherStore.metarData?.decoded || weatherStore.metarData;
-  return String(d?.altimeter?.value ?? formStore.form.QNH ?? '1013');
-});
+const qnh = computed(() => weatherStore.metarQnh ?? formStore.form.QNH ?? '1013');
 
 // Surligné tant que l'utilisateur n'a pas ouvert les paramètres depuis le bandeau
 const highlight = ref(false);

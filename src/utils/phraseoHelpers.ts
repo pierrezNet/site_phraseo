@@ -85,6 +85,14 @@ export function resolveStationName(lang: Language, formStore: FormStoreType): st
 }
 
 /**
+ * Échappe les caractères HTML d'une valeur injectée : les textes sont affichés en v-html,
+ * seules les balises du JSON source doivent être interprétées, pas les saisies du formulaire.
+ */
+export function escapeHtml(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/**
  * Remplace tous les placeholders [TAG] d'un texte de phraséologie.
  */
 export function replacePlaceholders(
@@ -103,7 +111,9 @@ export function replacePlaceholders(
   const hdiffFr = `${dh}_${dm}`;
   const hdiffEn = `${dh[0]}_${dh[1]}_${dm[0]}_${dm[1]}`;
 
-  return text.replace(/\[([^\]]+)\]/g, (_match, p1: string) => {
+  return text.replace(/\[([^\]]+)\]/g, (_match, p1: string) => escapeHtml(resolveTag(p1, _match)));
+
+  function resolveTag(p1: string, raw: string): string {
     switch (p1) {
       case 'POL':
         return POL_STRINGS[getHeure()][lang];
@@ -123,11 +133,8 @@ export function replacePlaceholders(
         return formStore.form.CAA || 'Station';
       case 'RWY':
         return formStore.formatRunway(formStore.form.RWY, lang);
-      case 'QNH': {
-        const d = weatherStore.metarData?.decoded || weatherStore.metarData;
-        const qnh = d?.altimeter?.value || formStore.form.QNH || '1013';
-        return qnh;
-      }
+      case 'QNH':
+        return weatherStore.metarQnh || formStore.form.QNH || '1013';
       case 'MET':
         if (weatherStore.loading) return lang === 'fr' ? 'chargement...' : 'loading...';
         if (weatherStore.metarData) return replaceMetarTag('[MET]', weatherStore.metarData, { lang });
@@ -150,7 +157,7 @@ export function replacePlaceholders(
       case 'NCTR':
         return formStore.frequencyLabels[p1]?.[lang] || p1;
       default:
-        return formStore.form[p1] || _match;
+        return formStore.form[p1] || raw;
     }
-  });
+  }
 }
