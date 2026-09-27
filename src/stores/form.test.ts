@@ -45,12 +45,16 @@ describe('formStore', () => {
       expect(store.formatFrequency('121.050', 'fr')).toBe('121 décimale 0_50')
     })
 
-    it('118.700 → "118 décimale unité"  (décimale multiple de 100)', () => {
-      expect(store.formatFrequency('118.700', 'fr')).toBe('118 décimale unité')
+    it('118.700 → "118 décimale 7"  (décimale multiple de 100)', () => {
+      expect(store.formatFrequency('118.700', 'fr')).toBe('118 décimale 7')
     })
 
-    it('122.800 → "122 décimale unité"  (décimale multiple de 100)', () => {
-      expect(store.formatFrequency('122.800', 'fr')).toBe('122 décimale unité')
+    it('122.800 → "122 décimale 8"  (décimale multiple de 100)', () => {
+      expect(store.formatFrequency('122.800', 'fr')).toBe('122 décimale 8')
+    })
+
+    it('122.275 → "122 décimale 275"', () => {
+      expect(store.formatFrequency('122.275', 'fr')).toBe('122 décimale 275')
     })
 
     it('121.825 → "121 décimale 825"  (décimale standard)', () => {

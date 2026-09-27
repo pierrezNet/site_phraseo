@@ -26,38 +26,41 @@ export function getHeure(): 'matin' | 'soir' {
 }
 
 /**
- * Résout le label + fréquence d'une station radio avec fallback vers la station supérieure.
+ * Résout le label et la fréquence formatée d'une station radio,
+ * avec repli vers la station supérieure si la fréquence n'est pas renseignée.
+ * `frequency` est vide si aucune fréquence n'est disponible.
  */
-export function resolveStation(
+export function resolveStationParts(
   freqType: string,
   lang: Language,
   formStore: FormStoreType
-): string {
-  const freq = formStore.form[freqType];
+): { label: string; frequency: string } {
   const stationKey = FREQUENCY_TO_STATION[freqType];
-
-  if (freq && freq.trim() !== '') {
-    const label = formStore.frequencyLabels[stationKey]?.[lang] || freqType;
-    return `${label}, ${formStore.formatFrequency(freq, lang)}`;
-  }
-
-  // Fallback : cherche la prochaine station disponible dans la hiérarchie
   const startIndex = STATION_HIERARCHY.indexOf(stationKey as typeof STATION_HIERARCHY[number]);
+
   if (startIndex !== -1) {
     for (let i = startIndex; i < STATION_HIERARCHY.length; i++) {
       const station = STATION_HIERARCHY[i];
       const fType = Object.keys(FREQUENCY_TO_STATION).find(k => FREQUENCY_TO_STATION[k] === station);
-      if (fType) {
-        const val = formStore.form[fType];
-        if (typeof val === 'string' && val.trim() !== '') {
-          const label = formStore.frequencyLabels[station]?.[lang] || station;
-          return `${label}, ${formStore.formatFrequency(val, lang)}`;
-        }
+      const val = fType ? formStore.form[fType] : undefined;
+      if (typeof val === 'string' && val.trim() !== '') {
+        return {
+          label: formStore.frequencyLabels[station]?.[lang] || station,
+          frequency: formStore.formatFrequency(val, lang),
+        };
       }
     }
   }
 
-  return formStore.frequencyLabels[stationKey]?.[lang] || freqType;
+  return { label: formStore.frequencyLabels[stationKey]?.[lang] || freqType, frequency: '' };
+}
+
+/**
+ * Résout le label + fréquence d'une station radio avec fallback vers la station supérieure.
+ */
+export function resolveStation(freqType: string, lang: Language, formStore: FormStoreType): string {
+  const { label, frequency } = resolveStationParts(freqType, lang, formStore);
+  return frequency ? `${label}, ${frequency}` : label;
 }
 
 /** Hiérarchie fréquence → station pour le nom de la première station de contact. */

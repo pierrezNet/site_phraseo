@@ -6,6 +6,8 @@ import {
   tokenSimilarity,
   scoreAnswer,
   PASS_THRESHOLD,
+  CRITICAL_TAGS,
+  requiredText,
 } from './quizScoring'
 
 describe('normalizeText', () => {
@@ -137,5 +139,93 @@ describe('phraséologie exigeante (reformulations refusées)', () => {
       [['F E P', 'FEP']]
     )
     expect(r.passed).toBe(false)
+  })
+})
+
+// ── Nombres dits en toutes lettres ────────────────────────────────────────────
+
+describe('tokenize — nombres', () => {
+  it('chiffres épelés, composés et en chiffres donnent le même nombre', () => {
+    const ref = ['niveau', '110']
+    expect(tokenize('niveau 110')).toEqual(ref)
+    expect(tokenize('niveau 1_1_0')).toEqual(ref)
+    expect(tokenize('niveau un un zéro')).toEqual(ref)
+    expect(tokenize('niveau cent dix')).toEqual(ref)
+    expect(tokenize('level one one zero')).toEqual(['level', '110'])
+  })
+
+  it('compose les nombres français', () => {
+    expect(tokenize('quatre mille')).toEqual(['4000'])
+    expect(tokenize('deux mille cinq cents')).toEqual(['2500'])
+    expect(tokenize('quatre-vingt-dix')).toEqual(['90'])
+    expect(tokenize('soixante et onze')).toEqual(['71'])
+    expect(tokenize('mille vingt')).toEqual(['1020'])
+    expect(tokenize('trois cent soixante')).toEqual(['360'])
+  })
+
+  it('compose les nombres anglais et la prononciation OACI', () => {
+    expect(tokenize('two thousand five hundred')).toEqual(['2500'])
+    expect(tokenize('tree fife niner')).toEqual(['359'])
+  })
+
+  it('regroupe l\'heure épelée 1_5_5_5 avec 1555', () => {
+    expect(tokenize('1_5_5_5')).toEqual(tokenize('1555'))
+  })
+
+  it('sépare lettre et nombre d\'un point d\'attente', () => {
+    expect(tokenize('W41')).toEqual(['w', '41'])
+    expect(tokenize('whiskey quatre un')).toEqual(['w', '41'])
+  })
+
+  it('normalise la décimale des fréquences', () => {
+    expect(tokenize('118.7')).toEqual(['118', 'decimale', '7'])
+    expect(tokenize('118 decimal 7')).toEqual(['118', 'decimale', '7'])
+  })
+})
+
+describe('scoreAnswer — nouveaux éléments critiques', () => {
+  it('accepte un niveau dit en toutes lettres', () => {
+    const r = scoreAnswer('Je monte niveau un un zéro, F E P', 'Je monte niveau 110, F E P', [
+      { label: CRITICAL_TAGS.NIV, value: '110' },
+    ])
+    expect(r.passed).toBe(true)
+  })
+
+  it('refuse un code transpondeur faux', () => {
+    const criticals = [{ label: CRITICAL_TAGS.SQU, value: '7001' }]
+    const expected = 'Je roule point d\'attente, transpondeur 7001, F E P'
+    expect(scoreAnswer('je roule point d\'attente transpondeur 7010 F E P', expected, criticals).passed).toBe(false)
+    expect(scoreAnswer('je roule point d\'attente transpondeur sept zéro zéro un F E P', expected, criticals).passed).toBe(true)
+  })
+
+  it('contrôle le point d\'attente et la lettre ATIS', () => {
+    const criticals = [
+      { label: CRITICAL_TAGS.HLD, value: 'W41' },
+      { label: CRITICAL_TAGS.INF, value: 'C' },
+    ]
+    const expected = 'Je roule point d\'attente W41, avec information Charlie, F E P'
+    const ok = scoreAnswer('je roule point d\'attente whiskey quatre un avec information charlie F E P', expected, criticals)
+    expect(ok.passed).toBe(true)
+    const ko = scoreAnswer('je roule point d\'attente whiskey quatre deux avec information charlie F E P', expected, criticals)
+    expect(ko.criticals.find((c) => c.label === CRITICAL_TAGS.HLD)?.ok).toBe(false)
+    expect(ko.passed).toBe(false)
+  })
+})
+
+describe('requiredText — parenthèses = valeur libre ou segment optionnel', () => {
+  it('retire les valeurs d\'exemple et les notes', () => {
+    expect(requiredText('Je tourne à (droite) cap (220){note}, F E P')).toBe('Je tourne à cap , F E P')
+  })
+
+  it('une autre valeur que l\'exemple ne pénalise pas le rappel', () => {
+    const expected = requiredText('Je réduis (220) nœuds, F E P')
+    expect(scoreAnswer('je réduis 250 nœuds F E P', expected, []).passed).toBe(true)
+  })
+
+  it('accepte une fréquence dite en toutes lettres', () => {
+    const r = scoreAnswer('je contacte tour cent dix-huit décimale sept F E P', 'Je contacte Tour, 118 décimale 7, F E P', [
+      { label: CRITICAL_TAGS.TWR, value: '118 décimale 7' },
+    ])
+    expect(r.passed).toBe(true)
   })
 })

@@ -451,8 +451,11 @@ export const useFormStore = defineStore('form', {
     formatFrequencyFrench(integerPart: string, decimalPart: string, decimalValue: number): string {
       let result = `${integerPart} décimale `
 
-      if (decimalValue === 0 || parseInt(decimalPart) % 100 === 0) {
+      if (decimalValue === 0) {
         result += 'unité'
+      } else if (parseInt(decimalPart) % 100 === 0) {
+        // 118.700 → « 118 décimale 7 »
+        result += decimalPart[0]
       } else if (decimalValue > 0.009 && decimalValue < 0.091) {
         result += `0_${Math.round(decimalValue * DECIMAL_PRECISION)}`
       } else {

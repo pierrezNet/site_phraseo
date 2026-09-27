@@ -93,6 +93,11 @@ export default {
 
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
 
+    // Racine : simple description, utile pour vérifier que le relais répond
+    if (pathname === '/' && request.method === 'GET') {
+      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'POST /feedback'] }, 200, cors);
+    }
+
     const metar = pathname.match(/^\/metar\/([^/]+)$/);
     if (metar && request.method === 'GET') return handleMetar(metar[1].toUpperCase(), cors);
 

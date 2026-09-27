@@ -8,7 +8,7 @@
     </p>
 
     <!-- Rappel du mode quiz (seulement quand une étape/option est sélectionnée) -->
-    <div v-if="quizStore.enabled && renderedLines.length > 0" class="text-sm mb-3 px-3 py-2 rounded bg-blue-50 border border-blue-200 text-blue-900">
+    <div v-if="quizStore.enabled && renderedLines.length > 0" class="notice text-sm mb-3 px-3 py-2 rounded">
       🎯 Mode quiz : reproduisez la phrase du pilote, puis vérifiez.
     </div>
 
@@ -102,8 +102,8 @@ import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
 import { useWeatherStore } from '../stores/weather';
 import { useQuizStore } from '../stores/quiz';
-import { replacePlaceholders } from '../utils/phraseoHelpers';
-import { scoreAnswer, stripNotes, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
+import { replacePlaceholders, resolveStationParts } from '../utils/phraseoHelpers';
+import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
 import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
 
@@ -137,12 +137,19 @@ const resolveCriticalValue = (tag: string, lang: 'fr' | 'en'): string => {
       return formStore.formatRunway(formStore.form.RWY, lang);
     case 'QNH':
       return weatherStore.metarQnh ?? formStore.form.QNH ?? '1013';
-    case 'ALT':
-      return formStore.form.ALT || '';
-    case 'NIV':
-      return formStore.form.NIV || '';
+    case 'DEL':
+    case 'GND':
+    case 'TWR':
+    case 'APP':
+    case 'CTR':
+    {
+      // Fréquence seule (même repli de station que le texte affiché) ; ignorée si saisie invalide
+      const { frequency } = resolveStationParts(tag, lang, formStore);
+      return /\d/.test(frequency) ? frequency : '';
+    }
     default:
-      return '';
+      // ALT, NIV, CAP, VIT, SQU, STA, WPT, HLD, VOI, INF : valeur brute du formulaire
+      return formStore.form[tag] || '';
   }
 };
 
@@ -177,8 +184,9 @@ const renderedLines = computed(() => {
       return {
         isPilot: item._class === 'Pilot',
         content: tooltipHtml(processed),
-        expectedSpoken: stripNotes(processed),
-        criticals: buildCriticals(item.__text, lang),
+        expectedSpoken: requiredText(processed),
+        // Un tag entre parenthèses est optionnel : il n'est pas exigé
+        criticals: buildCriticals(requiredText(item.__text), lang),
       };
     });
 });
