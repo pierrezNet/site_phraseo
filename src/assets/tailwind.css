@@ -35,6 +35,126 @@
     .label-field {
         @apply block mt-1 text-sm font-medium text-gray-900;
     }
+
+    /* Boutons d'étapes/options : surface neutre, une seule couleur d'accent.
+       À faire = neutre ; vue = atténuée + coche ; en cours = seul bouton plein. */
+    .task-btn {
+        background-color: var(--task-bg);
+        color: var(--task-text);
+        border: 1px solid var(--task-border);
+        transition: background-color .15s, border-color .15s, color .15s;
+    }
+    .task-btn:hover {
+        background-color: var(--task-hover);
+        border-color: var(--accent-line);
+    }
+    .task-btn--done {
+        color: var(--task-muted);
+    }
+    .task-btn__check {
+        color: var(--accent-line);
+    }
+    .task-btn--active,
+    .task-btn--active:hover {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+    }
+    .task-btn--active .task-btn__check {
+        color: #fff;
+    }
+
+    /* En-têtes d'accordéon et onglets de phase, dans les mêmes tons */
+    .group-header {
+        background-color: var(--group-bg);
+        color: var(--task-text);
+    }
+    .group-header:hover {
+        background-color: var(--task-hover);
+    }
+    .group-panel {
+        border: 1px solid var(--task-border);
+    }
+    .phase-tab {
+        background-color: var(--group-bg);
+        color: var(--task-text);
+        border: 1px solid transparent;
+    }
+    /* Bandeau de vol et encarts d'information */
+    .strip {
+        background-color: var(--task-bg);
+        border-color: var(--task-border);
+        color: var(--task-text);
+    }
+    .strip:hover {
+        background-color: var(--task-hover);
+    }
+    .strip--highlight,
+    .strip--highlight:hover {
+        background-color: var(--attn-bg);
+        border-color: var(--attn-border);
+        box-shadow: 0 0 0 2px var(--attn-ring);
+    }
+    .strip__invite {
+        color: var(--attn-text);
+    }
+    .strip__edit {
+        color: var(--accent-line);
+    }
+    .notice {
+        background-color: var(--notice-bg);
+        border: 1px solid var(--notice-border);
+        color: var(--notice-text);
+    }
+
+    .phase-tab svg {
+        fill: currentColor;
+    }
+    .phase-tab:hover {
+        background-color: var(--task-hover);
+    }
+    .phase-tab--active,
+    .phase-tab--active:hover {
+        background-color: var(--task-bg);
+        border-color: var(--accent-line);
+        color: var(--accent-line);
+    }
+}
+
+/* Jetons de couleur par thème (appliqués sur #app) */
+.theme-vfr {
+    --task-bg: #ffffff;
+    --task-hover: #f1f5f9;
+    --task-border: #e2e8f0;
+    --task-text: #1e293b;
+    --task-muted: #64748b;
+    --group-bg: #eef2f7;
+    --accent: #1e3a8a;      /* bleu marine de la barre de navigation */
+    --accent-line: #1e40af;
+    --attn-bg: #fffbeb;
+    --attn-border: #f59e0b;
+    --attn-ring: #fde68a;
+    --attn-text: #92400e;
+    --notice-bg: #eff6ff;
+    --notice-border: #bfdbfe;
+    --notice-text: #1e3a8a;
+}
+.theme-ifr {
+    --task-bg: #1e293b;
+    --task-hover: #273449;
+    --task-border: #334155;
+    --task-text: #e2e8f0;
+    --task-muted: #94a3b8;
+    --group-bg: #172033;
+    --accent: #0369a1;      /* bleu instrument */
+    --accent-line: #38bdf8;
+    --attn-bg: rgba(245, 158, 11, 0.08);
+    --attn-border: #b45309;
+    --attn-ring: rgba(245, 158, 11, 0.15);
+    --attn-text: #fbbf24;
+    --notice-bg: rgba(56, 189, 248, 0.07);
+    --notice-border: #0c4a6e;
+    --notice-text: #bae6fd;
 }
 
 /* Le reste peut rester en dehors de @layer s'il s'agit de CSS standard */

@@ -7,10 +7,8 @@
         :key="i"
         @click="selectedTab = tab.id"
         :class="[
-          'flex items-center p-4 rounded-lg',
-          selectedTab === tab.id
-            ? 'bg-white border border-gray-300'
-            : 'bg-gray-200 hover:bg-gray-300 border-0'
+          'phase-tab flex items-center p-4 rounded-lg transition',
+          selectedTab === tab.id && 'phase-tab--active'
         ]"
       >
       <span
@@ -33,13 +31,13 @@
     <div :class="[showCircuitMap ? 'md:hidden' : '']">
       <template v-for="grp in displayGroups" :key="grp.name">
         <!-- Groupe accordéon dans un panneau ; groupe libre sans cadre -->
-        <div :class="grp.header ? 'mt-2 rounded-md border border-gray-300 overflow-hidden' : 'mt-2'">
+        <div :class="grp.header ? 'group-panel mt-2 rounded-md overflow-hidden' : 'mt-2'">
         <!-- En-tête repliable — seulement pour les groupes multi-tâches (hors débutant) -->
         <button
           v-if="grp.header"
           type="button"
           @click="toggleGroup(grp.name)"
-          class="w-full flex items-center justify-between px-2 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-semibold"
+          class="group-header w-full flex items-center justify-between px-2 py-1.5 text-sm font-semibold transition"
         >
           <span>{{ grp.name }}</span>
           <span class="text-xs font-normal opacity-70">{{ grp.tasks.length }}&nbsp;{{ openGroup === grp.name ? '▾' : '▸' }}</span>
@@ -47,17 +45,17 @@
 
         <div
           v-show="grp.alwaysOpen || openGroup === grp.name"
-          :class="['flex flex-wrap md:grid md:grid-cols-1 gap-1', grp.header ? 'bg-gray-500/10 px-1 pb-1 pt-1' : '']"
+          :class="['flex flex-wrap md:grid md:grid-cols-1 gap-1', grp.header ? 'px-1 pb-1 pt-1' : '']"
         >
           <button
             v-for="task in grp.tasks"
             :key="task._id"
             :class="[
-              'md:w-full text-white rounded-md px-3 py-1.5 my-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
-              selectedTaskIds.includes(task._id)
-                  ? `hover:bg-green-800 text-white bg-green-700`
-                  : `hover:bg-${task._color}-800 bg-${task._color}-700`
-              ]"
+              'task-btn md:w-full rounded-md px-3 py-1.5 my-1 md:p-2 md:mb-2 md:flex md:items-center md:text-center',
+              task._id === simulatorStore.currentTaskId
+                ? 'task-btn--active'
+                : selectedTaskIds.includes(task._id) && 'task-btn--done'
+            ]"
             @click="logTask(task)"
           >
             <svg v-if="task.subgraph && !task.para?.length" class="hidden md:block w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
@@ -68,7 +66,7 @@
             <span class="inline md:hidden whitespace-nowrap">{{ task._short }}</span>
             <span
               v-if="selectedTaskIds.includes(task._id)"
-              class="hidden md:block w-4 shrink-0 text-white"
+              class="task-btn__check hidden md:block w-4 shrink-0"
             >
               ✓
             </span>
@@ -86,10 +84,10 @@
               v-for="subgraph in selectedSubgraphs"
               :key="subgraph.refid"
               :class="[
-                'md:w-full text-white rounded-md px-3 py-1.5 my-1 md:p-2 md:mb-2 shadow transition md:flex md:items-center md:text-center',
-                selectedTaskIds.includes(subgraph.refid)
-                  ? `hover:bg-green-800 text-white bg-green-700`
-                  : `bg-orange-700 hover:bg-orange-800`
+                'task-btn md:w-full rounded-md px-3 py-1.5 my-1 md:p-2 md:mb-2 md:flex md:items-center md:text-center',
+                subgraph.refid === simulatorStore.currentTaskId
+                  ? 'task-btn--active'
+                  : selectedTaskIds.includes(subgraph.refid) && 'task-btn--done'
               ]"
               @click="logSubgraphTask(subgraph)"
             >
@@ -100,7 +98,7 @@
               <span class="inline md:hidden whitespace-nowrap">{{ subgraph._short }}</span>
               <span
                 v-if="selectedTaskIds.includes(subgraph.refid)"
-                class="hidden md:block w-4 shrink-0 text-white"
+                class="task-btn__check hidden md:block w-4 shrink-0"
               >
                 ✓
               </span>
@@ -154,17 +152,6 @@ const emitContext = () =>
 const tasks = ref<any[]>([]);
 const taskPhaseMap = ref<Record<string, string[]>>({});
 
-// --- Helper Functions ---
-
-const getColorFromClass = (className: string) => {
-  const cls = (className || '').toLowerCase();
-  if (cls.includes('pilot')) return 'blue';
-  if (cls.includes('atc')) return 'yellow';
-  if (cls.includes('option')) return 'orange';
-  if (cls.includes('info')) return 'orange';
-  return 'gray';
-};
-
 // --- Logic ---
 
 // Initialisation des tâches à partir des props (remplace created())
@@ -205,12 +192,7 @@ const initializeTasks = () => {
   tasks.value = allTasks.map(task => {
     const call = calls.find((c: any) => c._refid === task._id);
     const taskClass = call ? call._class : task._class || 'info';
-    const color = getColorFromClass(taskClass);
-    return {
-      ...task,
-      _class: taskClass,
-      _color: color || 'orange'
-    };
+    return { ...task, _class: taskClass };
   });
 
   // Auto-sélection du premier onglet dispo si nécessaire
@@ -341,7 +323,6 @@ const onMapSelect = (taskId: string, tab?: string) => {
           refid: sub.call._refid,
           _name: t?._name || sub.call._refid,
           _short: t?._short || t?._name?.slice(0, 3) || sub.call._refid,
-          _color: t?._color || 'orange',
           fullTask: t
         };
       })
@@ -396,7 +377,6 @@ const logTask = (task: any) => {
           refid: sub.call._refid,
           _name: t?._name || sub.call._refid,
           _short: t?._short || t?._name?.slice(0, 3) || sub.call._refid,
-          _color: t?._color || 'orange',
           fullTask: t
         };
       })

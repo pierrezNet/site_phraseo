@@ -231,8 +231,4 @@ const selectTask = (tabCode: string, taskId: string) => {
   color: #ffffff !important; /* Pour couvrir les deux modes de coloration possibles */
 }
 
-/* Optionnel : changer aussi la couleur de la bordure du bouton actif pour qu'elle soit plus visible */
-.theme-ifr .bg-white.border-gray-300 {
-  background-color: #334155 !important; /* Gris-bleu Slate 700 au lieu du blanc pur */
-}
 </style>

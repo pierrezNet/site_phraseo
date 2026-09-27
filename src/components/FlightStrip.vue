@@ -3,16 +3,14 @@
     type="button"
     @click="onEdit"
     :class="[
-      'w-full text-left rounded-lg px-3 py-2 mb-3 border transition flex items-center gap-2 flex-wrap',
-      highlight
-        ? 'bg-yellow-50 border-yellow-400 ring-2 ring-yellow-300'
-        : 'bg-white border-gray-300 hover:bg-gray-50'
+      'strip w-full text-left rounded-lg px-3 py-2 mb-3 border transition flex items-center gap-2 flex-wrap',
+      highlight && 'strip--highlight'
     ]"
     :title="'Cliquez pour modifier les paramètres de votre vol'"
   >
     <span class="text-lg shrink-0">✈</span>
     <span class="flex-1 text-sm min-w-0">
-      <span v-if="highlight" class="font-semibold text-yellow-800">👉 Personnalisez votre vol — </span>
+      <span v-if="highlight" class="strip__invite font-semibold">👉 Personnalisez votre vol — </span>
       <span class="font-medium">{{ callsign }}</span>
       <span class="opacity-70"> · {{ type }}</span>
       <span class="opacity-70"> · {{ dep }} → {{ arr }}</span>
@@ -22,7 +20,7 @@
       <span class="opacity-70"> · Info {{ inf }}</span>
       <span class="opacity-70"> · {{ extraLabel }} {{ extraValue }}</span>
     </span>
-    <span class="shrink-0 text-sm text-blue-600 font-medium whitespace-nowrap">✎ Modifier</span>
+    <span class="strip__edit shrink-0 text-sm font-medium whitespace-nowrap">✎ Modifier</span>
   </button>
 </template>
 
