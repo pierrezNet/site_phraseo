@@ -72,10 +72,23 @@ describe('scoreAnswer', () => {
     expect(r.criticals.find((c) => c.label === 'QNH')?.ok).toBe(false)
   })
 
-  it('échoue si trop de mots attendus manquent (rappel insuffisant)', () => {
-    const r = scoreAnswer('26 Gauche 1013', expected, criticals)
-    expect(r.criticals.every((c) => c.ok)).toBe(true)
+  it('échoue si seules les valeurs sont dites, sans l\'indicatif', () => {
+    const r = scoreAnswer('26 Gauche 1013', expected, [...criticals, { label: CRITICAL_TAGS.CAL, value: 'F S T' }])
+    expect(r.criticals.find((c) => c.label === 'Indicatif')?.ok).toBe(false)
     expect(r.passed).toBe(false)
+  })
+
+  it('valide une réponse incomplète mais à 75 % et plus, critiques justes (cas réel 84 %)', () => {
+    const r = scoreAnswer(
+      'Orly sol bonjour, demande une mise en route, information E, Air Europe 01',
+      'Orly Prévol, bonjour, Air Europe 01 en D2, demande mise en route pour Strasbourg, information E.',
+      [
+        { label: CRITICAL_TAGS.INF, value: 'E' },
+        { label: CRITICAL_TAGS.CAL, value: 'Air Europe 01' },
+      ]
+    )
+    expect(r.score).toBeGreaterThanOrEqual(PASS_THRESHOLD)
+    expect(r.passed).toBe(true)
   })
 
   // ── cas réels remontés par l'utilisateur (avant : 68 % / 42 % « à revoir ») ──

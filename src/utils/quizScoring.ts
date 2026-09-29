@@ -18,15 +18,16 @@ export interface QuizResult {
   accessory: number
   /** Résultat par élément critique. */
   criticals: CriticalResult[]
-  /** Exercice validé : essentiel dit (rappel suffisant) ET tous les critiques présents. */
+  /** Exercice validé : tous les critiques présents ET note globale suffisante. */
   passed: boolean
 }
 
-/** Seuil de note globale au-delà duquel la réponse est acceptée. */
+/**
+ * Seuil de note globale au-delà duquel la réponse est acceptée (critiques justes exigés).
+ * Les mots oubliés pèsent déjà dans la note (rappel = 70 % de la similarité) : pas de seuil séparé,
+ * pour que la note affichée suffise à expliquer la validation.
+ */
 export const PASS_THRESHOLD = 75
-
-/** Part minimale des mots attendus qu'il faut avoir dits pour valider. */
-export const RECALL_MIN = 0.7
 
 /** Tags de placeholders considérés comme critiques, avec leur libellé lisible. */
 export const CRITICAL_TAGS: Record<string, string> = {
@@ -47,6 +48,9 @@ export const CRITICAL_TAGS: Record<string, string> = {
   HLD: "Point d'attente",
   VOI: 'Cheminement',
   INF: 'Information ATIS',
+  // Règle OACI du collationnement : l'indicatif est toujours exigé (complet ≡ abrégé via les équivalences)
+  CAL: 'Indicatif',
+  CAA: 'Indicatif',
 }
 
 /** Alphabet aéronautique OACI → lettre (Lima = L, etc.). */
@@ -298,7 +302,6 @@ export function scoreAnswer(
   equivalences?: string[][]
 ): QuizResult {
   const groups = buildGroups(equivalences)
-  const { recall } = tokenStats(expectedSpoken, userText, equivalences)
   const accessory = tokenSimilarity(expectedSpoken, userText, equivalences)
 
   // Deux formes : lettres épelées regroupées ou non. Sans la seconde, une lettre critique
@@ -331,6 +334,6 @@ export function scoreAnswer(
     score,
     accessory,
     criticals: criticalResults,
-    passed: allCriticalsOk && recall >= RECALL_MIN && score >= PASS_THRESHOLD,
+    passed: allCriticalsOk && score >= PASS_THRESHOLD,
   }
 }
