@@ -859,22 +859,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], roulez point d'attente piste [RWY] via [VOI] [HLD]."
+							"__text": "[CAL], roulez point d'attente piste [RWY] via [VOI]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je roule point d'attente piste [RWY] via [VOI] [HLD], [CAL]."
+							"__text": "Je roule point d'attente piste [RWY] via [VOI], [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], taxi holding point runway [RWY] via [VOI] [HLD]."
+							"__text": "[CAL], taxi holding point runway [RWY] via [VOI]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Taxiing holding point runway [RWY] via [VOI] [HLD], [CAL]."
+							"__text": "Taxiing holding point runway [RWY] via [VOI], [CAL]."
 						}
 					],
 					"_id": "ROULAGE_AUTORISE",
@@ -1075,22 +1075,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], maintenez avant point d'attente piste [RWY] [HLD]."
+							"__text": "[CAL], maintenez avant point d'attente [HLD]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je maintiens avant point d'attente piste [RWY] [HLD], [CAL]."
+							"__text": "Je maintiens avant point d'attente [HLD], [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], hold short of holding point runway [RWY] [HLD]."
+							"__text": "[CAL], hold short of holding point [HLD]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Holding short of holding point runway [RWY] [HLD], [CAL]."
+							"__text": "Holding short of holding point [HLD], [CAL]."
 						}
 					],
 					"_id": "MAINTIEN_ARRET",
@@ -1319,22 +1319,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], procédez direct [WPT], montez via SID niveau [NIV]."
+							"__text": "[CAL], procédez direct [WPT], montez niveau [NIV]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Direct [WPT], je monte via SID niveau [NIV], [CAL]."
+							"__text": "Direct [WPT], je monte niveau [NIV], [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], proceed direct [WPT], climb via SID level [NIV]."
+							"__text": "[CAL], proceed direct [WPT], climb level [NIV]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Proceed direct [WPT], climb via SID level [NIV], [CAL]."
+							"__text": "Direct [WPT], climbing level [NIV], [CAL]."
 						}
 					],
 					"_id": "DIRECT_WPT",
