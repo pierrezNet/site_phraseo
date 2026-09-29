@@ -8,20 +8,21 @@
     </p>
 
     <!-- Rappel du mode quiz (seulement quand une étape/option est sélectionnée) -->
-    <div v-if="quizStore.enabled && renderedLines.length > 0" class="notice text-sm mb-3 px-3 py-2 rounded">
-      🎯 Mode quiz : reproduisez la phrase du pilote, puis vérifiez.
+    <div v-if="quizActive && renderedLines.length > 0" class="notice text-sm mb-3 px-3 py-2 rounded">
+      <template v-if="flight.active">✈ Vol complet : répondez comme le pilote. {{ MAX_ATTEMPTS }} essais par réplique.</template>
+      <template v-else>🎯 Mode quiz : reproduisez la phrase du pilote, puis vérifiez.</template>
     </div>
 
-    <template v-for="(line, index) in renderedLines" :key="index">
+    <template v-for="(line, index) in displayedLines" :key="index">
       <!-- Ligne pilote en mode quiz : saisie + correction -->
       <div
-        v-if="line.isPilot && quizStore.enabled"
+        v-if="line.isPilot && quizActive"
         class="w-full p-4 rounded-md mb-4 shadow border-l-4 bg-blue-100 border-blue-500"
       >
         <PilotIcon class="inline-block w-5 h-5 mr-2 align-middle" />
         <span class="text-sm font-medium">À vous — que dit le pilote ?</span>
 
-        <template v-if="!results[index]">
+        <template v-if="!resultOf(index)">
           <textarea
             v-model="answers[index]"
             rows="3"
@@ -45,31 +46,32 @@
           <div class="flex items-center gap-2">
             <span
               class="px-2 py-0.5 rounded text-sm font-semibold"
-              :class="results[index]!.passed ? 'bg-green-600 text-white' : 'bg-red-600 text-white'"
+              :class="resultOf(index)!.passed ? 'bg-green-600 text-white' : 'bg-red-600 text-white'"
             >
-              {{ results[index]!.passed ? '✓ Validé' : '✗ À revoir' }}
+              {{ verdictLabel(index) }}
             </span>
-            <span class="text-sm font-medium">Score : {{ results[index]!.score }} %</span>
+            <span class="text-sm font-medium">Score : {{ resultOf(index)!.score }} %</span>
           </div>
 
-          <ul v-if="results[index]!.criticals.length" class="text-sm space-y-0.5">
-            <li v-for="c in results[index]!.criticals" :key="c.label">
-              <span :class="c.ok ? 'text-green-700' : 'text-red-700'">
-                {{ c.ok ? '✓' : '✗' }} {{ c.label }} : <strong>{{ c.value }}</strong>
+          <!-- En vol, avant le dernier essai, on ne dévoile ni les valeurs manquées ni la réponse -->
+          <ul v-if="resultOf(index)!.criticals.length" class="text-sm space-y-0.5">
+            <li v-for="c in resultOf(index)!.criticals" :key="c.label">
+              <span :class="c.ok ? 'ok-text' : 'ko-text'">
+                {{ c.ok ? '✓' : '✗' }} {{ c.label }}<template v-if="c.ok || isFinal(index)"> : <strong>{{ c.value }}</strong></template>
               </span>
             </li>
           </ul>
 
-          <div class="text-sm">
+          <div v-if="answers[index]" class="text-sm">
             <span class="opacity-70">Votre réponse :</span>
             <div class="italic">{{ answers[index] }}</div>
           </div>
-          <div class="text-sm">
+          <div v-if="isFinal(index)" class="text-sm">
             <span class="opacity-70">Réponse attendue :</span>
             <div v-html="line.content"></div>
           </div>
 
-          <div class="flex justify-end">
+          <div v-if="!isFinal(index) || !flight.active" class="flex justify-end">
             <button
               @click="retry(index)"
               class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
@@ -93,6 +95,13 @@
         <span v-html="line.content"></span>
       </div>
     </template>
+
+    <!-- Vol complet : passage à l'étape suivante une fois toutes les répliques pilote terminées -->
+    <div v-if="flight.active && stepComplete" class="flex justify-end">
+      <button type="button" class="task-btn task-btn--active rounded-md px-4 py-2" @click="flight.next()">
+        {{ flight.isLastStep ? 'Terminer le vol ✓' : 'Étape suivante →' }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -102,6 +111,7 @@ import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
 import { useWeatherStore } from '../stores/weather';
 import { useQuizStore } from '../stores/quiz';
+import { useFlightStore, MAX_ATTEMPTS } from '../stores/flight';
 import { replacePlaceholders, resolveStationParts } from '../utils/phraseoHelpers';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
 import PilotIcon from './icons/PilotIcon.vue';
@@ -116,6 +126,10 @@ const formStore = useFormStore();
 const langStore = useLangStore();
 const weatherStore = useWeatherStore();
 const quizStore = useQuizStore();
+const flight = useFlightStore();
+
+// Le vol complet se joue toujours en mode quiz
+const quizActive = computed(() => quizStore.enabled || flight.active);
 
 const hasMetTag = computed(() =>
   props.selectedTaskTexts.some(t => t.__text?.includes('[MET]'))
@@ -158,7 +172,9 @@ const buildCriticals = (rawText: string, lang: 'fr' | 'en'): Critical[] => {
   return Object.keys(CRITICAL_TAGS)
     .filter(tag => rawText.includes(`[${tag}]`))
     .map(tag => ({ label: CRITICAL_TAGS[tag], value: String(resolveCriticalValue(tag, lang) ?? '') }))
-    .filter(c => c.value.trim() !== '');
+    .filter(c => c.value.trim() !== '')
+    // [CAL] et [CAA] dans la même réplique : un seul contrôle d'indicatif
+    .filter((c, i, all) => all.findIndex(o => o.label === c.label) === i);
 };
 
 const tooltipHtml = (processed: string): string =>
@@ -212,13 +228,46 @@ const callsignEquivalences = (): string[][] => {
 const verify = (index: number, line: { expectedSpoken: string; criticals: Critical[] }) => {
   const answer = answers[index];
   if (!answer || !answer.trim()) return;
-  results[index] = scoreAnswer(answer, line.expectedSpoken, line.criticals, callsignEquivalences());
+  const result = scoreAnswer(answer, line.expectedSpoken, line.criticals, callsignEquivalences());
+  results[index] = result;
+  if (flight.active) flight.recordAttempt(index, result);
 };
 
 const retry = (index: number) => {
   results[index] = null;
-  answers[index] = '';
+  // En vol, on garde la réponse pour la corriger ; hors vol, on repart de zéro
+  if (!flight.active) answers[index] = '';
 };
+
+// ── Vol complet ──────────────────────────────────────────────────────────────
+
+/** Réplique terminée : hors vol dès qu'elle est notée ; en vol, validée ou essais épuisés */
+const isFinal = (index: number): boolean => !flight.active || !!flight.outcomeOf(index)?.done;
+
+/** Résultat affiché : celui de la saisie, ou à défaut le résultat final enregistré pour le vol */
+const resultOf = (index: number) => {
+  if (results[index]) return results[index];
+  const outcome = flight.active ? flight.outcomeOf(index) : undefined;
+  return outcome?.done ? outcome : null;
+};
+
+const verdictLabel = (index: number): string => {
+  const r = resultOf(index)!;
+  if (r.passed) return '✓ Validé';
+  if (!flight.active) return '✗ À revoir';
+  return isFinal(index) ? '✗ Raté' : `✗ Essai ${flight.outcomeOf(index)?.attempts ?? 1}/${MAX_ATTEMPTS} — à revoir`;
+};
+
+/** En vol, les répliques se dévoilent au fil de l'échange : jusqu'à la première réplique pilote non terminée */
+const displayedLines = computed(() => {
+  if (!flight.active) return renderedLines.value;
+  const pending = renderedLines.value.findIndex((l, i) => l.isPilot && !flight.outcomeOf(i)?.done);
+  return pending === -1 ? renderedLines.value : renderedLines.value.slice(0, pending + 1);
+});
+
+const stepComplete = computed(() =>
+  renderedLines.value.every((l, i) => !l.isPilot || !!flight.outcomeOf(i)?.done)
+);
 
 // Réinitialise le quiz quand la tâche, la langue ou le mode quiz changent
 watch(() => props.selectedTaskTexts, resetQuiz);

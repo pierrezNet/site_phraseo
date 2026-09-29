@@ -7,6 +7,13 @@ export type StationType = 'NDEL' | 'NGND' | 'NTWR' | 'NAPP' | 'NCTR'
 export type RunwaySuffix = 'L' | 'R' | 'C'
 
 export type UserLevel = 'débutant' | 'intermédiaire' | 'avancé'
+
+/** Niveaux proposés dans l'interface (barre de navigation, choix du vol complet) */
+export const LEVEL_OPTIONS: ReadonlyArray<{ value: UserLevel; label: string; short: string }> = [
+  { value: 'débutant', label: 'Débutant', short: 'Déb' },
+  { value: 'intermédiaire', label: 'Intermédiaire', short: 'Int' },
+  { value: 'avancé', label: 'Avancé', short: 'Av' },
+]
 export type FlightMode = 'VFR' | 'IFR'
 
 export interface FormData {
@@ -225,6 +232,14 @@ export const useFormStore = defineStore('form', {
 
       this.saveToLocalStorage()
       this.syncFrequencyLabels()
+    },
+
+    /**
+     * Change le niveau d'apprentissage (partagé entre VFR et IFR) et le persiste.
+     */
+    setLevel(level: UserLevel): void {
+      this.form.LEVEL = level
+      this.updateFormData(this.form)
     },
 
     /**

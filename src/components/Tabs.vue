@@ -122,6 +122,7 @@ import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
 import CircuitMap from './CircuitMap.vue';
 import { groupOf, groupOrder } from '../utils/taskGroups';
+import { isTaskVisibleAtLevel } from '../utils/flight';
 
 const props = defineProps<{
   phraseoData: any
@@ -217,17 +218,8 @@ const showCircuitMap = computed(() =>
   props.currentMode === 'VFR' && formStore.form.LEVEL === 'débutant' && selectedTab.value !== 'EX'
 );
 
-// Niveaux cumulatifs : débutant < intermédiaire < avancé
-const LEVEL_HIERARCHY = ['débutant', 'intermédiaire', 'avancé'] as const;
-
-const isTaskVisible = (task: any): boolean => {
-  if (!task || !task._level) return true; // pas de niveau = toujours visible
-  const userLevelIndex = LEVEL_HIERARCHY.indexOf(formStore.form.LEVEL as any);
-  const taskLevelIndex = LEVEL_HIERARCHY.indexOf(task._level);
-  // _levelExact : visible uniquement si le niveau correspond exactement
-  if (task._levelExact) return taskLevelIndex === userLevelIndex;
-  return taskLevelIndex <= userLevelIndex;
-};
+// Niveaux cumulatifs ; _levelExact = visible uniquement à ce niveau
+const isTaskVisible = (task: any): boolean => isTaskVisibleAtLevel(task, formStore.form.LEVEL);
 
 const hasVisibleContent = (task: any): boolean => {
   // Si la tâche a du texte propre, elle a du contenu

@@ -12,7 +12,15 @@
 
     <div class="flex-1 min-h-0 flex flex-col overflow-hidden md:overflow-visible md:grid md:grid-cols-10 md:gap-4">
       <div v-scroll-fade class="col-span-12 md:col-span-4 max-h-[40%] md:max-h-none overflow-y-auto md:overflow-visible scroll-fade">
+        <!-- Vol complet (proposé en mode quiz) : la frise remplace les onglets (Tabs reste monté pour garder son état) -->
+        <FlightPanel v-if="flight.active" />
+        <div v-else-if="quizStore.enabled" class="px-1 md:px-4 pt-1 md:pt-4">
+          <button type="button" class="task-btn w-full rounded-md px-3 py-1.5 text-sm font-medium" @click="flightPickerModal?.open()">
+            ✈ Vol complet
+          </button>
+        </div>
         <Tabs
+          v-show="!flight.active"
           ref="tabsRef"
           :phraseoData="currentPhraseoData"
           :currentMode="currentMode"
@@ -22,7 +30,8 @@
       </div>
 
       <div id="instructions" v-scroll-fade class="col-span-12 md:col-span-6 m-1 md:mt-3 md:ml-3 flex-1 min-h-0 overflow-y-auto md:overflow-visible scroll-fade">
-        <TaskTextDisplay :selectedTaskTexts="selectedTaskTexts" :context="taskContext" />
+        <FlightSummary v-if="flight.active && flight.finished" />
+        <TaskTextDisplay v-else :selectedTaskTexts="displayedTexts" :context="displayedContext" />
       </div>
     </div>
 
@@ -30,11 +39,12 @@
     <ParametresModal ref="parametresModal" :currentMode="currentMode" />
     <AboutModal ref="aboutModal" />
     <FeedbackModal ref="feedbackModal" />
+    <FlightPickerModal ref="flightPickerModal" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, provide, nextTick } from 'vue';
+import { ref, computed, provide, nextTick, watch } from 'vue';
 import Navbar from '@/components/Navbar.vue';
 import Tabs from '@/components/Tabs.vue';
 import TaskTextDisplay from '@/components/TaskTextDisplay.vue';
@@ -43,6 +53,10 @@ import ParametresModal from '@/components/ParametresModal.vue';
 import AboutModal from '@/components/AboutModal.vue';
 import FeedbackModal from '@/components/FeedbackModal.vue';
 import FlightStrip from '@/components/FlightStrip.vue';
+import FlightPanel from '@/components/FlightPanel.vue';
+import FlightSummary from '@/components/FlightSummary.vue';
+import FlightPickerModal from '@/components/FlightPickerModal.vue';
+import { useFlightStore } from '@/stores/flight';
 import { useQuizStore } from '@/stores/quiz';
 import { useFormStore } from '@/stores/form';
 
@@ -108,17 +122,21 @@ const currentPhraseoData = computed(() => {
 provide('phraseoData', currentPhraseoData);
 
 const quizStore = useQuizStore();
-// Le bandeau de vol n'apparaît qu'en mode quiz (rappel des paramètres)
-const showFlightStrip = computed(() => quizStore.enabled);
+const flight = useFlightStore();
+// Le bandeau de vol n'apparaît qu'en mode quiz ou en vol complet (rappel des paramètres)
+const showFlightStrip = computed(() => quizStore.enabled || flight.active);
 
 const handleModeChange = () => {
   selectedTaskTexts.value = [];
+  // Un vol appartient à son mode : changer VFR/IFR l'interrompt
+  if (flight.active) flight.abort();
 };
 
 const aideModal = ref<ModalInstance | null>(null);
 const parametresModal = ref<ModalInstance | null>(null);
 const aboutModal = ref<ModalInstance | null>(null);
 const feedbackModal = ref<ModalInstance | null>(null);
+const flightPickerModal = ref<ModalInstance | null>(null);
 const tabsRef = ref<TabsInstance | null>(null);
 
 /**
@@ -134,6 +152,21 @@ const taskContext = ref<{ step: string; option: string }>({ step: '', option: ''
 const updateContext = (ctx: { step: string; option: string }) => {
   taskContext.value = ctx;
 };
+
+// Changer de niveau pendant un vol le relance à ce niveau (les étapes diffèrent)
+watch(
+  () => formStore.form.LEVEL,
+  (level) => {
+    if (flight.active && flight.scenario && level !== flight.level) flight.start(flight.scenario, level);
+  }
+);
+
+// En vol complet, le dialogue affiché est celui de l'étape en cours
+const displayedTexts = computed(() => (flight.active ? flight.currentStep?.lines ?? [] : selectedTaskTexts.value));
+// En vol, la variante de l'étape en cours n'est pas annoncée : c'est la surprise de l'échange
+const displayedContext = computed(() =>
+  flight.active ? { step: flight.currentStep?.title ?? '', option: '' } : taskContext.value
+);
 
 const openModal = (modalName: string) => {
   if (modalName === 'aide') aideModal.value?.open();

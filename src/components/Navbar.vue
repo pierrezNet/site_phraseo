@@ -25,35 +25,30 @@
               <button
                 v-for="level in levels"
                 :key="level.value"
-                :disabled="level.disabled"
                 @click="setLevel(level.value)"
                 :class="[
                   'px-2 py-0.5 rounded text-xs font-medium transition-colors',
-                  level.disabled
-                    ? 'bg-blue-900/50 text-blue-700 cursor-not-allowed'
-                    : formStore.form.LEVEL === level.value
-                      ? 'bg-white text-blue-900'
-                      : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+                  formStore.form.LEVEL === level.value
+                    ? 'bg-white text-blue-900'
+                    : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
                 ]"
-                :title="level.disabled ? 'Bientôt disponible' : level.label"
+                :title="level.label"
               >
                 {{ level.short }}
               </button>
             </div>
 
-            <template v-if="quizAvailable">
-              <div class="h-6 w-px bg-blue-700 mx-2"></div>
-              <button
-                @click="quizStore.toggle()"
-                :class="[
-                  'px-2 py-0.5 rounded text-xs font-medium transition-colors',
-                  quizStore.enabled ? 'bg-green-500 text-white' : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
-                ]"
-                title="Mode quiz : masque les réponses pilote pour s'entraîner"
-              >
-                Quiz {{ quizStore.enabled ? 'ON' : 'OFF' }}
-              </button>
-            </template>
+            <div class="h-6 w-px bg-blue-700 mx-2"></div>
+            <button
+              @click="quizStore.toggle()"
+              :class="[
+                'px-2 py-0.5 rounded text-xs font-medium transition-colors',
+                quizStore.enabled ? 'bg-green-500 text-white' : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+              ]"
+              title="Mode quiz : masque les réponses pilote pour s'entraîner"
+            >
+              Quiz {{ quizStore.enabled ? 'ON' : 'OFF' }}
+            </button>
           </div>
         </div>
 
@@ -108,21 +103,18 @@
         <button
           v-for="level in levels"
           :key="level.value"
-          :disabled="level.disabled"
           @click="setLevel(level.value)"
           :class="[
             'px-2 py-0.5 rounded text-xs font-medium transition-colors',
-            level.disabled
-              ? 'bg-blue-900/50 text-blue-700 cursor-not-allowed'
-              : formStore.form.LEVEL === level.value
-                ? 'bg-white text-blue-900'
-                : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+            formStore.form.LEVEL === level.value
+              ? 'bg-white text-blue-900'
+              : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
           ]"
         >
           {{ level.short }}
         </button>
       </div>
-      <div v-if="quizAvailable" class="flex items-center space-x-2 py-1">
+      <div class="flex items-center space-x-2 py-1">
         <span class="text-blue-200 text-sm">Quiz :</span>
         <button
           @click="quizStore.toggle()"
@@ -147,9 +139,9 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useLangStore } from '../stores/lang'
-import { useFormStore, type UserLevel } from '../stores/form'
+import { useFormStore, LEVEL_OPTIONS, type UserLevel } from '../stores/form'
 import { useQuizStore } from '../stores/quiz'
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { computed, onMounted, onBeforeUnmount } from 'vue'
 
 const emit = defineEmits(['update:mode', 'open-modal', 'select-task'])
 
@@ -160,8 +152,6 @@ const quizStore = useQuizStore()
 // Gestion du mode de vol (IFR/VFR), porté par le store du formulaire
 const flightMode = computed(() => formStore.mode)
 
-// Le mode quiz est disponible dans tous les modes et niveaux
-const quizAvailable = computed(() => true)
 
 const toggleFlightMode = () => {
   // Paramètres indépendants par mode : on échange l'instantané VFR/IFR
@@ -169,16 +159,9 @@ const toggleFlightMode = () => {
   emit('update:mode', flightMode.value)
 }
 
-const levels = [
-  { value: 'débutant' as UserLevel, label: 'Débutant', short: 'Déb', disabled: false },
-  { value: 'intermédiaire' as UserLevel, label: 'Intermédiaire', short: 'Int', disabled: false },
-  { value: 'avancé' as UserLevel, label: 'Avancé', short: 'Av', disabled: false }
-]
+const levels = LEVEL_OPTIONS
 
-const setLevel = (level: UserLevel) => {
-  formStore.form.LEVEL = level
-  formStore.updateFormData(formStore.form)
-}
+const setLevel = (level: UserLevel) => formStore.setLevel(level)
 
 const changeLanguage = (lang: string) => langStore.changeLanguage(lang)
 
