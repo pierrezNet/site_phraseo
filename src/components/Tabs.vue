@@ -26,6 +26,15 @@
       :selectedTaskIds="selectedTaskIds"
       @select-task="onMapSelect"
     />
+    <!-- Avec la carte (desktop), la liste des tâches est masquée : les options s'affichent sous la carte -->
+    <div v-if="showCircuitMap && selectedSubgraphs.length > 0" class="hidden md:block">
+      <TaskOptions
+        :subgraphs="selectedSubgraphs"
+        :selectedTaskIds="selectedTaskIds"
+        :currentTaskId="simulatorStore.currentTaskId"
+        @select="logSubgraphTask"
+      />
+    </div>
 
     <!-- Contenu des tâches par phase — accordéon par sous-thème -->
     <div :class="[showCircuitMap ? 'md:hidden' : '']">
@@ -78,33 +87,12 @@
         <!-- Options rattachées au groupe de la tâche active (juste sous son accordéon) -->
         <template v-if="selectedSubgraphs.length > 0 && grp.tasks.some((t) => t._id === simulatorStore.currentTaskId)">
           <hr class="md:hidden border border-blue-800 mt-1 mb-1" />
-          <div class="flex flex-wrap md:grid md:grid-cols-1 gap-1 mt-1">
-            <h2 class="custom-h2 hidden md:flex w-full">Options</h2>
-            <button
-              v-for="subgraph in selectedSubgraphs"
-              :key="subgraph.refid"
-              :class="[
-                'task-btn md:w-full rounded-md px-3 py-1.5 my-1 md:p-2 md:mb-2 md:flex md:items-center md:text-center',
-                subgraph.refid === simulatorStore.currentTaskId
-                  ? 'task-btn--active'
-                  : selectedTaskIds.includes(subgraph.refid) && 'task-btn--done'
-              ]"
-              @click="logSubgraphTask(subgraph)"
-            >
-              <PilotIcon v-if="getInitiator(subgraph.fullTask) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
-              <AtcIcon v-else-if="getInitiator(subgraph.fullTask) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
-              <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
-              <span class="hidden md:inline flex-1">{{ subgraph._name }}</span>
-              <span class="inline md:hidden whitespace-nowrap">{{ subgraph._short }}</span>
-              <span
-                v-if="selectedTaskIds.includes(subgraph.refid)"
-                class="task-btn__check hidden md:block w-4 shrink-0"
-              >
-                ✓
-              </span>
-              <span v-else class="hidden md:block w-4 shrink-0"></span>
-            </button>
-          </div>
+          <TaskOptions
+            :subgraphs="selectedSubgraphs"
+            :selectedTaskIds="selectedTaskIds"
+            :currentTaskId="simulatorStore.currentTaskId"
+            @select="logSubgraphTask"
+          />
         </template>
       </template>
     </div>
@@ -121,6 +109,7 @@ import { useSimulatorStore } from '../stores/simulator';
 import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
 import CircuitMap from './CircuitMap.vue';
+import TaskOptions from './TaskOptions.vue';
 import { groupOf, groupOrder } from '../utils/taskGroups';
 import { isTaskVisibleAtLevel } from '../utils/flight';
 
