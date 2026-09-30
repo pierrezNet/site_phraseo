@@ -272,14 +272,34 @@ function multisetMatch(a: string[], b: string[]): number {
 }
 
 /** Rappel et précision au niveau des mots entre attendu et réponse. */
+/**
+ * Formules de politesse : hors phraséologie normalisée (absentes des expressions
+ * conventionnelles du manuel ; « merci » n'y figure jamais). Ni leur oubli ni leur
+ * présence ne comptent dans le score.
+ */
+const POLITENESS: string[][] = [
+  'bonjour', 'bonsoir', 'merci', 'au revoir', 'bonne journee', 'bonne soiree',
+  'hello', 'good morning', 'good afternoon', 'good evening', 'good day', 'thank you', 'thanks', 'goodbye', 'bye',
+].map((p) => p.split(' ')).sort((a, b) => b.length - a.length)
+
+function withoutPoliteness(tokens: string[]): string[] {
+  const out: string[] = []
+  for (let i = 0; i < tokens.length; ) {
+    const hit = POLITENESS.find((p) => p.every((w, k) => tokens[i + k] === w))
+    if (hit) i += hit.length
+    else out.push(tokens[i++])
+  }
+  return out
+}
+
 export function tokenStats(
   expected: string,
   user: string,
   equivalences?: string[][]
 ): { recall: number; precision: number } {
   const groups = buildGroups(equivalences)
-  const e = applyEquivalences(tokenize(expected), groups)
-  const u = applyEquivalences(tokenize(user), groups)
+  const e = withoutPoliteness(applyEquivalences(tokenize(expected), groups))
+  const u = withoutPoliteness(applyEquivalences(tokenize(user), groups))
   if (!e.length && !u.length) return { recall: 1, precision: 1 }
   if (!e.length || !u.length) return { recall: 0, precision: 0 }
   const match = multisetMatch(e, u)

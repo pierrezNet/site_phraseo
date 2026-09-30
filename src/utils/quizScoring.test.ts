@@ -232,6 +232,16 @@ describe('lettre critique et indicatif épelé', () => {
   })
 })
 
+describe('formules de politesse', () => {
+  const expected = 'Strasbourg Prévol, bonjour, F-EPST.'
+  it('les oublier ne coûte rien', () => {
+    expect(scoreAnswer('Strasbourg Prévol, F-EPST', expected, []).score).toBe(100)
+  })
+  it('les ajouter ne coûte rien non plus', () => {
+    expect(scoreAnswer('Strasbourg Prévol, bonjour, F-EPST, merci, au revoir', 'Strasbourg Prévol, F-EPST.', []).score).toBe(100)
+  })
+})
+
 describe('PHRASE_EQUIVALENCES', () => {
   it('« Wilco » est accepté là où « Bien compris » est attendu, et inversement', () => {
     const crit = [{ label: CRITICAL_TAGS.CAA, value: 'F E P' }]
