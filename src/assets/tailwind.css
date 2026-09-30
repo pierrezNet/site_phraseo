@@ -98,6 +98,20 @@
     .strip__invite {
         color: var(--attn-text);
     }
+    /* Élément du bandeau cliquable : s'insère dans la réponse en cours */
+    .strip__chip {
+        border-radius: 0.25rem;
+        padding: 0 0.15rem;
+        cursor: pointer;
+        transition: background-color .15s, color .15s;
+    }
+    .strip__chip:hover:not(:disabled) {
+        background-color: var(--task-hover);
+        color: var(--accent-line);
+    }
+    .strip__chip:disabled {
+        cursor: default;
+    }
     .strip__edit {
         color: var(--accent-line);
     }

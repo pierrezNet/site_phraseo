@@ -90,6 +90,12 @@ describe('replacePlaceholders', () => {
     expect(result).toBe('piste 26L')
   })
 
+  it('nomme la station ouverte suivante quand la station demandée est fermée', () => {
+    const closed = makeFormStore({ DEL: '', GND: '' })
+    expect(replacePlaceholders('[NGND]', 'fr', closed as any, weatherStore as any)).toBe('Tour')
+    expect(replacePlaceholders('[NGND]', 'fr', formStore as any, weatherStore as any)).toBe('Sol')
+  })
+
   it('laisse le texte inchangé sans placeholder', () => {
     const result = replacePlaceholders('rien à remplacer', 'fr', formStore as any, weatherStore as any)
     expect(result).toBe('rien à remplacer')

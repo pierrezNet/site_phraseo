@@ -8,6 +8,12 @@ import { ref } from 'vue'
 export const useQuizStore = defineStore('quiz', () => {
   const enabled = ref(false)
 
+  /**
+   * Dernier texte à insérer dans la réponse en cours (clic sur le bandeau de vol).
+   * `n` change à chaque demande, pour réagir même si le texte est identique.
+   */
+  const insertion = ref<{ text: string; n: number } | null>(null)
+
   function toggle() {
     enabled.value = !enabled.value
   }
@@ -16,5 +22,9 @@ export const useQuizStore = defineStore('quiz', () => {
     enabled.value = false
   }
 
-  return { enabled, toggle, disable }
+  function insertIntoAnswer(text: string) {
+    insertion.value = { text, n: (insertion.value?.n ?? 0) + 1 }
+  }
+
+  return { enabled, insertion, toggle, disable, insertIntoAnswer }
 })

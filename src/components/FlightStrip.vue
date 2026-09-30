@@ -1,54 +1,76 @@
 <template>
-  <button
-    type="button"
-    @click="onEdit"
+  <div
     :class="[
-      'strip w-full text-left rounded-lg px-3 py-2 mb-3 border transition flex items-center gap-2 flex-wrap',
+      'strip w-full rounded-lg px-3 py-2 mb-3 border transition flex items-center gap-2 flex-wrap',
       highlight && 'strip--highlight'
     ]"
-    :title="'Cliquez pour modifier les paramètres de votre vol'"
   >
     <span class="text-lg shrink-0">✈</span>
     <span class="flex-1 text-sm min-w-0">
-      <span v-if="highlight" class="strip__invite font-semibold">👉 Personnalisez votre vol — </span>
-      <span class="font-medium">{{ callsign }}</span>
-      <span class="opacity-70"> · {{ type }}</span>
-      <span class="opacity-70"> · {{ dep }} → {{ arr }}</span>
-      <span class="opacity-70"> · Parking {{ pos }}</span>
-      <span class="opacity-70"> · Piste {{ rwy }}</span>
-      <span class="opacity-70"> · QNH {{ qnh }}</span>
-      <span class="opacity-70"> · Info {{ inf }}</span>
-      <span class="opacity-70"> · {{ extraLabel }} {{ extraValue }}</span>
+      <button v-if="highlight" type="button" class="strip__invite font-semibold" @click="onEdit">👉 Personnalisez votre vol — </button>
+      <!-- Chaque élément s'insère dans la réponse en cours (évite de tout retaper) -->
+      <template v-for="(item, i) in items" :key="item.key">
+        <span v-if="i > 0" class="opacity-70">{{ item.sep }}</span>
+        <span :class="i === 0 ? 'font-medium' : 'opacity-70'">
+          {{ item.label }}<button
+            type="button"
+            class="strip__chip"
+            :title="`Insérer « ${item.insert} » dans la réponse`"
+            :disabled="!item.insert"
+            @mousedown.prevent
+            @click="quizStore.insertIntoAnswer(item.insert)"
+          >{{ item.display }}</button>
+        </span>
+      </template>
     </span>
-    <span class="strip__edit shrink-0 text-sm font-medium whitespace-nowrap">✎ Modifier</span>
-  </button>
+    <button type="button" class="strip__edit shrink-0 text-sm font-medium whitespace-nowrap" @click="onEdit">✎ Modifier</button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useFormStore } from '../stores/form';
 import { useWeatherStore } from '../stores/weather';
+import { useLangStore } from '../stores/lang';
+import { useQuizStore } from '../stores/quiz';
 
 const emit = defineEmits(['edit']);
 
 const formStore = useFormStore();
 const weatherStore = useWeatherStore();
+const langStore = useLangStore();
+const quizStore = useQuizStore();
 
-const orDash = (v?: string) => (v && v.trim() ? v : '—');
-
-const callsign = computed(() => orDash(formStore.form.CAL));
-const type = computed(() => orDash(formStore.form.COM));
-const dep = computed(() => orDash(formStore.form.DEP));
-const arr = computed(() => orDash(formStore.form.ARR));
-const pos = computed(() => orDash(formStore.form.POS));
-const rwy = computed(() => orDash(formStore.form.RWY));
-const inf = computed(() => orDash(formStore.form.INF));
+const value = (v?: string) => (v ?? '').trim();
+const qnh = computed(() => weatherStore.metarQnh ?? formStore.form.QNH ?? '1013');
 
 // Champ spécifique au mode : Niveau en IFR, Point de sortie en VFR
 const isVFR = computed(() => formStore.mode === 'VFR');
-const extraLabel = computed(() => (isVFR.value ? 'Sortie' : 'Niveau'));
-const extraValue = computed(() => orDash(isVFR.value ? formStore.form.SORTIE : formStore.form.NIV));
-const qnh = computed(() => weatherStore.metarQnh ?? formStore.form.QNH ?? '1013');
+
+/** Éléments du bandeau : libellé fixe, valeur affichée, texte inséré dans la réponse */
+const items = computed(() => {
+  const f = formStore.form;
+  const lang = langStore.current as 'fr' | 'en';
+  const entry = (key: string, label: string, raw: string, insert = raw, sep = ' · ') => ({
+    key,
+    label,
+    sep,
+    display: raw || '—',
+    insert: raw ? insert : '',
+  });
+  return [
+    entry('CAL', '', value(f.CAL)),
+    entry('COM', '', value(f.COM)),
+    entry('DEP', '', value(f.DEP)),
+    entry('ARR', '→ ', value(f.ARR), value(f.ARR), ' '),
+    entry('POS', 'Parking ', value(f.POS)),
+    // Piste insérée sous sa forme prononcée (26 Gauche / 26 Left)
+    entry('RWY', 'Piste ', value(f.RWY), formStore.formatRunway(value(f.RWY), lang)),
+    entry('QNH', 'QNH ', String(qnh.value)),
+    entry('INF', 'Info ', value(f.INF)),
+    isVFR.value ? entry('SORTIE', 'Sortie ', value(f.SORTIE)) : entry('NIV', 'Niveau ', value(f.NIV)),
+  ];
+});
 
 // Surligné tant que l'utilisateur n'a pas ouvert les paramètres depuis le bandeau
 const highlight = ref(false);

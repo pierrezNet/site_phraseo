@@ -7,13 +7,18 @@
       <span class="opacity-60">Étape : </span>{{ context.step }}<span v-if="context.option" class="opacity-60"> › </span>{{ context.option }}
     </p>
 
+    <!-- Vol complet : consigne d'instructeur (la décision du pilote, pas la phrase à dire) -->
+    <div v-if="flight.active && flight.currentStep?.brief" class="strip strip--highlight text-sm mb-3 px-3 py-2 rounded border">
+      📋 <strong>Consigne :</strong> {{ flight.currentStep.brief }}
+    </div>
+
     <!-- Rappel du mode quiz (seulement quand une étape/option est sélectionnée) -->
     <div v-if="quizActive && renderedLines.length > 0" class="notice text-sm mb-3 px-3 py-2 rounded">
       <template v-if="flight.active">✈ Vol complet : répondez comme le pilote. {{ MAX_ATTEMPTS }} essais par réplique.</template>
       <template v-else>🎯 Mode quiz : reproduisez la phrase du pilote, puis vérifiez.</template>
     </div>
 
-    <template v-for="(line, index) in displayedLines" :key="index">
+    <template v-for="line in displayedLines" :key="line.key">
       <!-- Ligne pilote en mode quiz : saisie + correction -->
       <div
         v-if="line.isPilot && quizActive"
@@ -22,18 +27,20 @@
         <PilotIcon class="inline-block w-5 h-5 mr-2 align-middle" />
         <span class="text-sm font-medium">À vous — que dit le pilote ?</span>
 
-        <template v-if="!resultOf(index)">
+        <template v-if="!resultOf(line.key)">
           <textarea
-            v-model="answers[index]"
+            :ref="(el) => { textareas[line.key] = el as HTMLTextAreaElement | null }"
+            v-model="answers[line.key]"
+            @focus="lastFocused = line.key"
             rows="3"
             placeholder="Tapez la phrase du pilote…"
             class="w-full mt-2 border rounded px-3 py-2 text-sm resize-y"
-            @keydown.ctrl.enter="verify(index, line)"
+            @keydown.ctrl.enter="verify(line)"
           ></textarea>
           <div class="flex justify-end mt-2">
             <button
-              @click="verify(index, line)"
-              :disabled="!(answers[index] && answers[index].trim())"
+              @click="verify(line)"
+              :disabled="!(answers[line.key] && answers[line.key].trim())"
               class="px-4 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Vérifier
@@ -46,34 +53,39 @@
           <div class="flex items-center gap-2">
             <span
               class="px-2 py-0.5 rounded text-sm font-semibold"
-              :class="resultOf(index)!.passed ? 'bg-green-600 text-white' : 'bg-red-600 text-white'"
+              :class="resultOf(line.key)!.passed ? 'bg-green-600 text-white' : 'bg-red-600 text-white'"
             >
-              {{ verdictLabel(index) }}
+              {{ verdictLabel(line.key) }}
             </span>
-            <span class="text-sm font-medium">Score : {{ resultOf(index)!.score }} %</span>
+            <span class="text-sm font-medium">Score : {{ resultOf(line.key)!.score }} %</span>
           </div>
 
           <!-- En vol, avant le dernier essai, on ne dévoile ni les valeurs manquées ni la réponse -->
-          <ul v-if="resultOf(index)!.criticals.length" class="text-sm space-y-0.5">
-            <li v-for="c in resultOf(index)!.criticals" :key="c.label">
+          <ul v-if="resultOf(line.key)!.criticals.length" class="text-sm space-y-0.5">
+            <li v-for="c in resultOf(line.key)!.criticals" :key="c.label">
               <span :class="c.ok ? 'ok-text' : 'ko-text'">
-                {{ c.ok ? '✓' : '✗' }} {{ c.label }}<template v-if="c.ok || isFinal(index)"> : <strong>{{ c.value }}</strong></template>
+                {{ c.ok ? '✓' : '✗' }} {{ c.label }}<template v-if="c.ok || (isFinal(line.key) && !awaitingReply(line.key))"> : <strong>{{ c.value }}</strong></template>
               </span>
             </li>
           </ul>
 
-          <div v-if="answers[index]" class="text-sm">
+          <!-- Débriefing : erreurs de phraséologie repérées dans la réponse -->
+          <ul v-if="lineRemarks[line.key]?.length" class="text-sm space-y-0.5">
+            <li v-for="code in lineRemarks[line.key]" :key="code" class="ko-text">💬 {{ REMARKS[code].title }}</li>
+          </ul>
+
+          <div v-if="answers[line.key]" class="text-sm">
             <span class="opacity-70">Votre réponse :</span>
-            <div class="italic">{{ answers[index] }}</div>
+            <div class="italic">{{ answers[line.key] }}</div>
           </div>
-          <div v-if="isFinal(index)" class="text-sm">
+          <div v-if="isFinal(line.key) && !awaitingReply(line.key)" class="text-sm">
             <span class="opacity-70">Réponse attendue :</span>
             <div v-html="line.content"></div>
           </div>
 
-          <div v-if="!isFinal(index) || !flight.active" class="flex justify-end">
+          <div v-if="(!isFinal(line.key) || !flight.active) && !relaunched[line.key]" class="flex justify-end">
             <button
-              @click="retry(index)"
+              @click="retry(line.key)"
               class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
             >
               Réessayer
@@ -106,13 +118,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted, watch } from 'vue';
+import { computed, reactive, ref, onMounted, watch, nextTick } from 'vue';
 import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
 import { useWeatherStore } from '../stores/weather';
 import { useQuizStore } from '../stores/quiz';
 import { useFlightStore, MAX_ATTEMPTS } from '../stores/flight';
 import { replacePlaceholders, resolveStationParts } from '../utils/phraseoHelpers';
+import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
 import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
@@ -190,32 +203,130 @@ const tooltipHtml = (processed: string): string =>
     </span>`;
   });
 
-const renderedLines = computed(() => {
-  const lang = langStore.current as 'fr' | 'en';
+interface SourceLine {
+  _class: string;
+  _lang: string;
+  __text: string;
+  /** Formulations obligatoires hors tags (ex. l'intention « pour un complet ») */
+  _critical?: string[];
+  /** Question de l'ATC si une formulation obligatoire manque (défaut : demande d'intentions) */
+  _ask?: string;
+}
 
-  return props.selectedTaskTexts
+interface RenderedLine {
+  /** Clé stable : « 3 », ou « 3.ask » / « 3.reply » pour une relance de l'ATC */
+  key: string;
+  /** Texte source avec ses tags (débriefing : indicatif complet ou abrégé attendu) */
+  source: string;
+  isPilot: boolean;
+  content: string;
+  expectedSpoken: string;
+  criticals: Critical[];
+  /** Formulations obligatoires : leur absence déclenche une relance de l'ATC */
+  intents: string[];
+  ask?: string;
+}
+
+const INTENT_LABEL = 'Intention';
+const DEFAULT_ASK = { fr: '[CAA], quelles sont vos intentions ?', en: '[CAA], say intentions.' };
+
+const capitalize = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
+
+/** Répliques pour lesquelles l'ATC a relancé le pilote (intention non annoncée) */
+const relaunched = reactive<Record<string, boolean>>({});
+
+/** Erreurs de phraséologie relevées par réplique (tous essais confondus) */
+const lineRemarks = reactive<Record<string, RemarkCode[]>>({});
+
+const noteRemarks = (key: string, codes: RemarkCode[]): RemarkCode[] => {
+  lineRemarks[key] = [...new Set([...(lineRemarks[key] ?? []), ...codes])];
+  return codes;
+};
+
+const flightCallsign = () => ({ cal: formStore.form.CAL ?? '', caa: formStore.form.CAA ?? '' });
+
+const remarksFor = (line: RenderedLine, answer: string): RemarkCode[] =>
+  detectRemarks({ source: line.source, expected: line.expectedSpoken, answer, callsign: flightCallsign() });
+
+/** « Roger » seul à la place d'un collationnement : toujours faux, quel que soit le score */
+const rogerOnly = (line: RenderedLine, answer: string): boolean =>
+  isRogerInsteadOfReadback({ expected: line.expectedSpoken, answer, callsign: flightCallsign() });
+
+const renderedLines = computed<RenderedLine[]>(() => {
+  const lang = langStore.current as 'fr' | 'en';
+  const render = (key: string, cls: string, text: string, intents: string[] = [], ask?: string): RenderedLine => {
+    const processed = replacePlaceholders(text, lang, formStore, weatherStore);
+    return {
+      key,
+      source: text,
+      isPilot: cls === 'Pilot',
+      content: tooltipHtml(processed),
+      expectedSpoken: requiredText(processed),
+      // Un tag entre parenthèses est optionnel : il n'est pas exigé
+      criticals: buildCriticals(requiredText(text), lang),
+      intents,
+      ask,
+    };
+  };
+
+  return (props.selectedTaskTexts as SourceLine[])
     .filter(t => t._lang === lang)
-    .map(item => {
-      const processed = replacePlaceholders(item.__text, lang, formStore, weatherStore);
-      return {
-        isPilot: item._class === 'Pilot',
-        content: tooltipHtml(processed),
-        expectedSpoken: requiredText(processed),
-        // Un tag entre parenthèses est optionnel : il n'est pas exigé
-        criticals: buildCriticals(requiredText(item.__text), lang),
-      };
+    .flatMap((item, i) => {
+      const key = String(i);
+      const intents = item._class === 'Pilot' ? item._critical ?? [] : [];
+      const line = render(key, item._class, item.__text, intents, item._ask);
+      if (!relaunched[key]) return [line];
+      // Relance : l'ATC demande l'intention, le pilote doit la préciser
+      const reply = `${capitalize(intents.join(', '))}, [CAA].`;
+      return [
+        line,
+        render(`${key}.ask`, 'ATC', item._ask ?? DEFAULT_ASK[lang]),
+        render(`${key}.reply`, 'Pilot', reply, intents),
+      ];
     });
 });
 
-const hasPilotLine = computed(() => renderedLines.value.some(l => l.isPilot));
+// État du quiz par clé de réplique
+const answers = reactive<Record<string, string>>({});
+const results = reactive<Record<string, QuizResult | null>>({});
 
-// État du quiz par index de ligne
-const answers = reactive<Record<number, string>>({});
-const results = reactive<Record<number, QuizResult | null>>({});
+// ── Insertion depuis le bandeau de vol ───────────────────────────────────────
+const textareas: Record<string, HTMLTextAreaElement | null> = {};
+const lastFocused = ref<string | null>(null);
+
+/** Zone de saisie visée : la dernière utilisée si elle attend encore une réponse, sinon la première ouverte */
+const insertionTarget = (): string | null => {
+  const open = (key: string) => !!textareas[key] && !resultOf(key);
+  if (lastFocused.value !== null && open(lastFocused.value)) return lastFocused.value;
+  return displayedLines.value.map((l) => l.key).find(open) ?? null;
+};
+
+watch(
+  () => quizStore.insertion,
+  async (insertion) => {
+    const key = insertionTarget();
+    if (!insertion || key === null) return;
+    const el = textareas[key]!;
+    const current = answers[key] ?? '';
+    const start = document.activeElement === el ? el.selectionStart : current.length;
+    const end = document.activeElement === el ? el.selectionEnd : current.length;
+    const before = current.slice(0, start);
+    const after = current.slice(end);
+    // Espaces autour du texte inséré, sans doublon
+    // (espace final aussi en fin de texte, pour enchaîner la saisie)
+    const text = `${before && !/\s$/.test(before) ? ' ' : ''}${insertion.text}${/^[\s,.]/.test(after) ? '' : ' '}`;
+    answers[key] = before + text + after;
+    await nextTick();
+    el.focus();
+    el.setSelectionRange(before.length + text.length, before.length + text.length);
+  }
+);
 
 const resetQuiz = () => {
-  for (const k of Object.keys(answers)) delete answers[Number(k)];
-  for (const k of Object.keys(results)) delete results[Number(k)];
+  for (const k of Object.keys(answers)) delete answers[k];
+  for (const k of Object.keys(results)) delete results[k];
+  for (const k of Object.keys(relaunched)) delete relaunched[k];
+  for (const k of Object.keys(lineRemarks)) delete lineRemarks[k];
 };
 
 // Le callsign complet (CAL) et sa forme abrégée (CAA) sont interchangeables
@@ -225,48 +336,75 @@ const callsignEquivalences = (): string[][] => {
   return caa && cal && caa !== cal ? [[caa, cal]] : [];
 };
 
-const verify = (index: number, line: { expectedSpoken: string; criticals: Critical[] }) => {
-  const answer = answers[index];
+/** Étape à évaluation souple (ex. message de fin) : seul l'indicatif compte, formulation libre */
+const lenientStep = computed(() => flight.active && !!flight.currentStep?.lenient);
+
+const verify = (line: RenderedLine) => {
+  const answer = answers[line.key];
   if (!answer || !answer.trim()) return;
-  const result = scoreAnswer(answer, line.expectedSpoken, line.criticals, callsignEquivalences());
-  results[index] = result;
-  if (flight.active) flight.recordAttempt(index, result);
+
+  if (lenientStep.value) {
+    const callsign = line.criticals.filter((c) => c.label === CRITICAL_TAGS.CAL);
+    const scored = scoreAnswer(answer, line.expectedSpoken, callsign, callsignEquivalences());
+    const result = { ...scored, passed: scored.criticals.every((c) => c.ok) && !rogerOnly(line, answer) };
+    results[line.key] = result;
+    flight.recordAttempt(line.key, { ...result, remarks: noteRemarks(line.key, remarksFor(line, answer)) });
+    return;
+  }
+
+  const intentCriticals = line.intents.map((value) => ({ label: INTENT_LABEL, value }));
+  const scored = scoreAnswer(answer, line.expectedSpoken, [...line.criticals, ...intentCriticals], callsignEquivalences());
+  const result = rogerOnly(line, answer) ? { ...scored, passed: false } : scored;
+
+  // Seule l'intention manque (le reste serait validé) : l'ATC relance au lieu de refuser
+  const baseResult = scoreAnswer(answer, line.expectedSpoken, line.criticals, callsignEquivalences());
+  const intentMissing = result.criticals.some((c) => c.label === INTENT_LABEL && !c.ok);
+  const relaunch = intentMissing && baseResult.passed && !line.key.endsWith('.reply');
+
+  results[line.key] = result;
+  if (relaunch) relaunched[line.key] = true;
+  const remarks = noteRemarks(line.key, [...remarksFor(line, answer), ...(relaunch ? ['INTENT_MISSING' as const] : [])]);
+  if (flight.active) flight.recordAttempt(line.key, { ...result, final: relaunch, remarks });
 };
 
-const retry = (index: number) => {
-  results[index] = null;
+const retry = (key: string) => {
+  results[key] = null;
   // En vol, on garde la réponse pour la corriger ; hors vol, on repart de zéro
-  if (!flight.active) answers[index] = '';
+  if (!flight.active) answers[key] = '';
 };
+
+/** Relance en cours : la réponse attendue n'est montrée qu'une fois l'intention précisée */
+const awaitingReply = (key: string): boolean => !!relaunched[key] && !isFinal(`${key}.reply`) && !resultOf(`${key}.reply`);
 
 // ── Vol complet ──────────────────────────────────────────────────────────────
 
 /** Réplique terminée : hors vol dès qu'elle est notée ; en vol, validée ou essais épuisés */
-const isFinal = (index: number): boolean => !flight.active || !!flight.outcomeOf(index)?.done;
+const isFinal = (key: string): boolean => !flight.active || !!flight.outcomeOf(key)?.done;
 
 /** Résultat affiché : celui de la saisie, ou à défaut le résultat final enregistré pour le vol */
-const resultOf = (index: number) => {
-  if (results[index]) return results[index];
-  const outcome = flight.active ? flight.outcomeOf(index) : undefined;
+const resultOf = (key: string) => {
+  if (results[key]) return results[key];
+  const outcome = flight.active ? flight.outcomeOf(key) : undefined;
   return outcome?.done ? outcome : null;
 };
 
-const verdictLabel = (index: number): string => {
-  const r = resultOf(index)!;
-  if (r.passed) return '✓ Validé';
+const verdictLabel = (key: string): string => {
+  const r = resultOf(key)!;
+  if (r.passed) return lenientStep.value ? '✓ Validé (formulation libre)' : '✓ Validé';
+  if (relaunched[key]) return '↪ Intention non annoncée';
   if (!flight.active) return '✗ À revoir';
-  return isFinal(index) ? '✗ Raté' : `✗ Essai ${flight.outcomeOf(index)?.attempts ?? 1}/${MAX_ATTEMPTS} — à revoir`;
+  return isFinal(key) ? '✗ Échoué' : `✗ Essai ${flight.outcomeOf(key)?.attempts ?? 1}/${MAX_ATTEMPTS} — à revoir`;
 };
 
 /** En vol, les répliques se dévoilent au fil de l'échange : jusqu'à la première réplique pilote non terminée */
 const displayedLines = computed(() => {
   if (!flight.active) return renderedLines.value;
-  const pending = renderedLines.value.findIndex((l, i) => l.isPilot && !flight.outcomeOf(i)?.done);
+  const pending = renderedLines.value.findIndex((l) => l.isPilot && !flight.outcomeOf(l.key)?.done);
   return pending === -1 ? renderedLines.value : renderedLines.value.slice(0, pending + 1);
 });
 
 const stepComplete = computed(() =>
-  renderedLines.value.every((l, i) => !l.isPilot || !!flight.outcomeOf(i)?.done)
+  renderedLines.value.every((l) => !l.isPilot || !!flight.outcomeOf(l.key)?.done)
 );
 
 // Réinitialise le quiz quand la tâche, la langue ou le mode quiz changent

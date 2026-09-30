@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildFlight, isTaskVisibleAtLevel, type Scenario } from './flight'
+import { buildFlight, isTaskVisibleAtLevel, scenarioName, FLIGHT_PHASES, type Scenario } from './flight'
 import scenarios from '../data/scenarios.json'
 import phraseoVFR from '../data/phraseologieVFR.json'
 import phraseoIFR from '../data/phraseologieIFR.json'
@@ -27,6 +27,15 @@ const scenario: Scenario = {
   name: 'Test',
   steps: [{ task: 'A' }, { task: 'B', then: ['V1', 'V2'] }, { task: 'C', chance: 0.5 }],
 }
+
+describe('scenarioName', () => {
+  it('remplace départ et arrivée par les paramètres du vol', () => {
+    expect(scenarioName('[DEP] → [ARR]', { DEP: 'Orly', ARR: 'Lyon Saint-Exupéry' })).toBe('Orly → Lyon Saint-Exupéry')
+  })
+  it('laisse le tag si la valeur est vide', () => {
+    expect(scenarioName('Tours de piste à [DEP]', { DEP: ' ' })).toBe('Tours de piste à [DEP]')
+  })
+})
 
 describe('isTaskVisibleAtLevel', () => {
   it('niveaux cumulatifs', () => {
@@ -56,6 +65,30 @@ describe('buildFlight', () => {
     expect(buildFlight(scenario, data, 'intermédiaire', () => 0.9).some((s) => s.incident)).toBe(false)
   })
 
+  it('applique le titre et la phase propres à l\'étape', () => {
+    const s: Scenario = { ...scenario, steps: [{ task: 'V2', title: 'Titre scénario', tab: 'SO' }] }
+    expect(buildFlight(s, data, 'avancé')[0]).toMatchObject({ title: 'Titre scénario', tab: 'SO' })
+  })
+
+  it('donne la consigne de l\'étape, ou celle de la variante tirée', () => {
+    const fixed: Scenario = { ...scenario, steps: [{ task: 'A', brief: 'Consigne fixe' }] }
+    expect(buildFlight(fixed, data, 'débutant')[0].brief).toBe('Consigne fixe')
+    const perVariant: Scenario = { ...scenario, steps: [{ task: 'B', then: ['V1', 'V2'], brief: { V2: 'Consigne V2' } }] }
+    expect(buildFlight(perVariant, data, 'intermédiaire', () => 0.99)[0].brief).toBe('Consigne V2')
+    expect(buildFlight(perVariant, data, 'débutant', () => 0)[0].brief).toBe('')
+  })
+
+  it('saute une étape dont une fréquence requise est fermée', () => {
+    const s: Scenario = { ...scenario, steps: [{ task: 'A', requires: ['GND'] }] }
+    expect(buildFlight(s, data, 'débutant', () => 0, (f) => f !== 'GND')).toEqual([])
+    expect(buildFlight(s, data, 'débutant', () => 0, () => true)).toHaveLength(1)
+  })
+
+  it('reporte l\'évaluation souple de l\'étape', () => {
+    const s: Scenario = { ...scenario, steps: [{ task: 'A', lenient: true }, { task: 'B', then: ['V1'] }] }
+    expect(buildFlight(s, data, 'débutant').map((st) => st.lenient)).toEqual([true, false])
+  })
+
   it('ignore une étape sans texte ni variante visible', () => {
     const s: Scenario = { ...scenario, steps: [{ task: 'B', then: ['V2'] }] }
     expect(buildFlight(s, data, 'débutant')).toEqual([])
@@ -71,6 +104,11 @@ describe('scenarios.json', () => {
   for (const sc of scenarios as Scenario[]) {
     const tasks = dataOf[sc.mode].processChain.tasks
     const ids = new Set([...tasks.spawnTask, ...tasks.orTask].map((t: { _id: string }) => t._id))
+
+    it(`${sc.id} : chaque étape appartient à une phase du vol`, () => {
+      const steps = buildFlight(sc, dataOf[sc.mode], 'avancé', () => 0)
+      expect(steps.filter((s) => !(FLIGHT_PHASES as readonly string[]).includes(s.tab)).map((s) => s.title)).toEqual([])
+    })
 
     it(`${sc.id} : toutes les tâches existent en ${sc.mode}`, () => {
       const missing = sc.steps.flatMap((s) => [s.task, ...(s.then || [])]).filter((id) => !ids.has(id))

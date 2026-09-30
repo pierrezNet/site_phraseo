@@ -21,12 +21,16 @@ describe('flightStore', () => {
   })
 
   it(`une réplique ratée reste ouverte jusqu'à ${MAX_ATTEMPTS} essais`, () => {
-    expect(flight.recordAttempt(0, ko('Niveau', '110')).done).toBe(false)
-    expect(flight.recordAttempt(0, ko('Niveau', '110')).done).toBe(true)
+    expect(flight.recordAttempt('0', ko('Niveau', '110')).done).toBe(false)
+    expect(flight.recordAttempt('0', ko('Niveau', '110')).done).toBe(true)
+  })
+
+  it('une réplique close par l\'ATC (final) est terminée dès le premier essai', () => {
+    expect(flight.recordAttempt('0', { ...ko('Intention', 'pour un complet'), final: true }).done).toBe(true)
   })
 
   it('une réplique validée est terminée dès le premier essai', () => {
-    expect(flight.recordAttempt(0, ok)).toMatchObject({ done: true, passed: true, attempts: 1 })
+    expect(flight.recordAttempt('0', ok)).toMatchObject({ done: true, passed: true, attempts: 1 })
   })
 
   it('termine le vol après la dernière étape', () => {
@@ -35,13 +39,13 @@ describe('flightStore', () => {
   })
 
   it('regroupe les éléments critiques ratés dans le bilan', () => {
-    flight.recordAttempt(0, ko('Niveau', '110'))
-    flight.recordAttempt(0, ko('Niveau', '110'))
+    flight.recordAttempt('0', ko('Niveau', '110'))
+    flight.recordAttempt('0', ko('Niveau', '110'))
     flight.next()
-    flight.recordAttempt(0, ko('Niveau', '110'))
-    flight.recordAttempt(0, ko('Niveau', '110'))
+    flight.recordAttempt('0', ko('Niveau', '110'))
+    flight.recordAttempt('0', ko('Niveau', '110'))
     flight.next()
-    flight.recordAttempt(0, ok)
+    flight.recordAttempt('0', ok)
 
     const s = flight.summary
     expect(s).toMatchObject({ total: 3, passed: 1 })
@@ -64,11 +68,11 @@ describe('flightStore.goTo', () => {
     const flight = useFlightStore()
     flight.start(SCENARIOS.find((s) => s.mode === 'IFR')!, 'débutant')
     flight.goTo(3)
-    flight.recordAttempt(0, ok)
+    flight.recordAttempt('0', ok)
     flight.goTo(5)
     flight.goTo(3)
     expect(flight.index).toBe(3)
-    expect(flight.outcomeOf(0)).toBeUndefined()
+    expect(flight.outcomeOf('0')).toBeUndefined()
   })
 
   it('ignore un index hors limites', () => {

@@ -36,7 +36,7 @@
             class="task-btn w-full text-left rounded-md px-3 py-2"
             @click="takeOff(sc)"
           >
-            <span class="block font-medium">✈ {{ sc.name }}</span>
+            <span class="block font-medium">✈ {{ scenarioName(sc.name, formStore.form) }}</span>
             <span v-if="sc.description" class="block text-sm opacity-75">{{ sc.description }}</span>
           </button>
           <p v-if="!scenarios.length" class="text-sm opacity-75">Aucun vol disponible en {{ formStore.mode }} pour l'instant.</p>
@@ -54,7 +54,7 @@
 import { computed, ref } from 'vue';
 import { useFormStore, LEVEL_OPTIONS } from '../stores/form';
 import { useFlightStore, SCENARIOS, MAX_ATTEMPTS } from '../stores/flight';
-import type { Scenario } from '../utils/flight';
+import { scenarioName, type Scenario } from '../utils/flight';
 
 const formStore = useFormStore();
 const flightStore = useFlightStore();

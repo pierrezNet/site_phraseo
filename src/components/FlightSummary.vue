@@ -3,7 +3,7 @@
     <h2 class="custom-h2">Bilan du vol</h2>
 
     <div class="notice rounded p-4">
-      <p class="font-semibold">✈ {{ flight.scenario?.name }} · {{ flight.level }}</p>
+      <p class="font-semibold">✈ {{ flight.title }} · {{ flight.level }}</p>
       <p class="mt-1 text-sm">
         Répliques validées : <strong>{{ summary.passed }} / {{ summary.total }}</strong>
         · score moyen <strong>{{ summary.score }} %</strong>
@@ -17,6 +17,16 @@
           <span class="w-28 shrink-0">{{ phaseLabel(p.tab) }}</span>
           <div class="phase-bar flex-1"><div class="phase-bar__fill" :style="{ width: `${(p.passed / p.total) * 100}%` }"></div></div>
           <span class="w-12 text-right shrink-0">{{ p.passed }}/{{ p.total }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div v-if="summary.remarks.length">
+      <h3 class="font-semibold mb-2">Débriefing</h3>
+      <ul class="space-y-3 text-sm">
+        <li v-for="r in summary.remarks" :key="r.code">
+          <p class="font-medium">💬 {{ r.title }} <span class="opacity-70 font-normal">— {{ r.count }} fois ({{ r.steps.join(', ') }})</span></p>
+          <p class="opacity-80 mt-0.5">{{ r.advice }}</p>
         </li>
       </ul>
     </div>

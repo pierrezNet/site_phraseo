@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { buildFlight, FLIGHT_PHASES, type FlightStep, type Scenario } from '../utils/flight'
+import { buildFlight, FLIGHT_PHASES, scenarioName, type FlightStep, type Scenario } from '../utils/flight'
+import { useFormStore } from './form'
 import type { CriticalResult } from '../utils/quizScoring'
+import { REMARKS, type RemarkCode } from '../utils/debrief'
 import scenariosData from '../data/scenarios.json'
 import phraseoVFR from '../data/phraseologieVFR.json'
 import phraseoIFR from '../data/phraseologieIFR.json'
@@ -16,6 +18,8 @@ export interface LineOutcome {
   done: boolean
   score: number
   criticals: CriticalResult[]
+  /** Erreurs de phraséologie relevées sur l'un des essais (débriefing) */
+  remarks: RemarkCode[]
 }
 
 export const SCENARIOS = scenariosData as Scenario[]
@@ -30,9 +34,12 @@ export const useFlightStore = defineStore('flight', () => {
   const steps = ref<FlightStep[]>([])
   const index = ref(0)
   const finished = ref(false)
-  const outcomes = ref<Record<number, Record<number, LineOutcome>>>({})
+  // Résultats par étape, puis par clé de réplique (« 3 », ou « 3.reply » pour une relance ATC)
+  const outcomes = ref<Record<number, Record<string, LineOutcome>>>({})
 
   const active = computed(() => scenario.value !== null)
+  /** Nom du vol en cours, avec les paramètres (départ, arrivée) */
+  const title = computed(() => (scenario.value ? scenarioName(scenario.value.name, useFormStore().form) : ''))
   const currentStep = computed(() => steps.value[index.value] ?? null)
   const isLastStep = computed(() => index.value >= steps.value.length - 1)
 
@@ -40,7 +47,9 @@ export const useFlightStore = defineStore('flight', () => {
     const data = sc.mode === 'VFR' ? phraseoVFR : phraseoIFR
     scenario.value = sc
     level.value = userLevel
-    steps.value = buildFlight(sc, data, userLevel)
+    // Fréquence ouverte = renseignée dans les paramètres du vol
+    const form = useFormStore().form
+    steps.value = buildFlight(sc, data, userLevel, Math.random, (f) => !!String(form[f] ?? '').trim())
     index.value = 0
     finished.value = false
     outcomes.value = {}
@@ -70,22 +79,30 @@ export const useFlightStore = defineStore('flight', () => {
     finished.value = false
   }
 
-  /** Enregistre un essai sur une réplique de l'étape courante ; renvoie l'état de la réplique. */
-  function recordAttempt(line: number, result: { passed: boolean; score: number; criticals: CriticalResult[] }): LineOutcome {
+  /**
+   * Enregistre un essai sur une réplique de l'étape courante ; renvoie l'état de la réplique.
+   * `final` clôt la réplique même ratée (ex. l'ATC relance le pilote sur son intention).
+   */
+  function recordAttempt(
+    line: string,
+    result: { passed: boolean; score: number; criticals: CriticalResult[]; final?: boolean; remarks?: RemarkCode[] }
+  ): LineOutcome {
     const step = (outcomes.value[index.value] ??= {})
     const attempts = (step[line]?.attempts ?? 0) + 1
     const outcome: LineOutcome = {
       attempts,
       passed: result.passed,
-      done: result.passed || attempts >= MAX_ATTEMPTS,
+      done: result.passed || !!result.final || attempts >= MAX_ATTEMPTS,
       score: result.score,
       criticals: result.criticals,
+      // Une erreur commise puis corrigée au second essai reste à débriefer
+      remarks: [...new Set([...(step[line]?.remarks ?? []), ...(result.remarks ?? [])])],
     }
     step[line] = outcome
     return outcome
   }
 
-  const outcomeOf = (line: number): LineOutcome | undefined => outcomes.value[index.value]?.[line]
+  const outcomeOf = (line: string): LineOutcome | undefined => outcomes.value[index.value]?.[line]
 
   /** Résultats finaux (répliques terminées) de tout le vol */
   const allOutcomes = computed(() =>
@@ -117,12 +134,27 @@ export const useFlightStore = defineStore('flight', () => {
       }
     }
     const missed = [...missedMap.values()].sort((a, b) => b.count - a.count)
+
+    // Débriefing : erreurs de phraséologie, regroupées par type avec les étapes concernées
+    const remarkMap = new Map<RemarkCode, { code: RemarkCode; title: string; advice: string; count: number; steps: string[] }>()
+    for (const r of results) {
+      for (const code of r.outcome.remarks) {
+        const entry = remarkMap.get(code) ?? { code, ...REMARKS[code], count: 0, steps: [] }
+        entry.count++
+        const title = r.step?.title ?? ''
+        if (!entry.steps.includes(title)) entry.steps.push(title)
+        remarkMap.set(code, entry)
+      }
+    }
+    const remarks = [...remarkMap.values()].sort((a, b) => b.count - a.count)
+
     return {
       total: results.length,
       passed: results.filter((r) => r.outcome.passed).length,
       score: results.length ? Math.round(results.reduce((s, r) => s + r.outcome.score, 0) / results.length) : 0,
       byPhase,
       missed,
+      remarks,
     }
   })
 
@@ -139,7 +171,7 @@ export const useFlightStore = defineStore('flight', () => {
   )
 
   return {
-    scenario, level, steps, index, finished, active, currentStep, isLastStep,
+    scenario, title, level, steps, index, finished, active, currentStep, isLastStep,
     start, restart, abort, next, goTo, recordAttempt, outcomeOf, stepMissed, summary, phaseProgress,
   }
 })

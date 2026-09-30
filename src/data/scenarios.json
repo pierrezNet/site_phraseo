@@ -2,51 +2,53 @@
   {
     "id": "VFR_TOUR_DE_PISTE",
     "mode": "VFR",
-    "name": "Tours de piste",
+    "name": "Tours de piste à [DEP]",
     "description": "Mise en route, un tour de piste main gauche et atterrissage complet sur l'aérodrome de départ.",
     "steps": [
-      { "task": "MISE_EN_ROUTE", "then": ["TOUR_PISTE"] },
+      { "task": "MISE_EN_ROUTE", "title": "Premier contact" },
+      { "task": "TOUR_PISTE", "title": "Demande de roulage", "tab": "SO" },
       { "task": "TAXI", "then": ["TRAFIC_SOL", "TRAVERSER_PISTE"], "chance": 0.3 },
-      { "task": "PRET_DEPART", "then": ["CONTACT_TOUR"] },
+      { "task": "PRET_DEPART", "then": ["CONTACT_TOUR"], "requires": ["GND"] },
       { "task": "PRET_DEPART1", "then": ["RAPPEL_VENT_ARRIERE"] },
       { "task": "VENT_ARRIERE", "then": ["TOUR_PISTE_SIMPLE", "TOUR_PISTE_TRAFIC"] },
       { "task": "ALLONGEZ_VENT_ARRIERE", "chance": 0.2 },
-      { "task": "FIN_VENT_ARRIERE", "then": ["DEMANDE_COMPLET"] },
+      { "task": "FIN_VENT_ARRIERE", "then": ["DEMANDE_COMPLET"], "brief": "Vous souhaitez un atterrissage complet." },
       { "task": "ATTERRISSAGE", "then": ["COMPLET"] },
       { "task": "DEGAGEMENT", "then": ["DEGAGEMENT_STANDARD", "DEGAGEMENT_PISTE"] },
-      { "task": "TRANSFERT_SOL" },
+      { "task": "TRANSFERT_SOL", "requires": ["GND"] },
       { "task": "PARKING" },
-      { "task": "QUITTER" }
+      { "task": "QUITTER", "lenient": true }
     ]
   },
   {
     "id": "VFR_NAVIGATION",
     "mode": "VFR",
-    "name": "Navigation vers un autre aérodrome",
+    "name": "Navigation [DEP] → [ARR]",
     "description": "Départ par le point de sortie, navigation, entrée dans la zone de l'aérodrome d'arrivée et atterrissage.",
     "steps": [
-      { "task": "MISE_EN_ROUTE", "then": ["DESTINATION"] },
+      { "task": "MISE_EN_ROUTE", "title": "Premier contact" },
+      { "task": "DESTINATION", "title": "Demande de roulage", "tab": "SO" },
       { "task": "TAXI", "then": ["TRAFIC_SOL", "TRAVERSER_PISTE"], "chance": 0.3 },
-      { "task": "PRET_DEPART", "then": ["CONTACT_TOUR"] },
+      { "task": "PRET_DEPART", "then": ["CONTACT_TOUR"], "requires": ["GND"] },
       { "task": "PRET_DEPART1", "then": ["RAPPEL_PT_SORTIE"] },
       { "task": "SORTIE_ZONE", "then": ["TRANSFERT_UNICOM"] },
       { "task": "TRAFIC", "chance": 0.3 },
       { "task": "ENTREE_ZONE", "then": ["INTEGRATION_COMPLET"] },
       { "task": "INTEGRATION_BASE", "chance": 0.2 },
-      { "task": "FIN_VENT_ARRIERE", "then": ["DEMANDE_COMPLET"] },
+      { "task": "FIN_VENT_ARRIERE", "then": ["DEMANDE_COMPLET"], "brief": "Vous souhaitez un atterrissage complet." },
       { "task": "ATTERRISSAGE", "then": ["COMPLET"] },
       { "task": "DEGAGEMENT", "then": ["DEGAGEMENT_STANDARD", "DEGAGEMENT_PISTE"] },
-      { "task": "TRANSFERT_SOL" },
+      { "task": "TRANSFERT_SOL", "requires": ["GND"] },
       { "task": "TAXI2", "then": ["TRAFIC_SOL"], "chance": 0.2 },
       { "task": "PARKING" },
       { "task": "CLOTURE_PLAN_VOL_2" },
-      { "task": "QUITTER" }
+      { "task": "QUITTER", "lenient": true }
     ]
   },
   {
     "id": "IFR_ORLY_STRASBOURG",
     "mode": "IFR",
-    "name": "Orly → Strasbourg",
+    "name": "[DEP] → [ARR]",
     "description": "Vol IFR complet : mise en route, départ SID, croisière, arrivée STAR, approche ILS et roulage au poste.",
     "steps": [
       { "task": "PARAMETRES" },
@@ -54,7 +56,7 @@
       { "task": "DEMANDE_REPOUSSAGE", "then": ["REPOUSSAGE_STANDARD", "REPOUSSAGE_CONDITIONNEL"] },
       { "task": "DEMANDE_ROULAGE", "then": ["ROULAGE_AUTORISE", "ROULAGE_TRAFIC"] },
       { "task": "TAXI", "then": ["TRAFIC_SOL"], "chance": 0.25 },
-      { "task": "TRANSFERT_TOUR1" },
+      { "task": "TRANSFERT_TOUR1", "requires": ["GND"] },
       { "task": "CONTACT_TOUR1", "then": ["MAINTIEN_ARRET"] },
       { "task": "TYPE_ALIGNEMENT", "then": ["ALIGNEMENT", "ALIGNEMENT_POS2"] },
       { "task": "DECOLLAGE", "then": ["DECOL_AUTO"] },
@@ -73,10 +75,10 @@
       { "task": "CONTACT_TWR" },
       { "task": "ATTERRISSAGE", "then": ["ATTERRISSAGE_AUTORISE"] },
       { "task": "DEGAGEMENT", "then": ["DEGAGEMENT_STANDARD"] },
-      { "task": "TRANSFERT_SOL" },
+      { "task": "TRANSFERT_SOL", "requires": ["GND"] },
       { "task": "TAXI2", "then": ["TRAFIC_SOL"], "chance": 0.2 },
       { "task": "PARKING" },
-      { "task": "QUITTER" }
+      { "task": "QUITTER", "lenient": true }
     ]
   }
 ]

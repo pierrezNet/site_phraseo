@@ -158,7 +158,8 @@ export function replacePlaceholders(
       case 'NTWR':
       case 'NAPP':
       case 'NCTR':
-        return formStore.frequencyLabels[p1]?.[lang] || p1;
+        // Station fermée (fréquence vide) : même repli que la fréquence, vers la station ouverte suivante
+        return resolveStationParts(p1.slice(1), lang, formStore).label;
       default:
         return formStore.form[p1] || raw;
     }

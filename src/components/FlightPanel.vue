@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between gap-2 mb-2">
       <div class="min-w-0">
         <p class="text-xs uppercase tracking-wide opacity-60">Vol complet · {{ flight.level }}</p>
-        <p class="font-semibold truncate">✈ {{ flight.scenario?.name }}</p>
+        <p class="font-semibold truncate">✈ {{ flight.title }}</p>
       </div>
       <button type="button" class="task-btn shrink-0 rounded-md px-3 py-1 text-sm" @click="flight.abort()">
         Quitter le vol
