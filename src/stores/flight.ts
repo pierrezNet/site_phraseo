@@ -25,6 +25,22 @@ export interface LineOutcome {
 export const SCENARIOS = scenariosData as Scenario[]
 
 /**
+ * Regroupe des occurrences par clé : nombre d'occurrences et étapes concernées (sans doublon),
+ * les plus fréquentes d'abord.
+ */
+function groupByStep<T>(occurrences: { key: string; step?: FlightStep; item: T }[]) {
+  const groups = new Map<string, T & { count: number; steps: string[] }>()
+  for (const { key, step, item } of occurrences) {
+    const group = groups.get(key) ?? { ...item, count: 0, steps: [] }
+    group.count++
+    const title = step?.title ?? ''
+    if (!group.steps.includes(title)) group.steps.push(title)
+    groups.set(key, group)
+  }
+  return [...groups.values()].sort((a, b) => b.count - a.count)
+}
+
+/**
  * Vol complet : enchaîne les étapes d'un scénario en mode quiz.
  * Les résultats sont indexés par étape puis par position de la réplique pilote dans l'étape.
  */
@@ -48,7 +64,7 @@ export const useFlightStore = defineStore('flight', () => {
     scenario.value = sc
     level.value = userLevel
     const formStore = useFormStore()
-    steps.value = buildFlight(sc, data, userLevel, Math.random, (f) => formStore.isFrequencyOpen(f))
+    steps.value = buildFlight(sc, data, userLevel, Math.random, formStore.isFrequencyOpen)
     index.value = 0
     finished.value = false
     outcomes.value = {}
@@ -119,33 +135,19 @@ export const useFlightStore = defineStore('flight', () => {
       const inPhase = results.filter((r) => r.step?.tab === tab)
       return { tab, total: inPhase.length, passed: inPhase.filter((r) => r.outcome.passed).length }
     }).filter((p) => p.total > 0)
-    // Éléments critiques ratés, regroupés : « Niveau 110 — 3 fois (Mise en route, Descente) »
-    const missedMap = new Map<string, { label: string; value: string; count: number; steps: string[] }>()
-    for (const r of results) {
-      if (r.outcome.passed) continue
-      for (const c of r.outcome.criticals.filter((c) => !c.ok)) {
-        const key = `${c.label}|${c.value}`
-        const entry = missedMap.get(key) ?? { label: c.label, value: c.value, count: 0, steps: [] }
-        entry.count++
-        const title = r.step?.title ?? ''
-        if (!entry.steps.includes(title)) entry.steps.push(title)
-        missedMap.set(key, entry)
-      }
-    }
-    const missed = [...missedMap.values()].sort((a, b) => b.count - a.count)
+    // Éléments critiques ratés : « Niveau 110 — 3 fois (Mise en route, Descente) »
+    const missed = groupByStep(
+      results.flatMap((r) =>
+        r.outcome.passed ? [] : r.outcome.criticals.filter((c) => !c.ok).map((c) => ({
+          key: `${c.label}|${c.value}`, step: r.step, item: { label: c.label, value: c.value },
+        }))
+      )
+    )
 
     // Débriefing : erreurs de phraséologie, regroupées par type avec les étapes concernées
-    const remarkMap = new Map<RemarkCode, { code: RemarkCode; title: string; advice: string; count: number; steps: string[] }>()
-    for (const r of results) {
-      for (const code of r.outcome.remarks) {
-        const entry = remarkMap.get(code) ?? { code, ...REMARKS[code], count: 0, steps: [] }
-        entry.count++
-        const title = r.step?.title ?? ''
-        if (!entry.steps.includes(title)) entry.steps.push(title)
-        remarkMap.set(code, entry)
-      }
-    }
-    const remarks = [...remarkMap.values()].sort((a, b) => b.count - a.count)
+    const remarks = groupByStep(
+      results.flatMap((r) => r.outcome.remarks.map((code) => ({ key: code, step: r.step, item: { code, ...REMARKS[code] } })))
+    )
 
     return {
       total: results.length,

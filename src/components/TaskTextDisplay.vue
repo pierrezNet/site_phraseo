@@ -274,7 +274,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
 
   return (props.selectedTaskTexts as SourceLine[])
     // Répliques liées à une station fermée masquées (ex. transfert Prévol → Sol sans Prévol)
-    .filter(t => t._lang === lang && requirementsMet(t, (f) => formStore.isFrequencyOpen(f)))
+    .filter(t => t._lang === lang && requirementsMet(t, formStore.isFrequencyOpen))
     .flatMap((item, i) => {
       const key = String(i);
       const intents = item._class === 'Pilot' ? item._critical ?? [] : [];
@@ -343,28 +343,33 @@ const callsignEquivalences = (): string[][] => {
 /** Étape à évaluation souple (ex. message de fin) : seul l'indicatif compte, formulation libre */
 const lenientStep = computed(() => flight.active && !!flight.currentStep?.lenient);
 
+type Grade = { result: QuizResult; relaunch: boolean };
+
+/** Évaluation souple : seul l'indicatif compte (mais « Roger » seul reste faux) */
+const gradeLenient = (line: RenderedLine, answer: string): Grade => {
+  const callsign = line.criticals.filter((c) => c.label === CRITICAL_TAGS.CAL);
+  const scored = scoreAnswer(answer, line.expectedSpoken, callsign, callsignEquivalences());
+  return { result: { ...scored, passed: scored.criticals.every((c) => c.ok) && !rogerOnly(line, answer) }, relaunch: false };
+};
+
+/** Évaluation normale ; si seule l'intention manque (le reste serait validé), l'ATC relance au lieu de refuser */
+const gradeStrict = (line: RenderedLine, answer: string): Grade => {
+  const intentCriticals = line.intents.map((value) => ({ label: INTENT_LABEL, value }));
+  const scored = scoreAnswer(answer, line.expectedSpoken, [...line.criticals, ...intentCriticals], callsignEquivalences());
+  const result = rogerOnly(line, answer) ? { ...scored, passed: false } : scored;
+  const intentMissing = result.criticals.some((c) => c.label === INTENT_LABEL && !c.ok);
+  const relaunch =
+    intentMissing &&
+    !line.key.endsWith('.reply') &&
+    scoreAnswer(answer, line.expectedSpoken, line.criticals, callsignEquivalences()).passed;
+  return { result, relaunch };
+};
+
 const verify = (line: RenderedLine) => {
   const answer = answers[line.key];
   if (!answer || !answer.trim()) return;
 
-  if (lenientStep.value) {
-    const callsign = line.criticals.filter((c) => c.label === CRITICAL_TAGS.CAL);
-    const scored = scoreAnswer(answer, line.expectedSpoken, callsign, callsignEquivalences());
-    const result = { ...scored, passed: scored.criticals.every((c) => c.ok) && !rogerOnly(line, answer) };
-    results[line.key] = result;
-    flight.recordAttempt(line.key, { ...result, remarks: noteRemarks(line.key, remarksFor(line, answer)) });
-    return;
-  }
-
-  const intentCriticals = line.intents.map((value) => ({ label: INTENT_LABEL, value }));
-  const scored = scoreAnswer(answer, line.expectedSpoken, [...line.criticals, ...intentCriticals], callsignEquivalences());
-  const result = rogerOnly(line, answer) ? { ...scored, passed: false } : scored;
-
-  // Seule l'intention manque (le reste serait validé) : l'ATC relance au lieu de refuser
-  const baseResult = scoreAnswer(answer, line.expectedSpoken, line.criticals, callsignEquivalences());
-  const intentMissing = result.criticals.some((c) => c.label === INTENT_LABEL && !c.ok);
-  const relaunch = intentMissing && baseResult.passed && !line.key.endsWith('.reply');
-
+  const { result, relaunch } = lenientStep.value ? gradeLenient(line, answer) : gradeStrict(line, answer);
   results[line.key] = result;
   if (relaunch) relaunched[line.key] = true;
   const remarks = noteRemarks(line.key, [...remarksFor(line, answer), ...(relaunch ? ['INTENT_MISSING' as const] : [])]);

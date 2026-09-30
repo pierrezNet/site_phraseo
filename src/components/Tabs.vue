@@ -210,7 +210,7 @@ const showCircuitMap = computed(() =>
 // Niveaux cumulatifs ; _levelExact = visible uniquement à ce niveau
 // Tâches liées à une station fermée masquées (ex. transfert Sol → Tour sans Sol)
 const isTaskVisible = (task: any): boolean =>
-  isTaskVisibleAtLevel(task, formStore.form.LEVEL) && requirementsMet(task, (f) => formStore.isFrequencyOpen(f));
+  isTaskVisibleAtLevel(task, formStore.form.LEVEL) && requirementsMet(task, formStore.isFrequencyOpen);
 
 const hasVisibleContent = (task: any): boolean => {
   // Si la tâche a du texte propre, elle a du contenu
