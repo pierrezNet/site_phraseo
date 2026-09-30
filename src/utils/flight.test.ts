@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildFlight, isTaskVisibleAtLevel, scenarioName, FLIGHT_PHASES, type Scenario } from './flight'
+import { buildFlight, isTaskVisibleAtLevel, requirementsMet, scenarioName, FLIGHT_PHASES, type Scenario } from './flight'
 import scenarios from '../data/scenarios.json'
 import phraseoVFR from '../data/phraseologieVFR.json'
 import phraseoIFR from '../data/phraseologieIFR.json'
@@ -34,6 +34,17 @@ describe('scenarioName', () => {
   })
   it('laisse le tag si la valeur est vide', () => {
     expect(scenarioName('Tours de piste à [DEP]', { DEP: ' ' })).toBe('Tours de piste à [DEP]')
+  })
+})
+
+describe('requirementsMet', () => {
+  const groundClosed = (f: string) => f !== 'GND'
+  it('sans _requires, toujours présent', () => {
+    expect(requirementsMet({}, groundClosed)).toBe(true)
+  })
+  it('absent si une station requise est fermée', () => {
+    expect(requirementsMet({ _requires: ['GND'] }, groundClosed)).toBe(false)
+    expect(requirementsMet({ _requires: ['TWR'] }, groundClosed)).toBe(true)
   })
 })
 
@@ -87,6 +98,15 @@ describe('buildFlight', () => {
   it('reporte l\'évaluation souple de l\'étape', () => {
     const s: Scenario = { ...scenario, steps: [{ task: 'A', lenient: true }, { task: 'B', then: ['V1'] }] }
     expect(buildFlight(s, data, 'débutant').map((st) => st.lenient)).toEqual([true, false])
+  })
+
+  it('écarte une tâche ou une variante dont la station requise est fermée', () => {
+    const d = structuredClone(data)
+    const v1 = d.processChain.tasks.spawnTask.find((t) => t._id === 'V1') as { _requires?: string[] }
+    v1._requires = ['GND']
+    const s: Scenario = { ...scenario, steps: [{ task: 'B', then: ['V1'] }] }
+    expect(buildFlight(s, d, 'débutant', () => 0, (f) => f !== 'GND')).toEqual([])
+    expect(buildFlight(s, d, 'débutant', () => 0, () => true)).toHaveLength(1)
   })
 
   it('ignore une étape sans texte ni variante visible', () => {

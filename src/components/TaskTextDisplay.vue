@@ -124,6 +124,7 @@ import { useLangStore } from '../stores/lang';
 import { useWeatherStore } from '../stores/weather';
 import { useQuizStore } from '../stores/quiz';
 import { useFlightStore, MAX_ATTEMPTS } from '../stores/flight';
+import { requirementsMet } from '../utils/flight';
 import { replacePlaceholders, resolveStationParts } from '../utils/phraseoHelpers';
 import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
@@ -211,6 +212,8 @@ interface SourceLine {
   _critical?: string[];
   /** Question de l'ATC si une formulation obligatoire manque (défaut : demande d'intentions) */
   _ask?: string;
+  /** Stations nécessaires : la réplique disparaît si l'une est fermée */
+  _requires?: string[];
 }
 
 interface RenderedLine {
@@ -270,7 +273,8 @@ const renderedLines = computed<RenderedLine[]>(() => {
   };
 
   return (props.selectedTaskTexts as SourceLine[])
-    .filter(t => t._lang === lang)
+    // Répliques liées à une station fermée masquées (ex. transfert Prévol → Sol sans Prévol)
+    .filter(t => t._lang === lang && requirementsMet(t, (f) => formStore.isFrequencyOpen(f)))
     .flatMap((item, i) => {
       const key = String(i);
       const intents = item._class === 'Pilot' ? item._critical ?? [] : [];

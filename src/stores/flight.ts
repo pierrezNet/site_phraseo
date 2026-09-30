@@ -47,9 +47,8 @@ export const useFlightStore = defineStore('flight', () => {
     const data = sc.mode === 'VFR' ? phraseoVFR : phraseoIFR
     scenario.value = sc
     level.value = userLevel
-    // Fréquence ouverte = renseignée dans les paramètres du vol
-    const form = useFormStore().form
-    steps.value = buildFlight(sc, data, userLevel, Math.random, (f) => !!String(form[f] ?? '').trim())
+    const formStore = useFormStore()
+    steps.value = buildFlight(sc, data, userLevel, Math.random, (f) => formStore.isFrequencyOpen(f))
     index.value = 0
     finished.value = false
     outcomes.value = {}

@@ -658,6 +658,7 @@
 				},
 				{
 					"_id": "TRANSFERT_SOL",
+					"_requires": ["GND"],
 					"_name": "Transfert sol",
 					"_short": "Tr GND",
 					"para": [
@@ -686,6 +687,7 @@
 				},
 				{
 					"_id": "CONTACT_TOUR",
+					"_requires": ["GND"],
 					"_name": "Transfert tour",
 					"_short": "Tr TWR",
 					"para": [

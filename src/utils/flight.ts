@@ -8,6 +8,16 @@ export interface PhraseoLine {
   _class: string;
   _lang: string;
   __text: string;
+  /** Stations nécessaires : la réplique disparaît si l'une est fermée */
+  _requires?: string[];
+}
+
+/**
+ * Tâche ou réplique déclarant `_requires` : elle n'existe que si ces stations sont ouvertes.
+ * Ex. un transfert Sol → Tour n'a pas lieu quand le Sol est fermé (on est déjà avec la Tour).
+ */
+export function requirementsMet(item: { _requires?: string[] } | undefined | null, isOpen: (frequency: string) => boolean): boolean {
+  return !item?._requires || item._requires.every(isOpen);
 }
 
 interface Task {
@@ -15,6 +25,8 @@ interface Task {
   _name?: string;
   _level?: string;
   _levelExact?: boolean;
+  /** Stations nécessaires : la tâche n'a pas de sens si l'une est fermée */
+  _requires?: string[];
   para?: PhraseoLine[];
 }
 
@@ -118,13 +130,15 @@ export function buildFlight(
   const steps: FlightStep[] = [];
   for (const step of scenario.steps) {
     const task = byId.get(step.task);
-    if (!task || !isTaskVisibleAtLevel(task, level)) continue;
+    if (!task || !isTaskVisibleAtLevel(task, level) || !requirementsMet(task, isOpen)) continue;
     if (step.requires?.some((f) => !isOpen(f))) continue;
 
     const incident = step.chance !== undefined && step.chance < 1;
     if (incident && rng() >= (step.chance as number)) continue;
 
-    const variants = (step.then || []).map((id) => byId.get(id)).filter((t): t is Task => !!t && isTaskVisibleAtLevel(t, level));
+    const variants = (step.then || [])
+      .map((id) => byId.get(id))
+      .filter((t): t is Task => !!t && isTaskVisibleAtLevel(t, level) && requirementsMet(t, isOpen));
     const variant = variants.length ? variants[Math.floor(rng() * variants.length)] : undefined;
 
     const lines = [...(task.para || []), ...(variant?.para || [])];

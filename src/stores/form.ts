@@ -237,6 +237,11 @@ export const useFormStore = defineStore('form', {
     /**
      * Change le niveau d'apprentissage (partagé entre VFR et IFR) et le persiste.
      */
+    /** Station ouverte = fréquence renseignée (DEL, GND, TWR, APP, CTR) */
+    isFrequencyOpen(frequency: string): boolean {
+      return !!String(this.form[frequency] ?? '').trim()
+    },
+
     setLevel(level: UserLevel): void {
       this.form.LEVEL = level
       this.updateFormData(this.form)

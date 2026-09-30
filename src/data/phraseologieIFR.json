@@ -715,12 +715,14 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], correct, rappelez prêt au repoussage sur [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}."
+							"__text": "[CAL], correct, rappelez prêt au repoussage sur [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}.",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je rappellerai prêt au repoussage sur [DEP] [GND], [CAL]."
+							"__text": "Je rappellerai prêt au repoussage sur [DEP] [GND], [CAL].",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "en",
@@ -735,12 +737,14 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], correct, report ready for push-back on [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}."
+							"__text": "[CAL], correct, report ready for push-back on [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}.",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Will report ready for push-back on [DEP] [GND], [CAL]."
+							"__text": "Will report ready for push-back on [DEP] [GND], [CAL].",
+							"_requires": ["DEL"]
 						}
 					],
 					"_id": "MER_OMNI",
@@ -767,12 +771,14 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], correct, rappelez prêt au repoussage sur [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}."
+							"__text": "[CAL], correct, rappelez prêt au repoussage sur [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}.",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je rappellerai prêt au repoussage sur [DEP] [GND], [CAL]."
+							"__text": "Je rappellerai prêt au repoussage sur [DEP] [GND], [CAL].",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "en",
@@ -787,12 +793,14 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], correct, report ready for push-back on [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}."
+							"__text": "[CAL], correct, report ready for push-back on [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}.",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Will report ready for push-back on [DEP] [GND], [CAL]."
+							"__text": "Will report ready for push-back on [DEP] [GND], [CAL].",
+							"_requires": ["DEL"]
 						}
 					],
 					"_id": "MER_APPROUVEE",
@@ -926,6 +934,7 @@
 						}
 					],
 					"_id": "TRANSFERT_TOUR1",
+					"_requires": ["GND"],
 					"_name": "Transfert tour",
 					"_short": "Tr TWR",
 					"_level": "débutant"
@@ -1246,6 +1255,7 @@
 						}
 					],
 					"_id": "TRANSFERT_SOL",
+					"_requires": ["GND"],
 					"_name": "Transfert contrôleur",
 					"_short": "Tr GND",
 					"_level": "débutant"
@@ -2975,12 +2985,14 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], correct, rappelez prêt au repoussage sur [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}."
+							"__text": "[CAL], correct, rappelez prêt au repoussage sur [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}.",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je rappellerai prêt au repoussage sur [DEP] [GND], [CAL]."
+							"__text": "Je rappellerai prêt au repoussage sur [DEP] [GND], [CAL].",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "en",
@@ -2995,12 +3007,14 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], correct, report ready for push-back on [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}."
+							"__text": "[CAL], correct, report ready for push-back on [DEP] [GND] {ce rappel est nécessaire uniquement en cas de transfert}.",
+							"_requires": ["DEL"]
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Will report ready for push-back on [DEP] [GND], [CAL]."
+							"__text": "Will report ready for push-back on [DEP] [GND], [CAL].",
+							"_requires": ["DEL"]
 						}
 					],
 					"_levelExact": true

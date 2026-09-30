@@ -111,7 +111,7 @@ import AtcIcon from './icons/AtcIcon.vue';
 import CircuitMap from './CircuitMap.vue';
 import TaskOptions from './TaskOptions.vue';
 import { groupOf, groupOrder } from '../utils/taskGroups';
-import { isTaskVisibleAtLevel } from '../utils/flight';
+import { isTaskVisibleAtLevel, requirementsMet } from '../utils/flight';
 
 const props = defineProps<{
   phraseoData: any
@@ -208,7 +208,9 @@ const showCircuitMap = computed(() =>
 );
 
 // Niveaux cumulatifs ; _levelExact = visible uniquement à ce niveau
-const isTaskVisible = (task: any): boolean => isTaskVisibleAtLevel(task, formStore.form.LEVEL);
+// Tâches liées à une station fermée masquées (ex. transfert Sol → Tour sans Sol)
+const isTaskVisible = (task: any): boolean =>
+  isTaskVisibleAtLevel(task, formStore.form.LEVEL) && requirementsMet(task, (f) => formStore.isFrequencyOpen(f));
 
 const hasVisibleContent = (task: any): boolean => {
   // Si la tâche a du texte propre, elle a du contenu

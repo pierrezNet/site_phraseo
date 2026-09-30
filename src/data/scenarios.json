@@ -15,7 +15,7 @@
       { "task": "FIN_VENT_ARRIERE", "then": ["DEMANDE_COMPLET"], "brief": "Vous souhaitez un atterrissage complet." },
       { "task": "ATTERRISSAGE", "then": ["COMPLET"] },
       { "task": "DEGAGEMENT", "then": ["DEGAGEMENT_STANDARD", "DEGAGEMENT_PISTE"] },
-      { "task": "TRANSFERT_SOL", "requires": ["GND"] },
+      { "task": "TRANSFERT_SOL" },
       { "task": "PARKING" },
       { "task": "QUITTER", "lenient": true }
     ]
@@ -38,7 +38,7 @@
       { "task": "FIN_VENT_ARRIERE", "then": ["DEMANDE_COMPLET"], "brief": "Vous souhaitez un atterrissage complet." },
       { "task": "ATTERRISSAGE", "then": ["COMPLET"] },
       { "task": "DEGAGEMENT", "then": ["DEGAGEMENT_STANDARD", "DEGAGEMENT_PISTE"] },
-      { "task": "TRANSFERT_SOL", "requires": ["GND"] },
+      { "task": "TRANSFERT_SOL" },
       { "task": "TAXI2", "then": ["TRAFIC_SOL"], "chance": 0.2 },
       { "task": "PARKING" },
       { "task": "CLOTURE_PLAN_VOL_2" },
@@ -56,7 +56,7 @@
       { "task": "DEMANDE_REPOUSSAGE", "then": ["REPOUSSAGE_STANDARD", "REPOUSSAGE_CONDITIONNEL"] },
       { "task": "DEMANDE_ROULAGE", "then": ["ROULAGE_AUTORISE", "ROULAGE_TRAFIC"] },
       { "task": "TAXI", "then": ["TRAFIC_SOL"], "chance": 0.25 },
-      { "task": "TRANSFERT_TOUR1", "requires": ["GND"] },
+      { "task": "TRANSFERT_TOUR1" },
       { "task": "CONTACT_TOUR1", "then": ["MAINTIEN_ARRET"] },
       { "task": "TYPE_ALIGNEMENT", "then": ["ALIGNEMENT", "ALIGNEMENT_POS2"] },
       { "task": "DECOLLAGE", "then": ["DECOL_AUTO"] },
@@ -75,7 +75,7 @@
       { "task": "CONTACT_TWR" },
       { "task": "ATTERRISSAGE", "then": ["ATTERRISSAGE_AUTORISE"] },
       { "task": "DEGAGEMENT", "then": ["DEGAGEMENT_STANDARD"] },
-      { "task": "TRANSFERT_SOL", "requires": ["GND"] },
+      { "task": "TRANSFERT_SOL" },
       { "task": "TAXI2", "then": ["TRAFIC_SOL"], "chance": 0.2 },
       { "task": "PARKING" },
       { "task": "QUITTER", "lenient": true }
