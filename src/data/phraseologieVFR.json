@@ -234,22 +234,22 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Demande paramètres pour le départ."
+							"__text": "[CAL], Demande paramètres pour le départ."
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], piste [RWY], [MET], niveau de transition (6_0), il est [HOU]."
+							"__text": "[CAL], piste [RWY], [MET], niveau de transition (6_0), il est [HOU]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Piste [RWY], Q_N_H [QNH], [CAA]."
+							"__text": "Piste [RWY], Q_N_H [QNH], [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Request departure information."
+							"__text": "[CAL], Request departure information."
 						},
 						{
 							"_lang": "en",
@@ -259,7 +259,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], Q_N_H [QNH], [CAA]."
+							"__text": "Runway [RWY], Q_N_H [QNH], [CAL]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -272,7 +272,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], [COM], parking aviation générale, demande consignes roulage pour vol à destination de [ARR] avec information [INF]."
+							"__text": "[CAL], [COM], parking [POS], demande consignes roulage pour vol à destination de [ARR] avec information [INF]."
 						},
 						{
 							"_lang": "fr",
@@ -287,7 +287,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], [COM], general aviation apron, request taxi flight to [ARR] with information [INF]."
+							"__text": "[CAL], [COM], stand [POS], request taxi flight to [ARR] with information [INF]."
 						},
 						{
 							"_lang": "en",
@@ -310,7 +310,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], [COM], parking aviation générale, demande consignes roulage pour des tours de piste avec information [INF]."
+							"__text": "[CAL], [COM], parking [POS], demande consignes roulage pour des tours de piste avec information [INF]."
 						},
 						{
 							"_lang": "fr",
@@ -325,7 +325,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], [COM], general aviation apron, request taxi for patterns with information [INF]."
+							"__text": "[CAL], [COM], stand [POS], request taxi for patterns with information [INF]."
 						},
 						{
 							"_lang": "en",
@@ -348,12 +348,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], pouvez-vous partir de la piste [RWY] depuis intersection [HLD] ? TORA (1800) mètres."
+							"__text": "[CAL], pouvez-vous partir de la piste [RWY] depuis intersection [HLD] ? TORA (1800) mètres."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Affirm, [CAA]."
+							"__text": "Affirm, [CAL]."
 						},
 						{
 							"_lang": "fr",
@@ -368,7 +368,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], advise able to depart from runway [RWY], intersection [HLD]. TORA 1800 metres."
+							"__text": "[CAL], advise able to depart from runway [RWY], intersection [HLD]. TORA 1800 metres."
 						},
 						{
 							"_lang": "en",
@@ -452,12 +452,14 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], fin de vent arrière piste pour un complet, piste [RWY]."
+							"__text": "[CAA], fin de vent arrière pour un complet, piste [RWY].",
+							"_critical": ["pour un complet"]
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], end of downwind runway for a full stop, runway [RWY]."
+							"__text": "[CAA], end of downwind for a full stop, runway [RWY].",
+							"_critical": ["for a full stop"]
 						},
 						{
 							"_lang": "fr",
@@ -490,12 +492,14 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], fin de vent arrière pour un toucher, piste [RWY]."
+							"__text": "[CAA], fin de vent arrière pour un toucher, piste [RWY].",
+							"_critical": ["pour un toucher"]
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], end of downwind runway for a touch and go, runway [RWY]."
+							"__text": "[CAA], end of downwind for a touch and go, runway [RWY].",
+							"_critical": ["for a touch and go"]
 						},
 						{
 							"_lang": "fr",
@@ -782,22 +786,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], autorisé toucher piste [RWY], (numéro 2) vent 0_50 degrés 10 nœuds."
+							"__text": "[CAA], piste [RWY], autorisé toucher, vent 0_60 degrés 10 nœuds."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Toucher piste [RWY], (numéro 2) [CAA]."
+							"__text": "Piste [RWY], toucher, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], cleared to touch and go runway [RWY], (number X) wind 0_6_0 degrees, 10 knots."
+							"__text": "[CAA], runway [RWY], cleared to touch and go, wind 0_6_0 degrees 10 knots."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Touch and go runway [RWY], (number X) [CAA]."
+							"__text": "Runway [RWY], touch and go, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -810,22 +814,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], (numéro X), autorisé atterrissage piste [RWY] vent 0_60 degrés 10 nœuds."
+							"__text": "[CAA], piste [RWY], autorisé atterrissage, vent 0_60 degrés 10 nœuds."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "(numéro X), J'atterris piste [RWY], [CAA]."
+							"__text": "Piste [RWY], j'atterris, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], (number X), cleared to land runway [RWY], wind 0_6_0 degrees 10 knots."
+							"__text": "[CAA], runway [RWY], cleared to land, wind 0_6_0 degrees 10 knots."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "(number X), Landing runway [RWY], [CAA]."
+							"__text": "Runway [RWY], landing, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -838,22 +842,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], (numéro X), autorisé option piste [RWY], vent 0_60 degrés 10 nœuds."
+							"__text": "[CAA], piste [RWY], autorisé option, vent 0_60 degrés 10 nœuds."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "(numéro X), Option piste [RWY], [CAA]."
+							"__text": "Piste [RWY], option, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], (number X) cleared option runway [RWY]."
+							"__text": "[CAA], runway [RWY], cleared option, wind 0_6_0 degrees 10 knots."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "(number X), Option runway [RWY], [CAA]."
+							"__text": "Runway [RWY], option, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -1222,7 +1226,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de [ARR], verticale [SORTIE], [ALT] pieds, avec information [INF], demande transit."
+							"__text": "[CAL], Cessna 172 en provenance de [DEP], à destination de [ARR], verticale [SORTIE], [ALT] pieds, avec information [INF], demande transit."
 						},
 						{
 							"_lang": "fr",
@@ -1237,7 +1241,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request transit."
+							"__text": "[CAL], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request transit."
 						},
 						{
 							"_lang": "en",
@@ -1260,7 +1264,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], verticale aérodrome."
+							"__text": "[CAL], verticale aérodrome."
 						},
 						{
 							"_lang": "fr",
@@ -1275,7 +1279,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], over aerodrome."
+							"__text": "[CAL], over aerodrome."
 						},
 						{
 							"_lang": "en",
@@ -1298,7 +1302,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAA], au parking, pour quitter."
+							"__text": "[DEP] [NGND], [CAL], au parking, pour quitter."
 						},
 						{
 							"_lang": "fr",
@@ -1308,7 +1312,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAA], at the apron, leaving the frequency."
+							"__text": "[DEP] [NGND], [CAL], at the apron, leaving the frequency."
 						},
 						{
 							"_lang": "en",
@@ -1515,7 +1519,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[FIR] [NCTR], [CAA], passe [WPT] et clôture plan de vol."
+							"__text": "[FIR] [NCTR], [CAL], passe [WPT] et clôture plan de vol."
 						},
 						{
 							"_lang": "fr",
@@ -1525,7 +1529,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[FIR] [NCTR], [CAA], passing [WPT], closing flight plan."
+							"__text": "[FIR] [NCTR], [CAL], passing [WPT], closing flight plan."
 						},
 						{
 							"_lang": "en",
@@ -1711,7 +1715,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[ARR] [NSTA], [CAA], heure estimée d'arrivée 1_5_5_5, je clôture plan de vol."
+							"__text": "[ARR] [NSTA], [CAL], heure estimée d'arrivée 1_5_5_5, je clôture plan de vol."
 						},
 						{
 							"_lang": "fr",
@@ -1721,7 +1725,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[ARR] [NSTA], [CAA], estimated time of arrival 1_5_5_5, closing flight plan."
+							"__text": "[ARR] [NSTA], [CAL], estimated time of arrival 1_5_5_5, closing flight plan."
 						},
 						{
 							"_lang": "en",
@@ -1739,7 +1743,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR], [CAA], demande transit V_F_R, [ALT] pieds, de (W H) à (E N), j'estime (W) à [HOU]."
+							"__text": "[TTWR] [NTWR], [CAL], demande transit V_F_R, [ALT] pieds, de (W H) à (E N), j'estime (W) à [HOU]."
 						},
 						{
 							"_lang": "fr",
@@ -1754,7 +1758,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR], [CAA], request V_F_R transit, [ALT] feet, from (W H) to (E N), estimating (W) at [HOU]."
+							"__text": "[TTWR] [NTWR], [CAL], request V_F_R transit, [ALT] feet, from (W H) to (E N), estimating (W) at [HOU]."
 						},
 						{
 							"_lang": "en",
@@ -1947,7 +1951,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAA], demande départ V_F_R spécial."
+							"__text": "[DEP] [NGND], [CAL], demande départ V_F_R spécial."
 						},
 						{
 							"_lang": "fr",
@@ -1962,7 +1966,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAA], request special V_F_R departure."
+							"__text": "[DEP] [NGND], [CAL], request special V_F_R departure."
 						},
 						{
 							"_lang": "en",
@@ -1985,7 +1989,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAA], demande départ V_F_R spécial."
+							"__text": "[DEP] [NGND], [CAL], demande départ V_F_R spécial."
 						},
 						{
 							"_lang": "fr",
@@ -2000,7 +2004,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAA], request special V_F_R."
+							"__text": "[DEP] [NGND], [CAL], request special V_F_R."
 						},
 						{
 							"_lang": "en",
@@ -2023,7 +2027,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[ARR] [NTWR], [CAA], demande arrivée V_F_R spécial."
+							"__text": "[ARR] [NTWR], [CAL], demande arrivée V_F_R spécial."
 						},
 						{
 							"_lang": "fr",
@@ -2038,7 +2042,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[ARR] [NTWR], [CAA], request special V_F_R arrival."
+							"__text": "[ARR] [NTWR], [CAL], request special V_F_R arrival."
 						},
 						{
 							"_lang": "en",
@@ -2061,7 +2065,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR], [CAA], demande transit V_F_R spécial, [ALT] pieds, via (W H 1), verticale aérodrome, (E N 1), sortie [SORTIE]."
+							"__text": "[TTWR] [NTWR], [CAL], demande transit V_F_R spécial, [ALT] pieds, via (W H 1), verticale aérodrome, (E N 1), sortie [SORTIE]."
 						},
 						{
 							"_lang": "fr",
@@ -2076,7 +2080,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR], [CAA], request special V_F_R transit, [ALT] feet, via (W H 1), overhead airfield, (E N 1), [SORTIE]."
+							"__text": "[TTWR] [NTWR], [CAL], request special V_F_R transit, [ALT] feet, via (W H 1), overhead airfield, (E N 1), [SORTIE]."
 						},
 						{
 							"_lang": "en",
@@ -2099,7 +2103,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR], [CAA], demande V_F_R spécial, [ALT] pieds, (Hénin) vers (Armentières), (Hénin) à [HOU]."
+							"__text": "[TTWR] [NTWR], [CAL], demande V_F_R spécial, [ALT] pieds, (Hénin) vers (Armentières), (Hénin) à [HOU]."
 						},
 						{
 							"_lang": "fr",
@@ -2114,7 +2118,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR], [CAA], request special V_F_R, [ALT] feet, from (Hénin) to (Armentières) direct, (Hénin) time [HOU]."
+							"__text": "[TTWR] [NTWR], [CAL], request special V_F_R, [ALT] feet, from (Hénin) to (Armentières) direct, (Hénin) time [HOU]."
 						},
 						{
 							"_lang": "en",
@@ -2340,12 +2344,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NTWR], [CAA], au point d'attente piste [RWY], prêt au départ."
+							"__text": "[DEP] [NTWR], [CAL], au point d'attente piste [RWY], prêt au départ."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NTWR], [CAA], holding point runway [RWY], ready for departure."
+							"__text": "[DEP] [NTWR], [CAL], holding point runway [RWY], ready for departure."
 						}
 					],
 					"subgraph": [
@@ -2482,12 +2486,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[ARR] [NTWR], [CAA], [POL]."
+							"__text": "[ARR] [NTWR], [CAL], [POL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[ARR] [NTWR], [CAA], [POL]."
+							"__text": "[ARR] [NTWR], [CAL], [POL]."
 						},
 						{
 							"_lang": "fr",
@@ -2524,12 +2528,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR] de [CAA], [POL]."
+							"__text": "[TTWR] [NTWR] de [CAL], [POL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[TTWR] [NTWR], [POL] from [CAA]."
+							"__text": "[TTWR] [NTWR], [POL] from [CAL]."
 						},
 						{
 							"_lang": "fr",
@@ -2566,12 +2570,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NAPP], [CAA], départ [STA], je monte niveau [NIV]."
+							"__text": "[DEP] [NAPP], [CAL], départ [STA], je monte niveau [NIV]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NAPP], [CAA], [STA] departure, climbing level [NIV]."
+							"__text": "[DEP] [NAPP], [CAL], [STA] departure, climbing level [NIV]."
 						}
 					],
 					"subgraph": [
