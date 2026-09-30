@@ -225,6 +225,21 @@ describe('scoreAnswer — nouveaux éléments critiques', () => {
   })
 })
 
+describe('lettre critique et indicatif épelé', () => {
+  it('une lettre de l\'indicatif ne valide pas un point d\'attente d\'une lettre', () => {
+    const r = scoreAnswer('Roger, F S T', 'Je roule point d\'attente via F, F S T.', [{ label: CRITICAL_TAGS.HLD, value: 'F' }], [['F S T', 'F-EPST']])
+    expect(r.criticals[0].ok).toBe(false)
+  })
+})
+
+describe('PHRASE_EQUIVALENCES', () => {
+  it('« Wilco » est accepté là où « Bien compris » est attendu, et inversement', () => {
+    const crit = [{ label: CRITICAL_TAGS.CAA, value: 'F E P' }]
+    expect(scoreAnswer('Wilco, F E P', 'Bien compris, F E P.', crit).passed).toBe(true)
+    expect(scoreAnswer('Bien compris, F E P', 'Wilco, F E P.', crit).passed).toBe(true)
+  })
+})
+
 describe('requiredText — parenthèses = valeur libre ou segment optionnel', () => {
   it('retire les valeurs d\'exemple et les notes', () => {
     expect(requiredText('Je tourne à (droite) cap (220){note}, F E P')).toBe('Je tourne à cap , F E P')

@@ -151,6 +151,8 @@ export function normalizeText(input: string): string {
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
+    .replace(/œ/g, 'oe') // ligatures non décomposées par NFD (« nœuds »)
+    .replace(/æ/g, 'ae')
     .replace(/[_-]/g, ' ')
     .replace(/[^a-z0-9 ]/g, ' ')
     .replace(/\s+/g, ' ')
@@ -217,8 +219,13 @@ function buildGroups(equivalences?: string[][]): EquivGroup[] {
   return equivalences
     .map((phrases, i) => ({
       canon: `§eq${i}`,
-      // variantes les plus longues en premier pour un remplacement gourmand
-      variants: phrases.map((p) => tokenize(p)).filter((v) => v.length).sort((a, b) => b.length - a.length),
+      // Lettres épelées groupées (« fst ») et séparées (« f s t ») : sinon, dans la forme
+      // séparée, une lettre de l'indicatif passerait pour une valeur critique (point d'attente F).
+      // Variantes les plus longues en premier pour un remplacement gourmand.
+      variants: phrases
+        .flatMap((p) => [tokenize(p), tokenize(p, { collapse: false })])
+        .filter((v, i, all) => v.length && all.findIndex((o) => o.join(' ') === v.join(' ')) === i)
+        .sort((a, b) => b.length - a.length),
     }))
     .filter((g) => g.variants.length)
 }
@@ -295,12 +302,16 @@ export function tokenSimilarity(expected: string, user: string, equivalences?: s
  * @param criticals éléments critiques à retrouver tels quels
  * @param equivalences groupes de formulations équivalentes (ex. callsign complet/abrégé)
  */
+/** Expressions interchangeables dans une réponse pilote (validé par l'expert) */
+export const PHRASE_EQUIVALENCES: string[][] = [['bien compris', 'wilco']]
+
 export function scoreAnswer(
   userText: string,
   expectedSpoken: string,
   criticals: Critical[],
-  equivalences?: string[][]
+  extraEquivalences: string[][] = []
 ): QuizResult {
+  const equivalences = [...PHRASE_EQUIVALENCES, ...extraEquivalences]
   const groups = buildGroups(equivalences)
   const accessory = tokenSimilarity(expectedSpoken, userText, equivalences)
 
