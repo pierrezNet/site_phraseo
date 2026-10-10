@@ -33,6 +33,7 @@ import { useFormStore } from '../stores/form';
 import { useWeatherStore } from '../stores/weather';
 import { useLangStore } from '../stores/lang';
 import { useQuizStore } from '../stores/quiz';
+import { useFlightStore } from '../stores/flight';
 
 const emit = defineEmits(['edit']);
 
@@ -40,12 +41,14 @@ const formStore = useFormStore();
 const weatherStore = useWeatherStore();
 const langStore = useLangStore();
 const quizStore = useQuizStore();
+const flightStore = useFlightStore();
 
 const value = (v?: string) => (v ?? '').trim();
 const qnh = computed(() => weatherStore.metarQnh ?? formStore.form.QNH ?? '1013');
 
 // Champ spécifique au mode : Niveau en IFR, Point de sortie en VFR
 const isVFR = computed(() => formStore.mode === 'VFR');
+const arr = computed(() => flightStore.tagOverrides.ARR ?? value(formStore.form.ARR));
 
 /** Éléments du bandeau : libellé fixe, valeur affichée, texte inséré dans la réponse */
 const items = computed(() => {
@@ -62,7 +65,8 @@ const items = computed(() => {
     entry('CAL', '', value(f.CAL)),
     entry('COM', '', value(f.COM)),
     entry('DEP', '', value(f.DEP)),
-    entry('ARR', '→ ', value(f.ARR), value(f.ARR), ' '),
+    // Vol local (tours de piste) : retour au départ
+    entry('ARR', '→ ', arr.value, arr.value, ' '),
     entry('POS', 'Parking ', value(f.POS)),
     // Piste insérée sous sa forme prononcée (26 Gauche / 26 Left)
     entry('RWY', 'Piste ', value(f.RWY), formStore.formatRunway(value(f.RWY), lang)),

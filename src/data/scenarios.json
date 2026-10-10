@@ -3,6 +3,7 @@
     "id": "VFR_TOUR_DE_PISTE",
     "mode": "VFR",
     "name": "Tours de piste à [DEP]",
+    "local": true,
     "description": "Mise en route, un tour de piste main gauche et atterrissage complet sur l'aérodrome de départ.",
     "steps": [
       { "task": "MISE_EN_ROUTE", "title": "Premier contact" },
@@ -67,7 +68,7 @@
       { "task": "ROUTE", "then": ["DIRECT", "ROUTE_CONTROLEUR"], "chance": 0.3 },
       { "task": "NIVEAU" },
       { "task": "REGULATION", "then": ["TRAFIC", "VITESSE"], "chance": 0.3 },
-      { "task": "TRANSFERT_APP2", "then": ["TRANSFERT_SIMPLE"] },
+      { "task": "TRANSFERT_APP2", "then": ["TRANSFERT_SIMPLE_ARR"] },
       { "task": "DESCENTE", "then": ["APPROCHE_STAR", "DESCENTE_IMMEDIATE"] },
       { "task": "ATTENTE", "then": ["ATTENTE_PUBLIEE"], "chance": 0.25 },
       { "task": "APPROCHE", "then": ["APPROCHE_AUTORISE"] },

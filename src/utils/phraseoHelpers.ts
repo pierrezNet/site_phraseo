@@ -102,7 +102,9 @@ export function replacePlaceholders(
   text: string,
   lang: Language,
   formStore: FormStoreType,
-  weatherStore: WeatherStoreType
+  weatherStore: WeatherStoreType,
+  /** Valeurs imposées pour certains tags (ex. vol local : [ARR] = départ) */
+  overrides: Record<string, string> = {}
 ): string {
   const now = new Date();
   const currentHour = `${now.getUTCHours().toString().padStart(2, '0')} heures ${now.getMinutes().toString().padStart(2, '0')}`;
@@ -117,6 +119,7 @@ export function replacePlaceholders(
   return text.replace(/\[([^\]]+)\]/g, (_match, p1: string) => escapeHtml(resolveTag(p1, _match)));
 
   function resolveTag(p1: string, raw: string): string {
+    if (p1 in overrides) return overrides[p1];
     switch (p1) {
       case 'POL':
         return POL_STRINGS[getHeure()][lang];

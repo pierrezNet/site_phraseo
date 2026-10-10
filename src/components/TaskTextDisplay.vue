@@ -258,7 +258,7 @@ const rogerOnly = (line: RenderedLine, answer: string): boolean =>
 const renderedLines = computed<RenderedLine[]>(() => {
   const lang = langStore.current as 'fr' | 'en';
   const render = (key: string, cls: string, text: string, intents: string[] = [], ask?: string): RenderedLine => {
-    const processed = replacePlaceholders(text, lang, formStore, weatherStore);
+    const processed = replacePlaceholders(text, lang, formStore, weatherStore, flight.tagOverrides);
     return {
       key,
       source: text,

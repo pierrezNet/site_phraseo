@@ -54,6 +54,13 @@ export const useFlightStore = defineStore('flight', () => {
   const outcomes = ref<Record<number, Record<string, LineOutcome>>>({})
 
   const active = computed(() => scenario.value !== null)
+  /** Tags imposés pendant le vol : un vol local revient au départ ([ARR] = [DEP]) */
+  const tagOverrides = computed(() => {
+    const overrides: Record<string, string> = {}
+    if (scenario.value?.local) overrides.ARR = String(useFormStore().form.DEP ?? '')
+    return overrides
+  })
+
   /** Nom du vol en cours, avec les paramètres (départ, arrivée) */
   const title = computed(() => (scenario.value ? scenarioName(scenario.value.name, useFormStore().form) : ''))
   const currentStep = computed(() => steps.value[index.value] ?? null)
@@ -172,7 +179,7 @@ export const useFlightStore = defineStore('flight', () => {
   )
 
   return {
-    scenario, title, level, steps, index, finished, active, currentStep, isLastStep,
+    scenario, title, tagOverrides, level, steps, index, finished, active, currentStep, isLastStep,
     start, restart, abort, next, goTo, recordAttempt, outcomeOf, stepMissed, summary, phaseProgress,
   }
 })

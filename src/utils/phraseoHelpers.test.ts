@@ -96,6 +96,12 @@ describe('replacePlaceholders', () => {
     expect(replacePlaceholders('[NGND]', 'fr', formStore as any, weatherStore as any)).toBe('Sol')
   })
 
+  it('applique les valeurs imposées (vol local : arrivée = départ)', () => {
+    const store = makeFormStore({ DEP: 'Strasbourg', ARR: 'Colmar' })
+    expect(replacePlaceholders('[ARR]', 'fr', store as any, weatherStore as any)).toBe('Colmar')
+    expect(replacePlaceholders('[ARR]', 'fr', store as any, weatherStore as any, { ARR: 'Strasbourg' })).toBe('Strasbourg')
+  })
+
   it('laisse le texte inchangé sans placeholder', () => {
     const result = replacePlaceholders('rien à remplacer', 'fr', formStore as any, weatherStore as any)
     expect(result).toBe('rien à remplacer')

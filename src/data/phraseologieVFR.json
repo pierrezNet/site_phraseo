@@ -651,7 +651,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Contact [DEP] [APP], thank you, [CAA]."
+							"__text": "[DEP] [APP], thank you, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -680,7 +680,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Contact [ARR] [GND], thank you, [CAA]."
+							"__text": "[ARR] [GND], thank you, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -709,7 +709,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Contact [DEP] [TWR], thank you, [CAA]."
+							"__text": "[DEP] [TWR], thank you, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -1304,7 +1304,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAL], au parking, pour quitter."
+							"__text": "[ARR] [NGND], [CAL], au parking, pour quitter."
 						},
 						{
 							"_lang": "fr",
@@ -1314,7 +1314,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAL], at the apron, leaving the frequency."
+							"__text": "[ARR] [NGND], [CAL], at the apron, leaving the frequency."
 						},
 						{
 							"_lang": "en",

@@ -60,6 +60,8 @@ export interface Scenario {
   mode: 'VFR' | 'IFR';
   name: string;
   description?: string;
+  /** Vol local (tours de piste) : on revient au départ, l'arrivée vaut le départ */
+  local?: boolean;
   steps: ScenarioStep[];
 }
 

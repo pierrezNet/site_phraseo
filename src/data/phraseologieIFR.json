@@ -1208,6 +1208,34 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
+							"__text": "[CAL], contactez [ARR] [APP]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je contacte [ARR] [APP], merci, [CAL]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAL], contact [ARR] [APP]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "[ARR] [APP], thank you, [CAL]."
+						}
+					],
+					"_id": "TRANSFERT_SIMPLE_ARR",
+					"_name": "Transfert contrôleur",
+					"_short": "Tr APP",
+					"_level": "débutant"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "ATC",
 							"__text": "[CAL], contactez [FIR] [CTR]."
 						},
 						{
@@ -2471,7 +2499,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAL], au parking, pour quitter."
+							"__text": "[ARR] [NGND], [CAL], au parking, pour quitter."
 						},
 						{
 							"_lang": "fr",
@@ -2481,7 +2509,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NGND], [CAL], at the apron, leaving the frequency."
+							"__text": "[ARR] [NGND], [CAL], at the apron, leaving the frequency."
 						},
 						{
 							"_lang": "en",
@@ -6506,12 +6534,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NTWR], [CAL], courte finale piste [RWY]."
+							"__text": "[ARR] [NTWR], [CAL], courte finale piste [RWY]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NTWR], [CAL], final runway [RWY]."
+							"__text": "[ARR] [NTWR], [CAL], final runway [RWY]."
 						},
 						{
 							"_lang": "fr",
@@ -6616,7 +6644,7 @@
 						{
 							"call": {
 								"_class": "option",
-								"_refid": "TRANSFERT_SIMPLE"
+								"_refid": "TRANSFERT_SIMPLE_ARR"
 							}
 						},
 						{
