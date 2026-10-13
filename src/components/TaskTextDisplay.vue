@@ -90,7 +90,8 @@
             <div v-html="line.content"></div>
           </div>
 
-          <div v-if="(!isFinal(line.key) || !flight.active) && !relaunched[line.key]" class="flex justify-end">
+          <!-- Réessayer seulement après un échec (une réponse validée est terminée) -->
+          <div v-if="!resultOf(line.key)!.passed && (!isFinal(line.key) || !flight.active) && !relaunched[line.key]" class="flex justify-end">
             <button
               @click="retry(line.key)"
               class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"

@@ -4,6 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import TaskTextDisplay from './TaskTextDisplay.vue'
 import { useQuizStore } from '../stores/quiz'
 import { useWeatherStore } from '../stores/weather'
+import { useFormStore } from '../stores/form'
 
 const makeTasks = (text: string, lang = 'fr', cls = 'ATC') => [
   { __text: text, _lang: lang, _class: cls, icon: null },
@@ -102,6 +103,29 @@ describe('TaskTextDisplay', () => {
     expect(wrapper.findAll('.rounded-md')).toHaveLength(3)
     expect(wrapper.findAll('textarea')).toHaveLength(2)
     expect(wrapper.text()).toContain('À vous')
+  })
+
+  it('mode quiz : « Réessayer » seulement après une réponse refusée', async () => {
+    useQuizStore().enabled = true
+    const caa = useFormStore().form.CAA
+    const wrapper = mount(TaskTextDisplay, {
+      global: { plugins: [pinia] },
+      props: { selectedTaskTexts: makeTasks('Rappellerai prêt, [CAA].', 'fr', 'Pilot') },
+    })
+    const answer = async (text: string) => {
+      await wrapper.find('textarea').setValue(text)
+      await wrapper.findAll('button').find((b) => b.text() === 'Vérifier')!.trigger('click')
+    }
+    const hasRetry = () => wrapper.findAll('button').some((b) => b.text() === 'Réessayer')
+
+    await answer('roger')
+    expect(wrapper.text()).toContain('À revoir')
+    expect(hasRetry()).toBe(true)
+
+    await wrapper.findAll('button').find((b) => b.text() === 'Réessayer')!.trigger('click')
+    await answer(`Rappellerai prêt, ${caa}.`)
+    expect(wrapper.text()).toContain('Validé')
+    expect(hasRetry()).toBe(false)
   })
 
   it('affiche une tâche avec [QNH] même si le METAR renvoie un altimètre numérique', () => {
