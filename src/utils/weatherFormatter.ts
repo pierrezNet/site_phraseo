@@ -18,7 +18,7 @@ export function formatMetarData(metarData: Metar, options: FormatOptions = { lan
   const visParts = vis ? (options.lang === 'fr' ? `visibilité ${visKm} kilomètres, ` : `visibility ${visKm} kilometres, `) : '';
 
   if (options.lang === 'fr') {
-    return `vent ${windDir} degrés ${windSpd} noeuds, ${visParts}température ${temp}, Q_N_H ${qnh}`;
+    return `vent ${windDir} degrés ${windSpd} nœuds, ${visParts}température ${temp}, Q_N_H ${qnh}`;
   } else {
     return `wind ${windDir} degrees ${windSpd} knots, ${visParts}temperature ${temp}, Q_N_H ${qnh}`;
   }

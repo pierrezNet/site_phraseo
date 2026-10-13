@@ -33,6 +33,7 @@ export const PASS_THRESHOLD = 75
 export const CRITICAL_TAGS: Record<string, string> = {
   QNH: 'QNH',
   RWY: 'Piste',
+  RWYO: 'Piste opposée',
   ALT: 'Altitude',
   NIV: 'Niveau',
   DEL: 'Fréquence Prévol',

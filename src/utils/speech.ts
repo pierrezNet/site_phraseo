@@ -9,9 +9,10 @@
  * - nombres (wiki IVAO France / manuel DGAC) :
  *   - FR : langage courant (« transpondeur mille », « niveau cent dix »), même écrits 1_1_0 ;
  *     chiffre par chiffre seulement avec un zéro initial ; « unité » pour un chiffre 1 seul dans un identifiant
+ *   - EN : « make a three-sixty », « a one-eighty »
  *   - cap : toujours trois chiffres, un par un (manuel DGAC p. 17 : « cap zéro six zéro »)
  *   - EN : chiffre par chiffre, sauf centaines/milliers ronds et heures de trafic ; « tree », « fife », « niner »
- * - quelques mots réécrits pour la voix française (Whiskey, Boeing)
+ * - quelques mots réécrits pour la voix française (Whiskey, Boeing, Foxtrot)
  */
 export type SpeechLang = 'fr' | 'en';
 
@@ -22,10 +23,13 @@ export const OACI_WORDS: Record<string, string> = {
   X: 'X-ray', Y: 'Yankee', Z: 'Zulu',
 };
 
-/** Nom des lettres d'un sigle (Q_N_H), écrit pour être lu correctement par une voix française */
+/**
+ * Nom des lettres d'un sigle (Q_N_H) pour la voix française, écrit comme des mots que MeloTTS
+ * lit correctement (vérifié par aller-retour MeloTTS → Whisper : « cu haine hache » → QNH)
+ */
 const FR_LETTER_NAMES: Record<string, string> = {
-  A: 'a', B: 'bé', C: 'cé', D: 'dé', E: 'eu', F: 'èf', G: 'gé', H: 'ache', I: 'i', J: 'ji', K: 'ka',
-  L: 'èl', M: 'èm', N: 'ène', O: 'o', P: 'pé', Q: 'ku', R: 'èr', S: 'èss', T: 'té', U: 'u', V: 'vé',
+  A: 'a', B: 'bé', C: 'cé', D: 'dé', E: 'eu', F: 'effe', G: 'gé', H: 'hache', I: 'i', J: 'ji', K: 'ka',
+  L: 'elle', M: 'èm', N: 'haine', O: 'o', P: 'pé', Q: 'cu', R: 'erre', S: 'esse', T: 'té', U: 'u', V: 'vé',
   W: 'double vé', X: 'ixe', Y: 'i grec', Z: 'zède',
 };
 
@@ -41,6 +45,7 @@ const FR_PRONUNCIATION: Record<string, string> = {
   Whiskey: 'Ouisski',
   Whisky: 'Ouisski',
   Boeing: 'Boïngue',
+  Foxtrot: 'Fox trotte',
 };
 
 /** Noms féminins après « 1 » : « une minute » */
@@ -164,11 +169,23 @@ export function toSpeech(text: string, lang: SpeechLang): string {
 
   s = s.replace(/\b[A-Za-z\d]+(?:_[A-Za-z\d]+)+\b/g, (group) => sayUnderscored(group, lang));
 
+  // Fréquence écrite en chiffres (119.700) : « cent dix-neuf décimale sept » / « one one niner decimal seven »
+  s = s.replace(/\b(\d+)[.,](\d+)\b/g, (_m, int: string, dec: string) => {
+    const decimals = dec.replace(/0+$/, '') || '0';
+    // FR comme le formulaire : 121.075 → « décimale zéro soixante-quinze »
+    const fr = (d: string): string => (d.length > 1 && d.startsWith('0') ? `zéro ${fr(d.slice(1))}` : sayNumber(d, 'fr'));
+    const said = lang === 'en' ? digitByDigit(decimals, 'en') : fr(decimals);
+    return `${sayNumber(int, lang)} ${lang === 'fr' ? 'décimale' : 'decimal'} ${said}`;
+  });
+
   // Séparateur de milliers : « 1 800 » → 1800
   s = s.replace(/\b(\d{1,3}) (\d{3})\b/g, '$1$2');
 
   // Position horaire d'un trafic : « eleven o'clock » (pas chiffre par chiffre)
   if (lang === 'en') s = s.replace(/\b(1[0-2]|[1-9])(?=\s*o['’]clock)/g, (n) => EN_CLOCK[Number(n)]);
+
+  // Demi-tour et tour complet : « a one-eighty », « a three-sixty »
+  if (lang === 'en') s = s.replace(/\ba (180|360)\b/g, (_m, n: string) => (n === '180' ? 'a one-eighty' : 'a three-sixty'));
 
   // Cap : trois chiffres, un par un, dans les deux langues
   s = s.replace(/\b(cap|heading)\s+(\d{1,3})\b/gi, (_m, word: string, n: string) => `${word} ${digitByDigit(n.padStart(3, '0'), lang)}`);

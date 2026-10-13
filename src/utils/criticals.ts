@@ -4,7 +4,7 @@
  */
 import type { useFormStore } from '../stores/form';
 import type { useWeatherStore } from '../stores/weather';
-import { resolveStationParts } from './phraseoHelpers';
+import { oppositeRunway, resolveStationParts } from './phraseoHelpers';
 import { CRITICAL_TAGS, type Critical } from './quizScoring';
 
 type FormStoreType = ReturnType<typeof useFormStore>;
@@ -16,6 +16,8 @@ export function resolveCriticalValue(tag: string, lang: Lang, formStore: FormSto
   switch (tag) {
     case 'RWY':
       return formStore.formatRunway(formStore.form.RWY, lang);
+    case 'RWYO':
+      return formStore.formatRunway(oppositeRunway(formStore.form.RWY), lang);
     case 'QNH':
       return weatherStore.metarQnh ?? formStore.form.QNH ?? '1013';
     case 'DEL':

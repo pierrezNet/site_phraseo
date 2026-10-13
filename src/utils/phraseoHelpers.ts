@@ -96,6 +96,17 @@ export function escapeHtml(value: string): string {
 }
 
 /**
+ * Piste opposée (contre-QFU) : 26L → 08R, 04 → 22, 09C → 27C. Saisie non reconnue : inchangée.
+ */
+export function oppositeRunway(runway: string): string {
+  const match = runway?.trim().match(/^(\d{1,2})([LRC]?)$/i);
+  if (!match) return runway;
+  const number = ((Number(match[1]) + 17) % 36) + 1;
+  const side = ({ L: 'R', R: 'L', C: 'C', '': '' } as Record<string, string>)[match[2].toUpperCase()];
+  return `${String(number).padStart(2, '0')}${side}`;
+}
+
+/**
  * Remplace tous les placeholders [TAG] d'un texte de phraséologie.
  */
 export function replacePlaceholders(
@@ -142,6 +153,8 @@ export function replacePlaceholders(
         return formStore.form.CAA || 'Station';
       case 'RWY':
         return formStore.formatRunway(formStore.form.RWY, lang);
+      case 'RWYO':
+        return formStore.formatRunway(oppositeRunway(formStore.form.RWY), lang);
       case 'QNH':
         return weatherStore.metarQnh || formStore.form.QNH || '1013';
       case 'MET':
@@ -149,7 +162,7 @@ export function replacePlaceholders(
         if (weatherStore.metarData) return replaceMetarTag('[MET]', weatherStore.metarData, { lang });
         // Fallback statique si pas de METAR (API indisponible)
         return lang === 'fr'
-          ? `vent (240) degrés (10) noeuds, visibilité (10) kilomètres, température (15), Q_N_H ${formStore.form.QNH || '1013'}`
+          ? `vent (240) degrés (10) nœuds, visibilité (10) kilomètres, température (15), Q_N_H ${formStore.form.QNH || '1013'}`
           : `wind (2_4_0) degrees (1_0) knots, visibility (10) kilometres, temperature (1_5), Q_N_H ${formStore.form.QNH || '1013'}`;
       case 'DEL':
       case 'GND':

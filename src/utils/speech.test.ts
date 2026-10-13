@@ -20,10 +20,13 @@ describe('toSpeech — français', () => {
   const fr = (t: string) => toSpeech(t, 'fr')
 
   it('langage courant pour altitudes, QNH, pistes et fréquences', () => {
-    expect(fr('Montez 2500 pieds, Q_N_H 1013.')).toBe('Montez deux mille cinq cents pieds, ku ène ache mille treize.')
+    expect(fr('Montez 2500 pieds, Q_N_H 1013.')).toBe('Montez deux mille cinq cents pieds, cu haine hache mille treize.')
     expect(fr('piste 26 Gauche')).toBe('piste vingt-six Gauche')
     expect(fr('contactez Lille Tour, 118 décimale 7')).toBe('contactez Lille Tour, cent dix-huit décimale sept')
     expect(fr('120 décimale 0_25')).toBe('cent vingt décimale zéro vingt-cinq')
+    expect(fr('Information (119.700), 120,775, 121.075')).toBe(
+      'Information cent dix-neuf décimale sept, cent vingt décimale sept cent soixante-quinze, cent vingt et un décimale zéro soixante-quinze'
+    )
   })
 
   it('langage courant aussi pour transpondeur, niveau et chiffres à underscores ; zéro initial chiffre par chiffre', () => {
@@ -50,8 +53,8 @@ describe('toSpeech — français', () => {
   })
 
   it('indicatifs et taxiways en alphabet OACI', () => {
-    expect(fr('F-EPST, roulez via W41')).toBe('Foxtrot Echo Papa Sierra Tango, roulez via Ouisski quarante et un')
-    expect(fr('F S T, rappelez prêt')).toBe('Foxtrot Sierra Tango, rappelez prêt')
+    expect(fr('F-EPST, roulez via W41')).toBe('Fox trotte Echo Papa Sierra Tango, roulez via Ouisski quarante et un')
+    expect(fr('F S T, rappelez prêt')).toBe('Fox trotte Sierra Tango, rappelez prêt')
     expect(fr('point d\'attente (S A 1)')).toBe('point d\'attente Sierra Alfa unité')
   })
 
@@ -85,6 +88,9 @@ describe('toSpeech — anglais', () => {
   it('« I » reste un pronom, les lettres d’indicatif sont épelées', () => {
     expect(en('F S T, I say again')).toBe('Foxtrot Sierra Tango, I say again')
     expect(en('traffic 11 o\'clock, 4 miles')).toBe('traffic eleven o\'clock, four miles')
+    expect(en('make a 360 delaying action, make a 180, level 360')).toBe(
+      'make a three-sixty delaying action, make a one-eighty, level tree six zero'
+    )
     expect(en('behind A320, departure Bubli_3_Papa')).toBe('behind Airbus tree two zero, departure Bubli tree Papa')
     expect(en('holding point Z, runway 26 Left')).toBe('holding point Zulu, runway two six Left')
   })

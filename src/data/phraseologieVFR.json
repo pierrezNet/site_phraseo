@@ -560,42 +560,42 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], A_T_R en finale, rappelez en vue."
+							"__text": "[CAA], (A_T_R) en finale, rappelez en vue."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "A_T_R en vue, [CAA]."
+							"__text": "(A_T_R) en vue, [CAA]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], derrière A_T_R en finale, alignez-vous et attendez piste [RWY] derrière."
+							"__text": "[CAA], derrière (A_T_R) en finale, alignez-vous et attendez piste [RWY] derrière."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Derrière A_T_R en finale, je m'aligne et attends piste [RWY] derrière, [CAA]."
+							"__text": "Derrière (A_T_R) en finale, je m'aligne et attends piste [RWY] derrière, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], A_T_R on final, report in sight."
+							"__text": "[CAA], (A_T_R) on final, report in sight."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "A_T_R in sight, [CAA]."
+							"__text": "(A_T_R) in sight, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], behind A_T_R on final, line up and wait runway [RWY] behind."
+							"__text": "[CAA], behind (A_T_R) on final, line up and wait runway [RWY] behind."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Behind A_T_R on final, lining up and waiting runway [RWY], [CAA]."
+							"__text": "Behind (A_T_R) on final, lining up and waiting runway [RWY], [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -750,7 +750,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], trafic à 11 heures, 4 nautiques, gauche vers droite, TB-9, 1000 pieds plus haut."
+							"__text": "[CAA], trafic à 11 heures, 4 nautiques, gauche vers droite, (T_B 9), 1000 pieds plus haut."
 						},
 						{
 							"_lang": "fr",
@@ -760,12 +760,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "TB-9 en vue, 1000 pieds plus haut, [CAA]."
+							"__text": "(T_B 9) en vue, 1000 pieds plus haut, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], traffic 11 o'clock 4 miles, left to right, TB-9, 1000 feet above."
+							"__text": "[CAA], traffic 11 o'clock 4 miles, left to right, (T_B 9), 1000 feet above."
 						},
 						{
 							"_lang": "en",
@@ -775,7 +775,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "TB-9 in sight, 1000 feet above, [CAA]."
+							"__text": "(T_B 9) in sight, 1000 feet above, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -928,7 +928,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de vos installations, verticale [SORTIE], [ALT] pieds, avec information [INF], demande intégration pour un complet."
+							"__text": "[CAA], [COM] en provenance de [DEP], à destination de vos installations, verticale [SORTIE], [ALT] pieds, avec information [INF], demande intégration pour un complet."
 						},
 						{
 							"_lang": "fr",
@@ -943,7 +943,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request instruction for landing."
+							"__text": "[CAA], [COM] from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request instruction for landing."
 						},
 						{
 							"_lang": "en",
@@ -966,7 +966,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 en provenance de [DEP], à destination de vos installations, verticale [SORTIE], [ALT] pieds, avec information [INF], demande intégration pour un toucher."
+							"__text": "[CAA], [COM] en provenance de [DEP], à destination de vos installations, verticale [SORTIE], [ALT] pieds, avec information [INF], demande intégration pour un toucher."
 						},
 						{
 							"_lang": "fr",
@@ -981,7 +981,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request instruction for a touch and go."
+							"__text": "[CAA], [COM] from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request instruction for a touch and go."
 						},
 						{
 							"_lang": "en",
@@ -1116,22 +1116,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], maintenez position avant la prochaine intersection pour laisser passer un Cessna 172 droite vers la gauche."
+							"__text": "[CAA], maintenez position avant la prochaine intersection pour laisser passer un (Cessna 172) droite vers la gauche."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je maintiens position avant la prochaine intersection pour laisser passer un Cessna 172 droite vers la gauche, [CAA]."
+							"__text": "Je maintiens position avant la prochaine intersection pour laisser passer un (Cessna 172) droite vers la gauche, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], hold position before next intersection to give way to a Cessna 172 from right to left."
+							"__text": "[CAA], hold position before next intersection to give way to a (Cessna 172) from right to left."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Holding position before next intersection to give way to a Cessna 172 from right to left, [CAA]."
+							"__text": "Holding position before next intersection to give way to a (Cessna 172) from right to left, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -1172,22 +1172,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], numéro 2, suivez un Cessna 172 en base main gauche, rappelez fin de vent arrière piste [RWY]."
+							"__text": "[CAA], numéro 2, suivez un (Cessna 172) en base main gauche, rappelez fin de vent arrière piste [RWY]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Numéro 2, Cessna 172 en vue, je rappellerai fin de vent arrière, [CAA]."
+							"__text": "Numéro 2, (Cessna 172) en vue, je rappellerai fin de vent arrière, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], number 2, follow Cessna 172 on left-hand base, report end of downwind runway [RWY]."
+							"__text": "[CAA], number 2, follow (Cessna 172) on left-hand base, report end of downwind runway [RWY]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Number 2, Cessna 172 in sight, will report end of downwind runway [RWY], [CAA]."
+							"__text": "Number 2, (Cessna 172) in sight, will report end of downwind runway [RWY], [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -1228,7 +1228,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAL], Cessna 172 en provenance de [DEP], à destination de [ARR], verticale [SORTIE], [ALT] pieds, avec information [INF], demande transit."
+							"__text": "[CAL], [COM] en provenance de [DEP], à destination de [ARR], verticale [SORTIE], [ALT] pieds, avec information [INF], demande transit."
 						},
 						{
 							"_lang": "fr",
@@ -1243,7 +1243,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAL], Cessna 172 from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request transit."
+							"__text": "[CAL], [COM] from [DEP], destination your airport, over [SORTIE], [ALT] feet, with information [INF], request transit."
 						},
 						{
 							"_lang": "en",
@@ -1577,7 +1577,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], continuez approche, A_T_R 72 dégageant la piste."
+							"__text": "[CAA], continuez approche, (A_T_R 72) dégageant la piste."
 						},
 						{
 							"_lang": "fr",
@@ -1587,7 +1587,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], continue approach, A_T_R 72 vacating runway."
+							"__text": "[CAA], continue approach, (A_T_R 72) vacating runway."
 						},
 						{
 							"_lang": "en",
@@ -1816,7 +1816,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], numéro 3, suivez un Cessna 172 en base, rappelez base main droite piste [RWY]."
+							"__text": "[CAA], numéro 3, suivez un (Cessna 172) en base, rappelez base main droite piste [RWY]."
 						},
 						{
 							"_lang": "fr",
@@ -1831,7 +1831,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], number 3, follow Cessna 172 on base, report right-hand base runway [RWY]."
+							"__text": "[CAA], number 3, follow (Cessna 172) on base, report right-hand base runway [RWY]."
 						},
 						{
 							"_lang": "en",
@@ -1877,7 +1877,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], continuez approche, Boeing 737 au départ."
+							"__text": "[CAA], continuez approche, (Boeing 737) au départ."
 						},
 						{
 							"_lang": "fr",
@@ -1887,7 +1887,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], continue approach, Boeing 737 departing."
+							"__text": "[CAA], continue approach, (Boeing 737) departing."
 						},
 						{
 							"_lang": "en",
@@ -2151,16 +2151,6 @@
 							"__text": "[CAA], avez-vous visuel sur un (Airbus 320) au départ ?"
 						},
 						{
-							"_lang": "fr",
-							"_class": "Pilot",
-							"__text": "Affirme, (Airbus 320) en vue, [CAA]. (<i>si pas de contact :</i> Négatif, pas de contact visuel, [CAA].)"
-						},
-						{
-							"_lang": "fr",
-							"_class": "ATC",
-							"__text": "[CAA], poursuivez transit vers [SORTIE], rappelez [SORTIE] pour quitter. (<i>si pas de contact :</i> faites un 360 de retardement à (W D), je vous rappelle pour poursuivre.)"
-						},
-						{
 							"_lang": "en",
 							"_class": "Pilot",
 							"__text": "Approaching (W D), [CAA]."
@@ -2169,21 +2159,101 @@
 							"_lang": "en",
 							"_class": "ATC",
 							"__text": "[CAA], do you have visual contact with (Airbus 320) departing?"
+						}
+					],
+					"subgraph": [
+						{
+							"call": {
+								"_class": "option",
+								"_refid": "TRANSIT_IFR_VISUEL_OUI"
+							}
 						},
 						{
-							"_lang": "en",
-							"_class": "Pilot",
-							"__text": "Affirm, (Airbus 320) in sight, [CAA]. (<i>if no contact:</i> Negative, no visual contact, [CAA].)"
-						},
-						{
-							"_lang": "en",
-							"_class": "ATC",
-							"__text": "[CAA], continue transit [SORTIE], report [SORTIE] to leave. (<i>if no contact:</i> make a 360 delaying action at (W D), I call you back to continue.)"
+							"call": {
+								"_class": "option",
+								"_refid": "TRANSIT_IFR_VISUEL_NON"
+							}
 						}
 					],
 					"_id": "TRANSIT_IFR_CONTACT_VISUEL",
 					"_name": "Transit / IFR : contact visuel et 360",
 					"_short": "Transit / IFR",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Affirme, (Airbus 320) en vue, [CAA]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], poursuivez transit vers [SORTIE], rappelez [SORTIE] pour quitter."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Je poursuis vers [SORTIE], je rappellerai [SORTIE] pour quitter, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Affirm, (Airbus 320) in sight, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], continue transit [SORTIE], report [SORTIE] to leave."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Continuing to [SORTIE], will report [SORTIE] to leave, [CAA]."
+						}
+					],
+					"_id": "TRANSIT_IFR_VISUEL_OUI",
+					"_name": "Trafic en vue : poursuite du transit",
+					"_short": "En vue",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "Négatif, pas de contact visuel, [CAA]."
+						},
+						{
+							"_lang": "fr",
+							"_class": "ATC",
+							"__text": "[CAA], faites un 360 de retardement à (W D), je vous rappelle pour poursuivre."
+						},
+						{
+							"_lang": "fr",
+							"_class": "Pilot",
+							"__text": "360 de retardement à (W D), [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "Negative, no visual contact, [CAA]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAA], make a 360 delaying action at (W D), I call you back to continue."
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "360 delaying action at (W D), [CAA]."
+						}
+					],
+					"_id": "TRANSIT_IFR_VISUEL_NON",
+					"_name": "Pas de contact visuel : 360 de retardement",
+					"_short": "360",
 					"_level": "avancé"
 				}
 			],

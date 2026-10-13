@@ -859,17 +859,17 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], en fonction du Boeing 737 passant derrière vous, repoussage approuvé."
+							"__text": "[CAL], en fonction du (Boeing 737) passant derrière vous, repoussage approuvé."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je repousse en fonction du Boeing 737 en vue, [CAL]."
+							"__text": "Je repousse en fonction du (Boeing 737) en vue, [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], according to Boeing 737 taxiing behind you, pushback approved."
+							"__text": "[CAL], according to (Boeing 737) taxiing behind you, pushback approved."
 						},
 						{
 							"_lang": "en",
@@ -954,12 +954,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], give way to Air-France Airbus coming from your right, taxi holding point runway [RWY]."
+							"__text": "[CAL], give way to Air-France (Airbus) coming from your right, taxi holding point runway [RWY]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Giving way to Air-France Airbus coming from our right, taxiing holding point runway [RWY], [CAL]."
+							"__text": "Giving way to Air-France (Airbus) coming from our right, taxiing holding point runway [RWY], [CAL]."
 						}
 					],
 					"_id": "ROULAGE_TRAFIC",
@@ -1000,42 +1000,42 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], A_T_R en finale, rappelez en vue."
+							"__text": "[CAL], (A_T_R) en finale, rappelez en vue."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "A_T_R en vue, [CAL]."
+							"__text": "(A_T_R) en vue, [CAL]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], derrière A_T_R en finale, alignez-vous et attendez piste [RWY] derrière."
+							"__text": "[CAL], derrière (A_T_R) en finale, alignez-vous et attendez piste [RWY] derrière."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Derrière A_T_R en finale, je m'aligne et attends piste [RWY] derrière, [CAL]."
+							"__text": "Derrière (A_T_R) en finale, je m'aligne et attends piste [RWY] derrière, [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], A_T_R on final, report in sight."
+							"__text": "[CAL], (A_T_R) on final, report in sight."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "A_T_R in sight, [CAL]."
+							"__text": "(A_T_R) in sight, [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], behind A_T_R on final, line up and wait runway [RWY] behind."
+							"__text": "[CAL], behind (A_T_R) on final, line up and wait runway [RWY] behind."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Behind A_T_R on final, lining up and waiting runway [RWY], [CAL]."
+							"__text": "Behind (A_T_R) on final, lining up and waiting runway [RWY], [CAL]."
 						}
 					],
 					"_id": "ALIGNEMENT_APRES_AVION_FINAL",
@@ -1076,12 +1076,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], alignez-vous et attendez piste [RWY], intersection W7, numéro deux derrière un Boeing 737."
+							"__text": "[CAL], alignez-vous et attendez piste [RWY], intersection W7, numéro deux derrière un (Boeing 737)."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je m'aligne et attends piste [RWY], intersection W7, [CAL], numéro deux derrière un Boeing 737."
+							"__text": "Je m'aligne et attends piste [RWY], intersection W7, [CAL], numéro deux derrière un (Boeing 737)."
 						},
 						{
 							"_lang": "en",
@@ -1601,7 +1601,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], trafic à 11 heures, 4 nautiques, gauche vers droite, Airbus heavy, 1000 pieds plus haut."
+							"__text": "[CAL], trafic à 11 heures, 4 nautiques, gauche vers droite, (Airbus) heavy, 1000 pieds plus haut."
 						},
 						{
 							"i": "et dès acquisition visuelle",
@@ -1612,12 +1612,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Airbus en vue, 1000 pieds plus haut, [CAL]."
+							"__text": "(Airbus) en vue, 1000 pieds plus haut, [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL],traffic 11 o'clock 4 miles, left to right, heavy Airbus, 1000 feet above."
+							"__text": "[CAL],traffic 11 o'clock 4 miles, left to right, heavy (Airbus), 1000 feet above."
 						},
 						{
 							"i": "et dès acquisition visuelle",
@@ -1628,7 +1628,7 @@
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Airbus in sight, 1000 feet above, [CAL]."
+							"__text": "(Airbus) in sight, 1000 feet above, [CAL]."
 						}
 					],
 					"_id": "TRAFIC",
@@ -2077,7 +2077,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], cleared visual approach runway [RWY], maintain own separation from preceding Fokker 70."
+							"__text": "[CAL], cleared visual approach runway [RWY], maintain own separation from preceding (Fokker 70)."
 						},
 						{
 							"_lang": "en",
@@ -2537,7 +2537,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], hold short of next intersection to give way to the Airbus 321."
+							"__text": "[CAL], hold short of next intersection to give way to the (Airbus 321)."
 						},
 						{
 							"_lang": "en",
@@ -2631,7 +2631,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], expedite crossing runway (04 left), traffic Airbus 350, 4 miles on final, report runway vacated."
+							"__text": "[CAL], expedite crossing runway (04 left), traffic (Airbus 350), 4 miles on final, report runway vacated."
 						},
 						{
 							"_lang": "en",
@@ -3836,22 +3836,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], procédez [route] [WPT], (BULOT), puis (RILAX)."
+							"__text": "[CAL], procédez (route) [WPT], (BULOT), puis (RILAX)."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je procède [route] [WPT], (BULOT), puis (RILAX), [CAL]."
+							"__text": "Je procède (route) [WPT], (BULOT), puis (RILAX), [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], proceed [route] [WPT], (BULOT), then (RILAX)."
+							"__text": "[CAL], proceed (route) [WPT], (BULOT), then (RILAX)."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Proceeding [route] [WPT], (BULOT), then (RILAX), [CAL]."
+							"__text": "Proceeding (route) [WPT], (BULOT), then (RILAX), [CAL]."
 						}
 					],
 					"_id": "PROCEDEZ_ROUTE",
@@ -4041,12 +4041,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], service du contrôle terminé, contactez [ARR] Information (119.700)."
+							"__text": "[CAA], service du contrôle terminé, contactez [ARR] Information (119 décimale 7)."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[ARR] (119.700), [CAA]."
+							"__text": "[ARR] (119 décimale 7), [CAA]."
 						},
 						{
 							"_lang": "en",
@@ -4066,12 +4066,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], control service terminated, contact [ARR] Information (119.700)."
+							"__text": "[CAA], control service terminated, contact [ARR] Information (1_1_9 decimal 7)."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[ARR] (119.700), [CAA]."
+							"__text": "[ARR] (1_1_9 decimal 7), [CAA]."
 						}
 					],
 					"_id": "DESCENTE_EANC_AFIS",
@@ -4178,12 +4178,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], autorisé approche I_L_S piste (contre-QFU), suivie d'une M_V_L piste [RWY]."
+							"__text": "[CAL], autorisé approche I_L_S piste [RWYO], suivie d'une M_V_L piste [RWY]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Autorisé approche I_L_S piste (contre-QFU) suivie d'une M_V_L piste [RWY], [CAL]."
+							"__text": "Autorisé approche I_L_S piste [RWYO] suivie d'une M_V_L piste [RWY], [CAL]."
 						},
 						{
 							"_lang": "fr",
@@ -4198,12 +4198,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], cleared I_L_S approach runway (contre-QFU), followed by circling to runway [RWY]."
+							"__text": "[CAL], cleared I_L_S approach runway [RWYO], followed by circling to runway [RWY]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Cleared I_L_S approach runway (contre-QFU) followed by circling to runway [RWY], [CAL]."
+							"__text": "Cleared I_L_S approach runway [RWYO] followed by circling to runway [RWY], [CAL]."
 						},
 						{
 							"_lang": "en",
@@ -4472,7 +4472,7 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Airbus en vue, je laisse passer l'Airbus d'Air France et roule point d'attente piste [RWY] via [VOI], [CAL]."
+							"__text": "(Airbus) en vue, je laisse passer l'Airbus d'Air France et roule point d'attente piste [RWY] via [VOI], [CAL]."
 						},
 						{
 							"_lang": "en",
@@ -4482,12 +4482,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], give way to Air France Airbus coming from your right, taxi holding point runway [RWY] via [VOI]."
+							"__text": "[CAL], give way to Air France (Airbus) coming from your right, taxi holding point runway [RWY] via [VOI]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Airbus in sight, giving way to Air France Airbus, taxiing holding point runway [RWY] via [VOI], [CAL]."
+							"__text": "(Airbus) in sight, giving way to Air France (Airbus), taxiing holding point runway [RWY] via [VOI], [CAL]."
 						}
 					],
 					"_id": "ROULAGE_PRIORITE_CHEMINEMENT",
@@ -4694,12 +4694,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "(autre vol) un (Airbus 320) au départ intersection (W 7), avant vous."
+							"__text": "(Air France 1234), un (Airbus 320) au départ intersection (W 7), avant vous."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "(autre vol) (Airbus 320) en vue."
+							"__text": "(Airbus 320) en vue, (Air France 1234)."
 						},
 						{
 							"_lang": "en",
@@ -4714,12 +4714,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "(autre vol) (Airbus 320) departing intersection (W 7) before you."
+							"__text": "(Air France 1234), (Airbus 320) departing intersection (W 7) before you."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "(autre vol) (Airbus 320) in sight."
+							"__text": "(Airbus 320) in sight, (Air France 1234)."
 						}
 					],
 					"_id": "MULTI_ALIGN_NUM1_DEVANT",
@@ -4732,7 +4732,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], maintenez position, annulez le décollage, je répète, annulez le décollage, A_T_R en remise de gaz."
+							"__text": "[CAL], maintenez position, annulez le décollage, je répète, annulez le décollage, (A_T_R) en remise de gaz."
 						},
 						{
 							"_lang": "fr",
@@ -4752,7 +4752,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], hold position, cancel take-off, I say again cancel take-off, A_T_R going around."
+							"__text": "[CAL], hold position, cancel take-off, I say again cancel take-off, (A_T_R) going around."
 						},
 						{
 							"_lang": "en",
@@ -5126,42 +5126,42 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [route] [WPT], direct (BULOT), puis [route] (U_N 871)."
+							"__text": "[CAL], (route) [WPT], direct (BULOT), puis (route) (U_N 871)."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[WPT], direct (BULOT), puis [route] (U_N 871), [CAL]."
+							"__text": "[WPT], direct (BULOT), puis (route) (U_N 871), [CAL]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [route] (U_N 871), (BULOT) survol obligatoire, puis (RILAX)."
+							"__text": "[CAL], (route) (U_N 871), (BULOT) survol obligatoire, puis (RILAX)."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[route] (U_N 871), (BULOT) survol obligatoire, puis (RILAX), [CAL]."
+							"__text": "(route) (U_N 871), (BULOT) survol obligatoire, puis (RILAX), [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [route] [WPT], direct (BULOT), then [route] (U_N 871)."
+							"__text": "[CAL], (route) [WPT], direct (BULOT), then (route) (U_N 871)."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[WPT], direct (BULOT), then [route] (U_N 871), [CAL]."
+							"__text": "[WPT], direct (BULOT), then (route) (U_N 871), [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], [route] (U_N 871), (BULOT) overflight mandatory, then (RILAX)."
+							"__text": "[CAL], (route) (U_N 871), (BULOT) overflight mandatory, then (RILAX)."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[route] (U_N 871), (BULOT) overflight mandatory, then (RILAX), [CAL]."
+							"__text": "(route) (U_N 871), (BULOT) overflight mandatory, then (RILAX), [CAL]."
 						}
 					],
 					"_id": "ROUTE_COMPLEXE",
@@ -5404,7 +5404,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], début du service du contrôle passant niveau [NIV], montez niveau (150), [route] [WPT], (BULOT)."
+							"__text": "[CAL], début du service du contrôle passant niveau [NIV], montez niveau (150), (route) [WPT], (BULOT)."
 						},
 						{
 							"_lang": "fr",
@@ -5414,7 +5414,7 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], control service provided passing level [NIV], climb level (150), [route] [WPT], (BULOT)."
+							"__text": "[CAL], control service provided passing level [NIV], climb level (150), (route) [WPT], (BULOT)."
 						},
 						{
 							"_lang": "en",
@@ -6848,22 +6848,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], autorisé approche I_L_S piste (contre-QFU), suivie d'une V_P_T piste [RWY]."
+							"__text": "[CAL], autorisé approche I_L_S piste [RWYO], suivie d'une V_P_T piste [RWY]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Autorisé approche I_L_S piste (contre-QFU), suivie d'une V_P_T piste [RWY], [CAL]."
+							"__text": "Autorisé approche I_L_S piste [RWYO], suivie d'une V_P_T piste [RWY], [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], cleared I_L_S approach runway (contre-QFU), followed by V_P_T runway [RWY]."
+							"__text": "[CAL], cleared I_L_S approach runway [RWYO], followed by V_P_T runway [RWY]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Cleared I_L_S approach runway (contre-QFU), followed by V_P_T runway [RWY], [CAL]."
+							"__text": "Cleared I_L_S approach runway [RWYO], followed by V_P_T runway [RWY], [CAL]."
 						}
 					],
 					"_id": "APPROCHE_VPT",

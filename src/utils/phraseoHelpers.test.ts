@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { getHeure, POL_STRINGS, replacePlaceholders, resolveStation, resolveStationName } from './phraseoHelpers'
+import { getHeure, oppositeRunway, POL_STRINGS, replacePlaceholders, resolveStation, resolveStationName } from './phraseoHelpers'
 
 const makeFormStore = (overrides = {}) => ({
   form: {
@@ -129,7 +129,7 @@ describe('replacePlaceholders', () => {
 
   it('retourne le fallback météo si pas de données', () => {
     const result = replacePlaceholders('[MET]', 'fr', formStore as any, weatherStore as any)
-    expect(result).toContain('vent (240) degrés (10) noeuds')
+    expect(result).toContain('vent (240) degrés (10) nœuds')
   })
 
   it('conserve le placeholder original pour un tag inconnu', () => {
@@ -214,4 +214,11 @@ describe('resolveStationName', () => {
     const result = replacePlaceholders('[DEP] [NSTA], [POL], [CAL].', 'fr', store as any, weather as any)
     expect(result).toContain('Tour')
   })
+})
+
+describe('oppositeRunway', () => {
+  it.each([['26L', '08R'], ['04', '22'], ['09C', '27C'], ['36', '18'], ['18R', '36L'], ['1', '19'], ['abc', 'abc']])(
+    '%s → %s',
+    (rwy, opposite) => expect(oppositeRunway(rwy)).toBe(opposite)
+  )
 })
