@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { toSpeech, frenchNumber, englishNumber } from './speech'
+import { toSpeech, frenchNumber, englishNumber, groupFlightNumber } from './speech'
 
 describe('frenchNumber', () => {
   it.each([
@@ -93,5 +93,28 @@ describe('toSpeech — anglais', () => {
     )
     expect(en('behind A320, departure Bubli_3_Papa')).toBe('behind Airbus tree two zero, departure Bubli tree Papa')
     expect(en('holding point Z, runway 26 Left')).toBe('holding point Zulu, runway two six Left')
+  })
+})
+
+describe('groupFlightNumber', () => {
+  it.each([
+    ['Air Europe 012', 'Air Europe 0_12'],
+    ['Air France 1234', 'Air France 12_34'],
+    ['Air France 123', 'Air France 1_23'],
+    ['Air Europe 01', 'Air Europe 01'],
+    ['F-EPST', 'F-EPST'],
+  ])('%s → %s', (cal, grouped) => expect(groupFlightNumber(cal)).toBe(grouped))
+
+  it('se dit par groupes en français', () => {
+    expect(toSpeech(groupFlightNumber('Air Europe 012'), 'fr')).toBe('Air Europe zéro douze')
+    expect(toSpeech('(Air France 12_34), roulez', 'fr')).toBe('Air France douze trente-quatre, roulez')
+  })
+})
+
+describe('routes et C_T_O_T', () => {
+  it('route ATS et créneau', () => {
+    expect(toSpeech('puis (route) (Upper N 871)', 'fr')).toBe('puis route Upper November huit cent soixante et onze')
+    expect(toSpeech('then (Upper N 871)', 'en')).toBe('then Upper November eight seven one')
+    expect(toSpeech('C_T_O_T 15_25', 'fr')).toBe('cé té o té quinze vingt-cinq')
   })
 })

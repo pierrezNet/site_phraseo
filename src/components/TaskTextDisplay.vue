@@ -135,7 +135,7 @@ import { useFlightStore, MAX_ATTEMPTS } from '../stores/flight';
 import { useVoiceStore } from '../stores/voice';
 import { requirementsMet } from '../utils/flight';
 import { replacePlaceholders } from '../utils/phraseoHelpers';
-import { toSpeech } from '../utils/speech';
+import { groupFlightNumber, toSpeech } from '../utils/speech';
 import { buildCriticals, callsignEquivalences as callsignEquivalencesOf } from '../utils/criticals';
 import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
@@ -237,6 +237,14 @@ const rogerOnly = (line: RenderedLine, answer: string): boolean =>
 
 const renderedLines = computed<RenderedLine[]>(() => {
   const lang = langStore.current as 'fr' | 'en';
+  // Voix française : numéro de vol par groupes de deux chiffres (« Air Europe zéro douze »)
+  const speechOverrides = lang === 'fr'
+    ? {
+        ...flight.tagOverrides,
+        CAL: groupFlightNumber(formStore.form.CAL ?? ''),
+        CAA: groupFlightNumber(formStore.form.CAA || 'Station'),
+      }
+    : flight.tagOverrides;
   const render = (key: string, cls: string, text: string, intents: string[] = [], ask?: string): RenderedLine => {
     const processed = replacePlaceholders(text, lang, formStore, weatherStore, flight.tagOverrides);
     return {
@@ -245,7 +253,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
       isPilot: cls === 'Pilot',
       content: tooltipHtml(processed),
       expectedSpoken: requiredText(processed),
-      speech: toSpeech(processed, lang),
+      speech: toSpeech(replacePlaceholders(text, lang, formStore, weatherStore, speechOverrides), lang),
       // Un tag entre parenthèses est optionnel : il n'est pas exigé
       criticals: buildCriticals(requiredText(text), lang, formStore, weatherStore),
       intents,

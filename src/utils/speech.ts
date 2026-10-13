@@ -141,6 +141,18 @@ function sayUnderscored(group: string, lang: SpeechLang): string {
     .join(' ');
 }
 
+/**
+ * Numéro de vol d'un indicatif de compagnie, par groupes de deux chiffres en partant de la droite,
+ * pour la voix française : « Air Europe 012 » → « Air Europe 0_12 » (« zéro douze »),
+ * « Air France 1234 » → « Air France 12_34 ». Immatriculation (sans chiffres) : inchangée.
+ */
+export function groupFlightNumber(callsign: string): string {
+  return callsign.replace(/^(.*[A-Za-z]\s+)(\d{3,})$/, (_m, airline: string, digits: string) => {
+    const groups = digits.match(/^\d(?=(\d{2})+$)|\d{2}/g) ?? [digits];
+    return airline + groups.join('_');
+  });
+}
+
 export function toSpeech(text: string, lang: SpeechLang): string {
   let s = decodeEntities(text.replace(/<[^>]*>/g, ' '))
     .replace(/\{[^}]*\}/g, ' ')

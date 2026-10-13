@@ -757,16 +757,16 @@
 						{
 							"span": {
 								"_class": "AVA",
-								"__text": ", CTOT [HDIFF] {Créneau de Départ, décollage entre [HDIFF5M] et [HDIFF10P]}"
+								"__text": ", C_T_O_T [HDIFF] {Créneau de Départ, décollage entre [HDIFF5M] et [HDIFF10P]}"
 							},
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], [POL], mise en route approuvée, CTOT [HDIFF]{Créneau de Départ, décollage entre [HDIFF5M] et [HDIFF10P]}, départ [STA], niveau [NIV], transpondeur [SQU]."
+							"__text": "[CAL], [POL], mise en route approuvée, C_T_O_T [HDIFF]{Créneau de Départ, décollage entre [HDIFF5M] et [HDIFF10P]}, départ [STA], niveau [NIV], transpondeur [SQU]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Mise en route approuvée, CTOT [HDIFF], départ [STA], niveau [NIV], transpondeur [SQU], [CAL]."
+							"__text": "Mise en route approuvée, C_T_O_T [HDIFF], départ [STA], niveau [NIV], transpondeur [SQU], [CAL]."
 						},
 						{
 							"_lang": "fr",
@@ -4694,12 +4694,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "(Air France 1234), un (Airbus 320) au départ intersection (W 7), avant vous."
+							"__text": "(Air France 12_34), un (Airbus 320) au départ intersection (W 7), avant vous."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "(Airbus 320) en vue, (Air France 1234)."
+							"__text": "(Airbus 320) en vue, (Air France 12_34)."
 						},
 						{
 							"_lang": "en",
@@ -5126,42 +5126,42 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], (route) [WPT], direct (BULOT), puis (route) (U_N 871)."
+							"__text": "[CAL], (route) [WPT], direct (BULOT), puis (route) (Upper N 871)."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[WPT], direct (BULOT), puis (route) (U_N 871), [CAL]."
+							"__text": "[WPT], direct (BULOT), puis (route) (Upper N 871), [CAL]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], (route) (U_N 871), (BULOT) survol obligatoire, puis (RILAX)."
+							"__text": "[CAL], (route) (Upper N 871), (BULOT) survol obligatoire, puis (RILAX)."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "(route) (U_N 871), (BULOT) survol obligatoire, puis (RILAX), [CAL]."
+							"__text": "(route) (Upper N 871), (BULOT) survol obligatoire, puis (RILAX), [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], (route) [WPT], direct (BULOT), then (route) (U_N 871)."
+							"__text": "[CAL], (route) [WPT], direct (BULOT), then (route) (Upper N 871)."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[WPT], direct (BULOT), then (route) (U_N 871), [CAL]."
+							"__text": "[WPT], direct (BULOT), then (route) (Upper N 871), [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], (route) (U_N 871), (BULOT) overflight mandatory, then (RILAX)."
+							"__text": "[CAL], (route) (Upper N 871), (BULOT) overflight mandatory, then (RILAX)."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "(route) (U_N 871), (BULOT) overflight mandatory, then (RILAX), [CAL]."
+							"__text": "(route) (Upper N 871), (BULOT) overflight mandatory, then (RILAX), [CAL]."
 						}
 					],
 					"_id": "ROUTE_COMPLEXE",
@@ -5270,22 +5270,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAL], tournez à droite et suivez route offset, 10 nautiques à droite de (U_N 871)."
+							"__text": "[CAL], tournez à droite et suivez route offset, 10 nautiques à droite de (Upper N 871)."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je tourne à droite et suis route offset, 10 nautiques droite de (U_N 871), [CAL]."
+							"__text": "Je tourne à droite et suis route offset, 10 nautiques droite de (Upper N 871), [CAL]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], turn right and proceed offset, 10 miles right of (U_N 871)."
+							"__text": "[CAL], turn right and proceed offset, 10 miles right of (Upper N 871)."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Turning right and proceeding offset, 10 miles right of (U_N 871), [CAL]."
+							"__text": "Turning right and proceeding offset, 10 miles right of (Upper N 871), [CAL]."
 						}
 					],
 					"_id": "ROUTE_OFFSET",
@@ -5346,12 +5346,12 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "(Air France 1234), acceptez-vous séparation à vue avec trafic, 2 heures, 6 nautiques, droite vers gauche, (Airbus), 1000 pieds plus bas ?"
+							"__text": "(Air France 12_34), acceptez-vous séparation à vue avec trafic, 2 heures, 6 nautiques, droite vers gauche, (Airbus), 1000 pieds plus bas ?"
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Affirme, (Air France 1234)."
+							"__text": "Affirme, (Air France 12_34)."
 						},
 						{
 							"_lang": "fr",
