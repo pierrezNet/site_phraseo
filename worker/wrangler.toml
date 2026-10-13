@@ -4,6 +4,11 @@ compatibility_date = "2026-09-01"
 
 [vars]
 ALLOWED_ORIGINS = "https://phraseo.aeronautique.xyz,http://localhost:5173,http://localhost:4173"
+# Quotas voix du jour (UTC), en neurones Workers AI (gratuit : 10 000/jour).
+# 8 000 au total (réserve de 20 %), 800 par utilisateur (≈ 10 utilisateurs), 2 400 par IP (club, NAT)
+QUOTA_USER = "800"
+QUOTA_IP = "2400"
+QUOTA_GLOBAL = "8000"
 
 # 5 retours par minute et par IP
 [[ratelimits]]
@@ -26,6 +31,15 @@ namespace_id = "1002"
 # Workers AI (MeloTTS)
 [ai]
 binding = "AI"
+
+# Compteur des quotas voix (SQLite, disponible sur le plan gratuit)
+[[durable_objects.bindings]]
+name = "QUOTA"
+class_name = "VoiceQuota"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["VoiceQuota"]
 
 # Secret (jamais dans ce fichier) :
 #   npx wrangler secret put DISCORD_WEBHOOK_URL

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { API_BASE } from '../utils/relay'
-import { fetchAtcAudio, playRadio, stopRadio } from '../utils/atcAudio'
+import { fetchAtcAudio, playRadio, stopRadio, VoiceQuotaError, type QuotaScope } from '../utils/atcAudio'
 
 const STORAGE_KEY = 'atcVoice'
 
@@ -11,6 +11,18 @@ function readEnabled(): boolean {
   } catch {
     return true
   }
+}
+
+/** Jour de quota (UTC, comme le relais) */
+const utcDay = (now: Date) => now.toISOString().slice(0, 10)
+
+/** Message affiché quand le quota voix du jour est atteint ; le texte reste toujours disponible */
+export function quotaMessage(scope: QuotaScope, now = new Date()): string {
+  const reset = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
+  const at = reset.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+  return scope === 'global'
+    ? `Quota voix de l'application atteint pour aujourd'hui : la voix revient à ${at}. Les textes restent disponibles.`
+    : `Quota voix du jour atteint : il se renouvelle à ${at}. Les textes restent disponibles.`
 }
 
 export interface SpokenLine {
@@ -33,6 +45,11 @@ export const useVoiceStore = defineStore('voice', () => {
   const loading = ref<string | null>(null)
   const playing = ref<string | null>(null)
   const error = ref('')
+  /** Part du quota voix restante aujourd'hui (0–1), connue après la première synthèse */
+  const quotaLeft = ref<number | null>(null)
+  /** Quota atteint : la lecture automatique s'arrête jusqu'au lendemain (UTC) */
+  const quotaBlockedDay = ref<string | null>(null)
+  const quotaBlocked = () => quotaBlockedDay.value === utcDay(new Date())
 
   // Chaque lecture invalide la précédente : une séquence interrompue ne reprend pas
   let generation = 0
@@ -43,21 +60,28 @@ export const useVoiceStore = defineStore('voice', () => {
     stopRadio()
     error.value = ''
     // Toutes les répliques sont demandées d'emblée : la suivante est prête à la fin de la précédente
-    const audios = lines.map((l) => fetchAtcAudio(l.text, lang))
+    const audios = lines.map((l) => fetchAtcAudio(l.text, lang, (left) => (quotaLeft.value = left)))
     audios.forEach((a) => a.catch(() => {}))
     try {
       for (const [i, line] of lines.entries()) {
         loading.value = line.key
-        const mp3 = await audios[i]
+        const wav = await audios[i]
         if (mine !== generation) return
         loading.value = null
         playing.value = line.key
-        await playRadio(mp3, lang, line.pilot ? 'pilot' : 'atc')
+        await playRadio(wav, lang, line.pilot ? 'pilot' : 'atc')
         if (mine !== generation) return
       }
     } catch (e) {
-      console.error(e)
-      if (mine === generation) error.value = "Voix de l'ATC indisponible pour le moment."
+      if (mine !== generation) return
+      if (e instanceof VoiceQuotaError) {
+        quotaLeft.value = 0
+        quotaBlockedDay.value = utcDay(new Date())
+        error.value = quotaMessage(e.scope)
+      } else {
+        console.error(e)
+        error.value = 'Voix indisponible pour le moment.'
+      }
     } finally {
       if (mine === generation) {
         loading.value = null
@@ -85,5 +109,5 @@ export const useVoiceStore = defineStore('voice', () => {
     if (!enabled.value) stop()
   }
 
-  return { available, enabled, loading, playing, error, play, playAll, stop, toggle }
+  return { available, enabled, loading, playing, error, quotaLeft, quotaBlocked, play, playAll, stop, toggle }
 })

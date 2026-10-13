@@ -3,11 +3,27 @@
  *
  *   GET  /metar/:icao  → METAR NOAA (sans clé), mis en cache 10 min
  *   POST /feedback     → message Discord (webhook stocké en secret)
- *   POST /tts          → voix de l'ATC (MeloTTS, Workers AI), MP3 mis en cache 30 jours
+ *   POST /tts          → voix de l'ATC (MeloTTS, Workers AI), WAV mis en cache 30 jours,
+ *                        quotas du jour par utilisateur anonyme, par IP et au total (Durable Object VoiceQuota)
  *
  * Le site statique (GitHub Pages) n'embarque ainsi plus aucun secret.
  */
-import { ICAO_RE, discordPayload, parseFeedback, parseTts, toMetar, ttsAudioBytes, ttsCacheKey, type NoaaMetar } from './relay';
+import {
+  ICAO_RE,
+  USER_ID_RE,
+  discordPayload,
+  parseFeedback,
+  parseTts,
+  quotaLimits,
+  toMetar,
+  ttsAudioBytes,
+  ttsCacheKey,
+  ttsNeurons,
+  type NoaaMetar,
+} from './relay';
+import type { VoiceQuota } from './quota';
+
+export { VoiceQuota } from './quota';
 
 interface Env {
   DISCORD_WEBHOOK_URL: string;
@@ -16,6 +32,11 @@ interface Env {
   FEEDBACK_LIMITER: RateLimit;
   TTS_LIMITER: RateLimit;
   AI: Ai;
+  QUOTA: DurableObjectNamespace<VoiceQuota>;
+  /** Plafonds quotidiens en neurones (wrangler.toml) */
+  QUOTA_USER?: string;
+  QUOTA_IP?: string;
+  QUOTA_GLOBAL?: string;
 }
 
 const METAR_TTL_S = 600;
@@ -28,7 +49,8 @@ function corsHeaders(origin: string | null, env: Env): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Phraseo-User',
+    'Access-Control-Expose-Headers': 'X-Voice-Quota-Left',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin',
   };
@@ -105,7 +127,7 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
   const tts = parseTts(body);
   if (!tts) return json({ error: 'Champs invalides' }, 400, cors);
 
-  // Même réplique avec les mêmes paramètres : servie depuis le cache, sans compter dans la limite
+  // Même réplique avec les mêmes paramètres : servie depuis le cache, sans compter dans la limite ni le quota
   const cache = caches.default;
   const key = new Request(await ttsCacheKey(tts));
   const cached = await cache.match(key);
@@ -115,6 +137,14 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
   const { success } = await env.TTS_LIMITER.limit({ key: ip });
   if (!success) return json({ error: 'Trop de requêtes, réessaie dans une minute' }, 429, cors);
 
+  // Quotas du jour : sans identifiant valide, l'IP tient lieu d'utilisateur
+  const header = request.headers.get('X-Phraseo-User') ?? '';
+  const user = USER_ID_RE.test(header) ? header.toLowerCase() : `ip:${ip}`;
+  const limits = quotaLimits(env);
+  const quota = env.QUOTA.get(env.QUOTA.idFromName('global'));
+  const verdict = await quota.check(user, ip, limits);
+  if (!verdict.allowed) return json({ error: 'Quota voix atteint', quota: verdict.scope }, 429, cors, { 'X-Voice-Quota-Left': '0' });
+
   let audio: Uint8Array;
   try {
     audio = ttsAudioBytes(await env.AI.run('@cf/myshell-ai/melotts', { prompt: tts.text, lang: tts.lang }));
@@ -123,9 +153,12 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
     return json({ error: 'Synthèse indisponible' }, 502, cors);
   }
 
-  const headers = { 'Content-Type': 'audio/mpeg', 'Cache-Control': `public, max-age=${TTS_TTL_S}` };
+  const { left } = await quota.charge(user, ip, ttsNeurons(audio, tts.text), limits);
+
+  // MeloTTS renvoie du WAV (PCM 44,1 kHz mono)
+  const headers = { 'Content-Type': 'audio/wav', 'Cache-Control': `public, max-age=${TTS_TTL_S}` };
   ctx.waitUntil(cache.put(key, new Response(audio, { headers })));
-  return new Response(audio, { headers: { ...headers, ...cors } });
+  return new Response(audio, { headers: { ...headers, ...cors, 'X-Voice-Quota-Left': left.toFixed(3) } });
 }
 
 export default {

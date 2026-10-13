@@ -145,3 +145,55 @@ export function ttsAudioBytes(output: Uint8Array | { audio: string }): Uint8Arra
   if (output instanceof Uint8Array) return output;
   return Uint8Array.from(atob(output.audio), (c) => c.charCodeAt(0));
 }
+
+// ── Quotas voix (plan gratuit Workers AI : 10 000 neurones/jour) ─────────────
+
+/** Coût Workers AI par minute d'audio (MeloTTS mesuré ; Whisper turbo d'après le tarif) */
+export const NEURONS_PER_MINUTE = { tts: 18.6, stt: 45.5 } as const;
+
+export type QuotaScope = 'user' | 'ip' | 'global';
+export type QuotaUsage = Record<QuotaScope, number>;
+export type QuotaLimits = Record<QuotaScope, number>;
+
+export interface QuotaVerdict {
+  allowed: boolean;
+  /** Plafond atteint : `global` coupe la voix pour tout le monde */
+  scope?: QuotaScope;
+  /** Part restante (0–1) pour cet utilisateur : la plus petite des trois */
+  left: number;
+}
+
+/** Identifiant anonyme d'un navigateur (crypto.randomUUID côté front) */
+export const USER_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Jour de quota : UTC, comme la remise à zéro des neurones Cloudflare */
+export const quotaDay = (date = new Date()): string => date.toISOString().slice(0, 10);
+
+/** Le plafond global passe d'abord (coupure pour tous), puis l'IP, puis l'utilisateur */
+export function quotaVerdict(usage: QuotaUsage, limits: QuotaLimits): QuotaVerdict {
+  const left = Math.max(
+    0,
+    Math.min(...(['user', 'ip', 'global'] as const).map((s) => (limits[s] - usage[s]) / limits[s]))
+  );
+  const scope = (['global', 'ip', 'user'] as const).find((s) => usage[s] >= limits[s]);
+  return scope ? { allowed: false, scope, left: 0 } : { allowed: true, left };
+}
+
+/** Plafonds lus dans wrangler.toml ([vars]) ; valeurs par défaut si absents ou invalides */
+export function quotaLimits(vars: { QUOTA_USER?: string; QUOTA_IP?: string; QUOTA_GLOBAL?: string }): QuotaLimits {
+  const num = (v: string | undefined, fallback: number) => (Number(v) > 0 ? Number(v) : fallback);
+  return { user: num(vars.QUOTA_USER, 800), ip: num(vars.QUOTA_IP, 2400), global: num(vars.QUOTA_GLOBAL, 8000) };
+}
+
+/** Durée d'un WAV PCM (MeloTTS renvoie du WAV 44,1 kHz mono) ; null si ce n'est pas un WAV */
+export function wavSeconds(bytes: Uint8Array): number | null {
+  if (bytes.length < 44 || String.fromCharCode(...bytes.subarray(0, 4)) !== 'RIFF') return null;
+  const byteRate = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(28, true);
+  return byteRate > 0 ? (bytes.length - 44) / byteRate : null;
+}
+
+/** Neurones consommés par une synthèse : durée réelle, sinon estimée (≈ 12 caractères par seconde) */
+export function ttsNeurons(audio: Uint8Array, text: string): number {
+  const seconds = wavSeconds(audio) ?? text.length / 12;
+  return (seconds / 60) * NEURONS_PER_MINUTE.tts;
+}

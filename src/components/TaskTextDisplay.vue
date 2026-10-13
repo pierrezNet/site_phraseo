@@ -418,7 +418,7 @@ const spokenKeys = new Set<string>();
 // En vol complet, l'ATC parle dès que ses répliques apparaissent (réponse, relance…).
 // Déclaré après les watchers de réinitialisation : un changement de tâche remet d'abord à zéro.
 watch(
-  () => (flight.active && voice.enabled ? displayedLines.value.filter((l) => !l.isPilot) : []),
+  () => (flight.active && voice.enabled && !voice.quotaBlocked() ? displayedLines.value.filter((l) => !l.isPilot) : []),
   (atcLines) => {
     const fresh = atcLines.filter((l) => !spokenKeys.has(l.key));
     if (!fresh.length) return;

@@ -1,25 +1,63 @@
 /**
- * Voix de l'ATC : audio MeloTTS obtenu via le relais (POST /tts), joué avec un effet radio VHF.
+ * Voix des répliques : audio MeloTTS obtenu via le relais (POST /tts), joué avec un effet radio.
+ * Le relais décompte un quota voix quotidien par navigateur (identifiant anonyme).
  */
 import { API_BASE } from './relay';
 import { fetchWithTimeout } from './api';
 
-const MAX_CACHED = 60;
+/** WAV d'environ 500 Ko par réplique : cache de session limité */
+const MAX_CACHED = 30;
+const USER_ID_KEY = 'voiceUserId';
+
+export type QuotaScope = 'user' | 'ip' | 'global';
+
+/** Quota voix du jour atteint (relais : 429 avec `quota`) */
+export class VoiceQuotaError extends Error {
+  constructor(public scope: QuotaScope) {
+    super(`Quota voix atteint (${scope})`);
+  }
+}
+
+let sessionUserId: string | null = null;
+
+/** Identifiant anonyme du navigateur pour le quota voix (aucune donnée personnelle) */
+function voiceUserId(): string {
+  try {
+    const stored = localStorage.getItem(USER_ID_KEY);
+    if (stored) return stored;
+    const id = crypto.randomUUID();
+    localStorage.setItem(USER_ID_KEY, id);
+    return id;
+  } catch {
+    // Stockage indisponible (navigation privée stricte) : identifiant de session
+    return (sessionUserId ??= crypto.randomUUID());
+  }
+}
 
 /** Audio déjà demandé pendant la session (le relais le garde aussi en cache 30 jours) */
 const cache = new Map<string, Promise<ArrayBuffer>>();
 
-export function fetchAtcAudio(text: string, lang: 'fr' | 'en'): Promise<ArrayBuffer> {
+/**
+ * Audio d'une réplique. `onQuota` reçoit la part de quota restante (0–1) après une synthèse facturée
+ * (pas pour une réplique déjà en cache).
+ */
+export function fetchAtcAudio(text: string, lang: 'fr' | 'en', onQuota?: (left: number) => void): Promise<ArrayBuffer> {
   const key = `${lang}\n${text}`;
   let audio = cache.get(key);
   if (!audio) {
     audio = fetchWithTimeout(`${API_BASE}/tts`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Phraseo-User': voiceUserId() },
       body: JSON.stringify({ text, lang }),
       timeout: 15000,
-    }).then((res) => {
+    }).then(async (res) => {
+      if (res.status === 429) {
+        const body = (await res.json().catch(() => ({}))) as { quota?: QuotaScope };
+        if (body.quota) throw new VoiceQuotaError(body.quota);
+      }
       if (!res.ok) throw new Error(`Synthèse vocale : HTTP ${res.status}`);
+      const left = Number(res.headers.get('X-Voice-Quota-Left'));
+      if (res.headers.has('X-Voice-Quota-Left') && Number.isFinite(left)) onQuota?.(left);
       return res.arrayBuffer();
     });
     // Un échec n'est pas mémorisé : la réplique pourra être redemandée
@@ -66,16 +104,16 @@ export function stopRadio(): void {
 }
 
 /**
- * Joue un MP3 comme à la radio (bande passante VHF, niveau compressé), avec le rendu de l'interlocuteur.
+ * Joue un WAV comme à la radio (bande passante VHF, niveau compressé), avec le rendu de l'interlocuteur.
  * Lecteur HTML (et non AudioBuffer) pour régler débit et hauteur indépendamment.
  */
-export async function playRadio(mp3: ArrayBuffer, lang: 'fr' | 'en', speaker: Speaker = 'atc'): Promise<void> {
+export async function playRadio(wav: ArrayBuffer, lang: 'fr' | 'en', speaker: Speaker = 'atc'): Promise<void> {
   stopRadio();
   context ??= new AudioContext();
   if (context.state === 'suspended') await context.resume();
 
   const voice = VOICES[speaker];
-  const url = URL.createObjectURL(new Blob([mp3], { type: 'audio/mpeg' }));
+  const url = URL.createObjectURL(new Blob([wav], { type: 'audio/wav' }));
   const audio = new Audio(url);
   audio.playbackRate = voice.rate[lang];
   audio.preservesPitch = voice.preservesPitch;

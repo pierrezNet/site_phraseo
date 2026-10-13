@@ -56,7 +56,7 @@
                 'ml-1 px-2 py-0.5 rounded text-xs font-medium transition-colors',
                 voice.enabled ? 'bg-green-500 text-white' : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
               ]"
-              title="Voix de l'ATC : lecture automatique en vol complet (bouton 🔊 sur chaque réplique)"
+:title="voiceTitle"
             >
               🔊 {{ voice.enabled ? 'ON' : 'OFF' }}
             </button>
@@ -173,6 +173,10 @@ const langStore = useLangStore()
 const formStore = useFormStore()
 const quizStore = useQuizStore()
 const voice = useVoiceStore()
+const voiceTitle = computed(() => {
+  const base = "Voix de l'ATC : lecture automatique en vol complet"
+  return voice.quotaLeft === null ? base : `${base} — Voix : ${Math.round(voice.quotaLeft * 100)} % du quota restant aujourd'hui`
+})
 
 // Gestion du mode de vol (IFR/VFR), porté par le store du formulaire
 const flightMode = computed(() => formStore.mode)
