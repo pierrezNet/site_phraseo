@@ -105,8 +105,20 @@
         <PilotIcon v-if="line.isPilot" class="inline-block w-5 h-5 mr-2 align-middle" />
         <AtcIcon v-else class="inline-block w-5 h-5 mr-2 align-middle" />
         <span v-html="line.content"></span>
+        <button
+          v-if="!line.isPilot && voice.available"
+          type="button"
+          class="ml-2 align-middle opacity-70 hover:opacity-100"
+          :title="voice.playing === line.key ? 'Arrêter' : 'Écouter l\'ATC'"
+          :aria-label="voice.playing === line.key ? 'Arrêter' : 'Écouter l\'ATC'"
+          @click="voice.playing === line.key || voice.loading === line.key ? voice.stop() : speak(line)"
+        >
+          {{ voice.loading === line.key ? '⏳' : voice.playing === line.key ? '⏹' : '🔊' }}
+        </button>
       </div>
     </template>
+
+    <p v-if="voice.error" class="ko-text text-sm mb-2">{{ voice.error }}</p>
 
     <!-- Vol complet : passage à l'étape suivante une fois toutes les répliques pilote terminées -->
     <div v-if="flight.active && stepComplete" class="flex justify-end">
@@ -118,14 +130,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, onMounted, watch, nextTick } from 'vue';
+import { computed, reactive, ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
 import { useWeatherStore } from '../stores/weather';
 import { useQuizStore } from '../stores/quiz';
 import { useFlightStore, MAX_ATTEMPTS } from '../stores/flight';
+import { useVoiceStore } from '../stores/voice';
 import { requirementsMet } from '../utils/flight';
 import { replacePlaceholders } from '../utils/phraseoHelpers';
+import { toSpeech } from '../utils/speech';
 import { buildCriticals, callsignEquivalences as callsignEquivalencesOf } from '../utils/criticals';
 import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
@@ -142,6 +156,7 @@ const langStore = useLangStore();
 const weatherStore = useWeatherStore();
 const quizStore = useQuizStore();
 const flight = useFlightStore();
+const voice = useVoiceStore();
 
 // Le vol complet se joue toujours en mode quiz
 const quizActive = computed(() => quizStore.enabled || flight.active);
@@ -192,6 +207,8 @@ interface RenderedLine {
   isPilot: boolean;
   content: string;
   expectedSpoken: string;
+  /** Texte prêt pour la synthèse vocale (voix de l'ATC) */
+  speech: string;
   criticals: Critical[];
   /** Formulations obligatoires : leur absence déclenche une relance de l'ATC */
   intents: string[];
@@ -233,6 +250,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
       isPilot: cls === 'Pilot',
       content: tooltipHtml(processed),
       expectedSpoken: requiredText(processed),
+      speech: cls === 'Pilot' ? '' : toSpeech(processed, lang),
       // Un tag entre parenthèses est optionnel : il n'est pas exigé
       criticals: buildCriticals(requiredText(text), lang, formStore, weatherStore),
       intents,
@@ -295,6 +313,8 @@ watch(
 );
 
 const resetQuiz = () => {
+  voice.stop();
+  spokenKeys.clear();
   for (const k of Object.keys(answers)) delete answers[k];
   for (const k of Object.keys(results)) delete results[k];
   for (const k of Object.keys(relaunched)) delete relaunched[k];
@@ -384,4 +404,26 @@ const stepComplete = computed(() =>
 watch(() => props.selectedTaskTexts, resetQuiz);
 watch(() => langStore.current, resetQuiz);
 watch(() => quizStore.enabled, resetQuiz);
+
+// ── Voix de l'ATC ────────────────────────────────────────────────────────────
+
+const speak = (line: RenderedLine) => voice.play({ key: line.key, text: line.speech }, langStore.current as 'fr' | 'en');
+
+/** Répliques ATC déjà lues automatiquement pour la tâche en cours */
+const spokenKeys = new Set<string>();
+
+// En vol complet, l'ATC parle dès que ses répliques apparaissent (réponse, relance…).
+// Déclaré après les watchers de réinitialisation : un changement de tâche remet d'abord à zéro.
+watch(
+  () => (flight.active && voice.enabled ? displayedLines.value.filter((l) => !l.isPilot) : []),
+  (atcLines) => {
+    const fresh = atcLines.filter((l) => !spokenKeys.has(l.key));
+    if (!fresh.length) return;
+    fresh.forEach((l) => spokenKeys.add(l.key));
+    voice.playAll(fresh.map((l) => ({ key: l.key, text: l.speech })), langStore.current as 'fr' | 'en');
+  },
+  { immediate: true }
+);
+
+onBeforeUnmount(voice.stop);
 </script>

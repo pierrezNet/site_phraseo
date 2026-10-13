@@ -107,7 +107,10 @@ export function replacePlaceholders(
   overrides: Record<string, string> = {}
 ): string {
   const now = new Date();
-  const currentHour = `${now.getUTCHours().toString().padStart(2, '0')} heures ${now.getMinutes().toString().padStart(2, '0')}`;
+  const hh = now.getUTCHours().toString().padStart(2, '0');
+  const mm = now.getUTCMinutes().toString().padStart(2, '0');
+  // EN : chiffre par chiffre (« time 1_5_0_5 »), comme [HDIFF]
+  const currentHour = lang === 'fr' ? `${hh} heures ${mm}` : `${hh[0]}_${hh[1]}_${mm[0]}_${mm[1]}`;
 
   // Heure différée : UTC + 20 minutes
   const deferred = new Date(now.getTime() + 20 * 60 * 1000);

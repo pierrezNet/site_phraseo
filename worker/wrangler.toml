@@ -14,5 +14,18 @@ namespace_id = "1001"
   limit = 5
   period = 60
 
+# Voix de l'ATC : 60 synthèses par minute et par IP (les répliques en cache ne comptent pas)
+[[ratelimits]]
+name = "TTS_LIMITER"
+namespace_id = "1002"
+
+  [ratelimits.simple]
+  limit = 60
+  period = 60
+
+# Workers AI (MeloTTS)
+[ai]
+binding = "AI"
+
 # Secret (jamais dans ce fichier) :
 #   npx wrangler secret put DISCORD_WEBHOOK_URL

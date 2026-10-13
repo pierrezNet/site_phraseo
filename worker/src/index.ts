@@ -3,20 +3,24 @@
  *
  *   GET  /metar/:icao  → METAR NOAA (sans clé), mis en cache 10 min
  *   POST /feedback     → message Discord (webhook stocké en secret)
+ *   POST /tts          → voix de l'ATC (MeloTTS, Workers AI), MP3 mis en cache 30 jours
  *
  * Le site statique (GitHub Pages) n'embarque ainsi plus aucun secret.
  */
-import { ICAO_RE, discordPayload, parseFeedback, toMetar, type NoaaMetar } from './relay';
+import { ICAO_RE, discordPayload, parseFeedback, parseTts, toMetar, ttsAudioBytes, ttsCacheKey, type NoaaMetar } from './relay';
 
 interface Env {
   DISCORD_WEBHOOK_URL: string;
   /** Origines autorisées, séparées par des virgules */
   ALLOWED_ORIGINS: string;
   FEEDBACK_LIMITER: RateLimit;
+  TTS_LIMITER: RateLimit;
+  AI: Ai;
 }
 
 const METAR_TTL_S = 600;
 const MAX_BODY_BYTES = 4096;
+const TTS_TTL_S = 30 * 24 * 3600;
 
 function corsHeaders(origin: string | null, env: Env): Record<string, string> {
   const allowed = env.ALLOWED_ORIGINS.split(',').map((o) => o.trim());
@@ -86,8 +90,46 @@ async function handleFeedback(request: Request, env: Env, cors: Record<string, s
   return new Response(null, { status: 204, headers: cors });
 }
 
+async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors: Record<string, string>): Promise<Response> {
+  if (!cors['Access-Control-Allow-Origin']) return json({ error: 'Origine non autorisée' }, 403, cors);
+
+  const raw = await request.text();
+  if (raw.length > MAX_BODY_BYTES) return json({ error: 'Texte trop long' }, 413, cors);
+
+  let body: unknown;
+  try {
+    body = JSON.parse(raw);
+  } catch {
+    return json({ error: 'JSON invalide' }, 400, cors);
+  }
+  const tts = parseTts(body);
+  if (!tts) return json({ error: 'Champs invalides' }, 400, cors);
+
+  // Même réplique avec les mêmes paramètres : servie depuis le cache, sans compter dans la limite
+  const cache = caches.default;
+  const key = new Request(await ttsCacheKey(tts));
+  const cached = await cache.match(key);
+  if (cached) return new Response(cached.body, { headers: { ...Object.fromEntries(cached.headers), ...cors } });
+
+  const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown';
+  const { success } = await env.TTS_LIMITER.limit({ key: ip });
+  if (!success) return json({ error: 'Trop de requêtes, réessaie dans une minute' }, 429, cors);
+
+  let audio: Uint8Array;
+  try {
+    audio = ttsAudioBytes(await env.AI.run('@cf/myshell-ai/melotts', { prompt: tts.text, lang: tts.lang }));
+  } catch (err) {
+    console.error('MeloTTS a échoué', err);
+    return json({ error: 'Synthèse indisponible' }, 502, cors);
+  }
+
+  const headers = { 'Content-Type': 'audio/mpeg', 'Cache-Control': `public, max-age=${TTS_TTL_S}` };
+  ctx.waitUntil(cache.put(key, new Response(audio, { headers })));
+  return new Response(audio, { headers: { ...headers, ...cors } });
+}
+
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const cors = corsHeaders(request.headers.get('Origin'), env);
     const { pathname } = new URL(request.url);
 
@@ -95,13 +137,15 @@ export default {
 
     // Racine : simple description, utile pour vérifier que le relais répond
     if (pathname === '/' && request.method === 'GET') {
-      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'POST /feedback'] }, 200, cors);
+      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'POST /feedback', 'POST /tts'] }, 200, cors);
     }
 
     const metar = pathname.match(/^\/metar\/([^/]+)$/);
     if (metar && request.method === 'GET') return handleMetar(metar[1].toUpperCase(), cors);
 
     if (pathname === '/feedback' && request.method === 'POST') return handleFeedback(request, env, cors);
+
+    if (pathname === '/tts' && request.method === 'POST') return handleTts(request, env, ctx, cors);
 
     return json({ error: 'Not found' }, 404, cors);
   },

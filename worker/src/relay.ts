@@ -112,3 +112,36 @@ export function discordPayload(f: Feedback) {
     ],
   };
 }
+
+// ── Synthèse vocale (voix de l'ATC) ──────────────────────────────────────────
+
+export const TTS_MAX_CHARS = 600;
+
+export interface TtsRequest {
+  text: string;
+  lang: 'fr' | 'en';
+}
+
+/** Valide la demande de synthèse ; le texte arrive déjà préparé par le front (src/utils/speech.ts) */
+export function parseTts(body: unknown): TtsRequest | null {
+  if (!body || typeof body !== 'object') return null;
+  const b = body as Record<string, unknown>;
+  const text = str(b.text).replace(/\s+/g, ' ');
+  const lang = str(b.lang);
+  if (!text || text.length > TTS_MAX_CHARS) return null;
+  if (lang !== 'fr' && lang !== 'en') return null;
+  return { text, lang };
+}
+
+/** Clé de cache stable pour un texte et une langue (SHA-256 hexadécimal) */
+export async function ttsCacheKey({ text, lang }: TtsRequest): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${lang}\n${text}`));
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  return `https://tts.phraseo.cache/melotts/${hex}`;
+}
+
+/** Sortie MeloTTS : octets MP3, ou objet { audio } en base64 selon la version de l'API */
+export function ttsAudioBytes(output: Uint8Array | { audio: string }): Uint8Array {
+  if (output instanceof Uint8Array) return output;
+  return Uint8Array.from(atob(output.audio), (c) => c.charCodeAt(0));
+}

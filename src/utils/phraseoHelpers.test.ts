@@ -102,6 +102,14 @@ describe('replacePlaceholders', () => {
     expect(replacePlaceholders('[ARR]', 'fr', store as any, weatherStore as any, { ARR: 'Strasbourg' })).toBe('Strasbourg')
   })
 
+  it('[HOU] : « 15 heures 05 » en français, chiffre par chiffre en anglais', () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-10-13T15:05:00Z'))
+    expect(replacePlaceholders('[HOU]', 'fr', formStore as any, weatherStore as any)).toBe('15 heures 05')
+    expect(replacePlaceholders('[HOU]', 'en', formStore as any, weatherStore as any)).toBe('1_5_0_5')
+    vi.useRealTimers()
+  })
+
   it('laisse le texte inchangé sans placeholder', () => {
     const result = replacePlaceholders('rien à remplacer', 'fr', formStore as any, weatherStore as any)
     expect(result).toBe('rien à remplacer')

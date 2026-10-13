@@ -49,6 +49,17 @@
             >
               Quiz {{ quizStore.enabled ? 'ON' : 'OFF' }}
             </button>
+            <button
+              v-if="voice.available"
+              @click="voice.toggle()"
+              :class="[
+                'ml-1 px-2 py-0.5 rounded text-xs font-medium transition-colors',
+                voice.enabled ? 'bg-green-500 text-white' : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+              ]"
+              title="Voix de l'ATC : lecture automatique en vol complet (bouton 🔊 sur chaque réplique)"
+            >
+              🔊 {{ voice.enabled ? 'ON' : 'OFF' }}
+            </button>
           </div>
         </div>
 
@@ -126,6 +137,18 @@
           {{ quizStore.enabled ? 'Activé' : 'Désactivé' }}
         </button>
       </div>
+      <div v-if="voice.available" class="flex items-center space-x-2 py-1">
+        <span class="text-blue-200 text-sm">Voix ATC :</span>
+        <button
+          @click="voice.toggle()"
+          :class="[
+            'px-2 py-0.5 rounded text-xs font-medium transition-colors',
+            voice.enabled ? 'bg-green-500 text-white' : 'bg-blue-800 text-blue-200 hover:bg-blue-700'
+          ]"
+        >
+          {{ voice.enabled ? 'Activée' : 'Désactivée' }}
+        </button>
+      </div>
       <hr class="border-blue-700 my-2">
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','aide')">Aide</a>
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','parametres')">Paramètres</a>
@@ -141,6 +164,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { useLangStore } from '../stores/lang'
 import { useFormStore, LEVEL_OPTIONS, type UserLevel } from '../stores/form'
 import { useQuizStore } from '../stores/quiz'
+import { useVoiceStore } from '../stores/voice'
 import { computed, onMounted, onBeforeUnmount } from 'vue'
 
 const emit = defineEmits(['update:mode', 'open-modal', 'select-task'])
@@ -148,6 +172,7 @@ const emit = defineEmits(['update:mode', 'open-modal', 'select-task'])
 const langStore = useLangStore()
 const formStore = useFormStore()
 const quizStore = useQuizStore()
+const voice = useVoiceStore()
 
 // Gestion du mode de vol (IFR/VFR), porté par le store du formulaire
 const flightMode = computed(() => formStore.mode)

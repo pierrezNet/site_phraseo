@@ -6,6 +6,7 @@ Le site est statique (GitHub Pages) : tout ce qui est injecté au build via `VIT
 |---|---|
 | `GET /metar/:icao` | METAR depuis aviationweather.gov (NOAA, sans clé), converti au format du front, cache 10 min |
 | `POST /feedback` | Valide le retour et le poste sur Discord. Origine autorisée uniquement, 5 envois/min/IP, mentions désactivées |
+| `POST /tts` | Voix de l'ATC : `{ text, lang }` (texte préparé par `src/utils/speech.ts`, 600 caractères max) → MP3 MeloTTS (Workers AI). Origine autorisée uniquement, 60 synthèses/min/IP, cache 30 jours (une réplique déjà dite ne coûte rien) |
 
 ## Premier déploiement
 
@@ -27,7 +28,7 @@ Puis côté GitHub (Settings → Secrets and variables → Actions) :
 # worker/.dev.vars (ignoré par git)
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
 
-npm run dev   # http://localhost:8787
+npm run dev   # http://localhost:8787 (Workers AI s'exécute à distance : la voix est facturée, même en local)
 ```
 
 Et à la racine du projet, dans `.env.local` : `VITE_API_BASE=http://localhost:8787`.

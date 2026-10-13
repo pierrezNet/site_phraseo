@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { discordPayload, parseFeedback, toMetar, visibilityMeters } from './relay'
+import { TTS_MAX_CHARS, discordPayload, parseFeedback, parseTts, toMetar, ttsAudioBytes, ttsCacheKey, visibilityMeters } from './relay'
 
 // ── METAR NOAA → format front ─────────────────────────────────────────────────
 
@@ -91,5 +91,36 @@ describe('discordPayload', () => {
     const p = discordPayload(f)
     expect(p.allowed_mentions).toEqual({ parse: [] })
     expect(p.embeds[0].fields.map((x) => x.value)).toEqual(['—', '—', '—', '—'])
+  })
+})
+
+// ── Synthèse vocale ──────────────────────────────────────────────────────────
+
+describe('parseTts', () => {
+  it('accepte un texte et une langue valides, espaces réduits', () => {
+    expect(parseTts({ text: ' Foxtrot  Sierra Tango ', lang: 'fr' })).toEqual({ text: 'Foxtrot Sierra Tango', lang: 'fr' })
+  })
+
+  it('refuse texte vide, trop long ou langue inconnue', () => {
+    expect(parseTts({ text: '', lang: 'fr' })).toBeNull()
+    expect(parseTts({ text: 'a'.repeat(TTS_MAX_CHARS + 1), lang: 'fr' })).toBeNull()
+    expect(parseTts({ text: 'hello', lang: 'de' })).toBeNull()
+    expect(parseTts(null)).toBeNull()
+  })
+})
+
+describe('ttsCacheKey', () => {
+  it('dépend du texte et de la langue', async () => {
+    const a = await ttsCacheKey({ text: 'roger', lang: 'fr' })
+    expect(a).toBe(await ttsCacheKey({ text: 'roger', lang: 'fr' }))
+    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en' }))
+  })
+})
+
+describe('ttsAudioBytes', () => {
+  it('accepte les octets bruts ou le base64', () => {
+    const bytes = new Uint8Array([0x49, 0x44, 0x33])
+    expect(ttsAudioBytes(bytes)).toBe(bytes)
+    expect([...ttsAudioBytes({ audio: 'SUQz' })]).toEqual([0x49, 0x44, 0x33])
   })
 })
