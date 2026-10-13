@@ -22,7 +22,7 @@
           <ul class="list-disc ml-5 space-y-1">
             <li><strong>Débutant</strong> : phraséologie essentielle pour un vol standard (mise en route, roulage, décollage, circuit, atterrissage). Les situations complexes sont masquées.</li>
             <li><strong>Intermédiaire</strong> : toutes les situations courantes (CTOT, trafic, remise de gaz, approches spéciales, transit, décollage immédiat...).</li>
-            <li><strong>Avancé</strong> : à venir.</li>
+            <li><strong>Avancé</strong> : phraséologie hors des situations courantes (chapitre 5 du manuel DGAC : coordination, situations rares…).</li>
           </ul>
           <p>Le nombre de tâches et d'options s'adapte automatiquement au niveau choisi.</p>
 
@@ -31,6 +31,15 @@
             <li>Avion : le <strong>pilote</strong> initie l'échange</li>
             <li>Micro : l'<strong>ATC</strong> initie l'échange</li>
             <li>Chevron <strong>&gt;</strong> : ouvre un choix de sous-options</li>
+          </ul>
+
+          <h3 class="font-semibold text-base mt-4">Écouter les échanges</h3>
+          <ul class="list-disc ml-5 space-y-1">
+            <li>Cliquez sur l'icône <strong>micro</strong> d'une réplique pour écouter l'ATC, sur l'icône <strong>avion</strong> pour écouter le pilote. Un nouveau clic arrête la lecture.</li>
+            <li>Touche <strong>Espace</strong> : écoute (ou arrête) la dernière réplique de l'ATC. En mode quiz, elle servira bientôt aussi à enregistrer votre réponse à la voix.</li>
+            <li>En mode quiz, l'icône avion fait écouter la réponse attendue une fois la correction affichée.</li>
+            <li>Bouton <strong>🔊 ON/OFF</strong> de la barre : en vol complet, l'ATC parle automatiquement.</li>
+            <li>Voix de synthèse avec effet radio ; la première écoute d'une réplique peut prendre une seconde.</li>
           </ul>
 
           <h3 class="font-semibold text-base mt-4">Carte interactive (VFR débutant)</h3>

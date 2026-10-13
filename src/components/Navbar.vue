@@ -165,7 +165,7 @@ import { useLangStore } from '../stores/lang'
 import { useFormStore, LEVEL_OPTIONS, type UserLevel } from '../stores/form'
 import { useQuizStore } from '../stores/quiz'
 import { useVoiceStore } from '../stores/voice'
-import { computed, onMounted, onBeforeUnmount } from 'vue'
+import { computed, onMounted } from 'vue'
 
 const emit = defineEmits(['update:mode', 'open-modal', 'select-task'])
 
@@ -190,25 +190,14 @@ const setLevel = (level: UserLevel) => formStore.setLevel(level)
 
 const changeLanguage = (lang: string) => langStore.changeLanguage(lang)
 
-// Raccourcis clavier (PTT) - Gardés pour la V2
-function onKeyDown(e: KeyboardEvent) {}
-function onKeyUp(e: KeyboardEvent) {}
-
-// Initialisation des variables globales et events
+// Initialisation des variables globales (raccourci Espace : voir TaskTextDisplay)
 onMounted(() => {
   emit('update:mode', flightMode.value)
-  window.addEventListener('keydown', onKeyDown)
-  window.addEventListener('keyup', onKeyUp)
-  
+
   // Setup des variables globales nécessaires au reste de l'app
   window.isRecordingActive = false
   window.lastTranscriptTaskId = null
   window.currentTaskId = null
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('keydown', onKeyDown)
-  window.removeEventListener('keyup', onKeyUp)
 })
 
 /**

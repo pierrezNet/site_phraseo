@@ -17,10 +17,12 @@ export interface SpokenLine {
   key: string
   /** Texte préparé pour la synthèse (src/utils/speech.ts) */
   text: string
+  /** Réplique du pilote : voix plus grave et radio de bord */
+  pilot?: boolean
 }
 
 /**
- * Voix de l'ATC : lecture des répliques (bouton 🔊, et automatique en vol complet si activée).
+ * Voix des répliques : ATC et pilote (icône de la réplique, Espace, et ATC automatique en vol complet si activée).
  * Indisponible sans relais (VITE_API_BASE).
  */
 export const useVoiceStore = defineStore('voice', () => {
@@ -50,7 +52,7 @@ export const useVoiceStore = defineStore('voice', () => {
         if (mine !== generation) return
         loading.value = null
         playing.value = line.key
-        await playRadio(mp3, lang)
+        await playRadio(mp3, lang, line.pilot ? 'pilot' : 'atc')
         if (mine !== generation) return
       }
     } catch (e) {

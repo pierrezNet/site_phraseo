@@ -30,11 +30,28 @@ export function fetchAtcAudio(text: string, lang: 'fr' | 'en'): Promise<ArrayBuf
   return audio;
 }
 
+export type Speaker = 'atc' | 'pilot';
+
 /**
- * Débit de lecture (MeloTTS n'a ni réglage de vitesse ni de style) :
- * voix française un peu plate → accélérée pour plus de dynamisme ; anglaise trop rapide → ralentie
+ * Rendu de chaque interlocuteur (MeloTTS n'a qu'une voix par langue, sans réglage de vitesse ni de style) :
+ * - ATC : radio de la tour, débit retouché sans changer la hauteur (FR un peu plate → accélérée, EN trop rapide → ralentie)
+ * - pilote : hauteur non conservée, donc ralentir rend la voix aussi plus grave ;
+ *   radio de bord un peu moins bonne (bande plus étroite, légère saturation)
  */
-const PLAYBACK_RATE: Record<'fr' | 'en', number> = { fr: 1.1, en: 0.88 };
+const VOICES: Record<Speaker, { rate: Record<'fr' | 'en', number>; preservesPitch: boolean; band: [number, number]; drive: number }> = {
+  atc: { rate: { fr: 1.1, en: 0.88 }, preservesPitch: true, band: [300, 3400], drive: 0 },
+  pilot: { rate: { fr: 0.92, en: 0.86 }, preservesPitch: false, band: [450, 2800], drive: 3 },
+};
+
+/** Courbe de saturation douce (tanh) : 0 = aucune */
+function saturationCurve(drive: number): Float32Array<ArrayBuffer> {
+  const curve = new Float32Array(1024);
+  for (let i = 0; i < curve.length; i++) {
+    const x = (i / (curve.length - 1)) * 2 - 1;
+    curve[i] = Math.tanh(drive * x) / Math.tanh(drive);
+  }
+  return curve;
+}
 
 let context: AudioContext | null = null;
 let current: { audio: HTMLAudioElement; done: () => void } | null = null;
@@ -49,23 +66,25 @@ export function stopRadio(): void {
 }
 
 /**
- * Joue un MP3 comme à la radio : bande passante VHF 300–3400 Hz, niveau compressé.
- * Lecteur HTML (et non AudioBuffer) pour ralentir sans changer la hauteur de la voix.
+ * Joue un MP3 comme à la radio (bande passante VHF, niveau compressé), avec le rendu de l'interlocuteur.
+ * Lecteur HTML (et non AudioBuffer) pour régler débit et hauteur indépendamment.
  */
-export async function playRadio(mp3: ArrayBuffer, lang: 'fr' | 'en'): Promise<void> {
+export async function playRadio(mp3: ArrayBuffer, lang: 'fr' | 'en', speaker: Speaker = 'atc'): Promise<void> {
   stopRadio();
   context ??= new AudioContext();
   if (context.state === 'suspended') await context.resume();
 
+  const voice = VOICES[speaker];
   const url = URL.createObjectURL(new Blob([mp3], { type: 'audio/mpeg' }));
   const audio = new Audio(url);
-  audio.playbackRate = PLAYBACK_RATE[lang];
-  audio.preservesPitch = true;
+  audio.playbackRate = voice.rate[lang];
+  audio.preservesPitch = voice.preservesPitch;
 
-  const highpass = new BiquadFilterNode(context, { type: 'highpass', frequency: 300 });
-  const lowpass = new BiquadFilterNode(context, { type: 'lowpass', frequency: 3400 });
-  const compressor = new DynamicsCompressorNode(context, { threshold: -24, ratio: 6 });
-  context.createMediaElementSource(audio).connect(highpass).connect(lowpass).connect(compressor).connect(context.destination);
+  let chain: AudioNode = context.createMediaElementSource(audio);
+  chain = chain.connect(new BiquadFilterNode(context, { type: 'highpass', frequency: voice.band[0] }));
+  chain = chain.connect(new BiquadFilterNode(context, { type: 'lowpass', frequency: voice.band[1] }));
+  if (voice.drive) chain = chain.connect(new WaveShaperNode(context, { curve: saturationCurve(voice.drive), oversample: '2x' }));
+  chain.connect(new DynamicsCompressorNode(context, { threshold: -24, ratio: 6 })).connect(context.destination);
 
   return new Promise((resolve, reject) => {
     const done = () => {

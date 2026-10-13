@@ -24,7 +24,14 @@
         v-if="line.isPilot && quizActive"
         class="w-full p-4 rounded-md mb-4 shadow border-l-4 bg-blue-100 border-blue-500"
       >
-        <PilotIcon class="inline-block w-5 h-5 mr-2 align-middle" />
+        <!-- Écoute de la réponse attendue, une fois la correction dévoilée (l'icône servira à enregistrer en phase 2) -->
+        <ListenButton
+          :line-key="line.key"
+          :speech="line.speech"
+          is-pilot
+          :listenable="!!resultOf(line.key) && isFinal(line.key) && !awaitingReply(line.key)"
+          class="mr-2"
+        />
         <span class="text-sm font-medium">À vous — que dit le pilote ?</span>
 
         <template v-if="!resultOf(line.key)">
@@ -102,19 +109,8 @@
           line.isPilot ? 'bg-blue-100 border-blue-500' : 'bg-orange-100 border-orange-500'
         ]"
       >
-        <PilotIcon v-if="line.isPilot" class="inline-block w-5 h-5 mr-2 align-middle" />
-        <AtcIcon v-else class="inline-block w-5 h-5 mr-2 align-middle" />
+        <ListenButton :line-key="line.key" :speech="line.speech" :is-pilot="line.isPilot" class="mr-2" />
         <span v-html="line.content"></span>
-        <button
-          v-if="!line.isPilot && voice.available"
-          type="button"
-          class="ml-2 align-middle opacity-70 hover:opacity-100"
-          :title="voice.playing === line.key ? 'Arrêter' : 'Écouter l\'ATC'"
-          :aria-label="voice.playing === line.key ? 'Arrêter' : 'Écouter l\'ATC'"
-          @click="voice.playing === line.key || voice.loading === line.key ? voice.stop() : speak(line)"
-        >
-          {{ voice.loading === line.key ? '⏳' : voice.playing === line.key ? '⏹' : '🔊' }}
-        </button>
       </div>
     </template>
 
@@ -143,8 +139,7 @@ import { toSpeech } from '../utils/speech';
 import { buildCriticals, callsignEquivalences as callsignEquivalencesOf } from '../utils/criticals';
 import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
-import PilotIcon from './icons/PilotIcon.vue';
-import AtcIcon from './icons/AtcIcon.vue';
+import ListenButton from './ListenButton.vue';
 
 const props = defineProps<{
   selectedTaskTexts: any[]
@@ -250,7 +245,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
       isPilot: cls === 'Pilot',
       content: tooltipHtml(processed),
       expectedSpoken: requiredText(processed),
-      speech: cls === 'Pilot' ? '' : toSpeech(processed, lang),
+      speech: toSpeech(processed, lang),
       // Un tag entre parenthèses est optionnel : il n'est pas exigé
       criticals: buildCriticals(requiredText(text), lang, formStore, weatherStore),
       intents,
@@ -425,5 +420,23 @@ watch(
   { immediate: true }
 );
 
-onBeforeUnmount(voice.stop);
+// Espace (hors saisie et hors modale) : écoute ou arrête la dernière réplique de l'ATC affichée
+// (en phase 2, maintenir Espace en quiz servira à enregistrer sa réponse)
+const onSpace = (e: KeyboardEvent) => {
+  if (e.code !== 'Space' || e.repeat || !voice.available) return;
+  const target = e.target as HTMLElement | null;
+  if (target?.closest('input, textarea, select, [contenteditable="true"], .modal')) return;
+  const atc = displayedLines.value.filter((l) => !l.isPilot).at(-1);
+  if (!atc) return;
+  // Pas de défilement, ni de second clic sur l'icône qui a gardé le focus
+  e.preventDefault();
+  if (voice.playing === atc.key || voice.loading === atc.key) voice.stop();
+  else speak(atc);
+};
+
+onMounted(() => window.addEventListener('keydown', onSpace));
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onSpace);
+  voice.stop();
+});
 </script>
