@@ -60,12 +60,33 @@ const OACI_ALPHABET: Record<string, string> = {
   kilo: 'k', lima: 'l', mike: 'm', november: 'n', oscar: 'o', papa: 'p',
   quebec: 'q', romeo: 'r', sierra: 's', tango: 't', uniform: 'u',
   victor: 'v', whiskey: 'w', whisky: 'w', xray: 'x', yankee: 'y', zulu: 'z',
+  // Graphies d'« Echo » produites par la reconnaissance vocale en français
+  eco: 'e', echos: 'e',
+  // « Fox » : usage courant pour Foxtrot (validé par l'expert)
+  fox: 'f',
+}
+
+/**
+ * Côté de piste après un numéro : « 26 Gauche » = « 26 Left » = « 26L ».
+ * Jeton de plus d'une lettre, pour ne pas être fusionné avec un indicatif épelé qui suit.
+ */
+const RUNWAY_SIDE: Record<string, string> = {
+  l: 'cote_l', gauche: 'cote_l', left: 'cote_l',
+  r: 'cote_r', droite: 'cote_r', right: 'cote_r',
+  c: 'cote_c', centre: 'cote_c', center: 'cote_c', centrale: 'cote_c', central: 'cote_c',
+}
+
+function normalizeRunwaySide(tokens: string[]): string[] {
+  return tokens.map((t, i) => (i > 0 && /^\d+$/.test(tokens[i - 1]) && RUNWAY_SIDE[t]) || t)
 }
 
 /** Chiffres et nombres dits en toutes lettres (FR + EN, prononciations OACI incluses). */
 const DIGIT_WORDS: Record<string, number> = {
-  zero: 0, un: 1, une: 1, deux: 2, trois: 3, quatre: 4, cinq: 5, six: 6, sept: 7, huit: 8, neuf: 9,
+  // « unité » : forme française du chiffre 1 en radiotéléphonie (« zéro unité » = 01)
+  zero: 0, un: 1, une: 1, unite: 1, unites: 1, deux: 2, trois: 3, quatre: 4, cinq: 5, six: 6, sept: 7, huit: 8, neuf: 9,
   one: 1, two: 2, three: 3, tree: 3, four: 4, five: 5, fife: 5, seven: 7, eight: 8, nine: 9, niner: 9,
+  // Graphies phonétiques OACI / IVAO (« ziro », « wun », « tri », « fower »)
+  ziro: 0, wun: 1, tri: 3, fower: 4,
 }
 const COMPOUND_WORDS: Record<string, number> = {
   dix: 10, onze: 11, douze: 12, treize: 13, quatorze: 14, quinze: 15, seize: 16,
@@ -74,8 +95,8 @@ const COMPOUND_WORDS: Record<string, number> = {
   seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50,
   sixty: 60, seventy: 70, eighty: 80, ninety: 90,
 }
-const HUNDRED = new Set(['cent', 'cents', 'hundred'])
-const THOUSAND = new Set(['mille', 'thousand'])
+const HUNDRED = new Set(['cent', 'cents', 'hundred', 'hundert'])
+const THOUSAND = new Set(['mille', 'thousand', 'tousand', 'touzand', 'touzande'])
 
 const isNumberWord = (w: string) =>
   w in DIGIT_WORDS || w in COMPOUND_WORDS || HUNDRED.has(w) || THOUSAND.has(w)
@@ -191,7 +212,8 @@ function collapseSpelledLetters(tokens: string[]): string[] {
 export function tokenize(input: string, { collapse = true } = {}): string[] {
   const norm = normalizeText(input)
   const words = (norm ? norm.split(' ') : []).map((w) => (w === 'decimal' ? 'decimale' : OACI_ALPHABET[w] || w))
-  const tokens = splitAlphanumeric(wordsToNumbers(words))
+  // Après découpage lettres/chiffres (« 3PAPA » → 3 papa, « 26L » → 26 l) : alphabet OACI et côté de piste
+  const tokens = normalizeRunwaySide(splitAlphanumeric(wordsToNumbers(words)).map((w) => OACI_ALPHABET[w] || w))
   return collapse ? collapseSpelledLetters(tokens) : tokens
 }
 

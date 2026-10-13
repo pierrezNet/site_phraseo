@@ -242,6 +242,40 @@ describe('formules de politesse', () => {
   })
 })
 
+describe('normalisation de la reconnaissance vocale', () => {
+  it('« éco » est Echo', () => {
+    expect(tokenize('information éco')).toEqual(tokenize('information E'))
+  })
+  it('un indicatif de SID collé (« 3PAPA ») garde son alphabet OACI', () => {
+    expect(tokenize('Bubli 3PAPA')).toEqual(tokenize('Bubli_3_Papa'))
+  })
+  it('26L = 26 Left = 26 Gauche', () => {
+    expect(tokenize('26L')).toEqual(tokenize('26 Left'))
+    expect(tokenize('26 gauche')).toEqual(tokenize('26 Left'))
+    expect(tokenize('virages à gauche')).toEqual(['virages', 'a', 'gauche']) // pas après un numéro
+  })
+  it('le côté de piste ne fusionne pas avec l\'indicatif épelé qui suit', () => {
+    const r = scoreAnswer('piste 26L, F S T', 'Piste 26 Gauche, F S T.', [{ label: CRITICAL_TAGS.RWY, value: '26 Gauche' }, { label: CRITICAL_TAGS.CAA, value: 'F S T' }])
+    expect(r.criticals.every((c) => c.ok)).toBe(true)
+  })
+})
+
+describe('usages français validés', () => {
+  it('« unité » est le chiffre 1', () => {
+    expect(tokenize('Air Europe zéro unité')).toEqual(tokenize('Air Europe 01'))
+  })
+  it('graphies phonétiques anglaises (ziro, tri, wun, fower, touzande)', () => {
+    expect(tokenize('wun tri ziro')).toEqual(tokenize('130'))
+    expect(tokenize('fower touzande')).toEqual(tokenize('4000'))
+  })
+  it('« unité deux quatre zéro » = 1240 (wiki IVAO)', () => {
+    expect(tokenize('unité deux quatre zéro')).toEqual(tokenize('1240'))
+  })
+  it('« Fox » est F', () => {
+    expect(tokenize('Fox Sierra Tango')).toEqual(tokenize('F S T'))
+  })
+})
+
 describe('PHRASE_EQUIVALENCES', () => {
   it('« Wilco » est accepté là où « Bien compris » est attendu, et inversement', () => {
     const crit = [{ label: CRITICAL_TAGS.CAA, value: 'F E P' }]

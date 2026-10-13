@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banc vocal — enregistrement</title>
+  <style>
+    :root { --bg: #0f172a; --surface: #1e293b; --border: #334155; --text: #e2e8f0; --muted: #94a3b8; --accent: #0369a1; --accent-line: #38bdf8; --ok: #86efac; --ko: #fca5a5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); }
+    main { max-width: 760px; margin: 0 auto; padding: 24px 16px; }
+    h1 { font-size: 1.3rem; margin: 0 0 4px; }
+    .muted { color: var(--muted); font-size: .9rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-top: 16px; }
+    .meta { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: .85rem; }
+    .phrase { font-size: 1.5rem; line-height: 1.5; margin: 16px 0 8px; }
+    .criticals { color: var(--muted); font-size: .85rem; min-height: 1.2em; }
+    .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 18px; }
+    button { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; cursor: pointer; }
+    button:hover:not(:disabled) { border-color: var(--accent-line); }
+    button:disabled { opacity: .45; cursor: default; }
+    #talk { background: var(--accent); border-color: var(--accent); font-weight: 600; min-width: 240px; user-select: none; touch-action: none; }
+    #talk.recording { background: #b91c1c; border-color: #b91c1c; }
+    .status { margin-top: 12px; min-height: 1.4em; font-size: .9rem; }
+    .ok { color: var(--ok); } .ko { color: var(--ko); }
+    .progress { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 12px; }
+    .progress > div { height: 100%; background: var(--accent-line); width: 0; transition: width .3s; }
+    ol { padding-left: 1.4em; color: var(--muted); font-size: .85rem; columns: 2; }
+    li.done { color: var(--ok); } li.current { color: var(--text); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>🎙 Banc vocal — enregistrement</h1>
+    <p class="muted">
+      Lisez chaque phrase comme à la radio. Maintenez le bouton (ou la barre d'espace) pendant que vous parlez.
+      Les fichiers restent sur votre ordinateur, dans le dossier choisi.
+    </p>
+
+    <div class="row">
+      <button id="pick">📁 Choisir le dossier d'enregistrement</button>
+      <span id="folder" class="muted">Aucun dossier choisi</span>
+    </div>
+
+    <div class="card">
+      <div class="meta"><span id="counter"></span><span id="context"></span></div>
+      <div class="phrase" id="phrase">Chargement…</div>
+      <div class="criticals" id="criticals"></div>
+      <div class="row">
+        <button id="talk" disabled>🎙 Maintenir pour parler</button>
+        <button id="play" disabled>▶ Réécouter</button>
+      </div>
+      <div class="row">
+        <button id="prev">← Précédente</button>
+        <button id="next">Suivante →</button>
+      </div>
+      <div class="status" id="status"></div>
+      <div class="progress"><div id="bar"></div></div>
+    </div>
+
+    <ol id="list"></ol>
+  </main>
+  <script type="module" src="./recorder.ts"></script>
+</body>
+</html>

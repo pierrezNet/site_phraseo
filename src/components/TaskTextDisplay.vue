@@ -125,7 +125,8 @@ import { useWeatherStore } from '../stores/weather';
 import { useQuizStore } from '../stores/quiz';
 import { useFlightStore, MAX_ATTEMPTS } from '../stores/flight';
 import { requirementsMet } from '../utils/flight';
-import { replacePlaceholders, resolveStationParts } from '../utils/phraseoHelpers';
+import { replacePlaceholders } from '../utils/phraseoHelpers';
+import { buildCriticals, callsignEquivalences as callsignEquivalencesOf } from '../utils/criticals';
 import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
 import PilotIcon from './icons/PilotIcon.vue';
@@ -157,39 +158,6 @@ const checkMetarRefresh = () => {
 
 onMounted(checkMetarRefresh);
 watch(() => props.selectedTaskTexts, checkMetarRefresh);
-
-/** Résout la valeur concrète d'un tag critique dans la langue courante. */
-const resolveCriticalValue = (tag: string, lang: 'fr' | 'en'): string => {
-  switch (tag) {
-    case 'RWY':
-      return formStore.formatRunway(formStore.form.RWY, lang);
-    case 'QNH':
-      return weatherStore.metarQnh ?? formStore.form.QNH ?? '1013';
-    case 'DEL':
-    case 'GND':
-    case 'TWR':
-    case 'APP':
-    case 'CTR':
-    {
-      // Fréquence seule (même repli de station que le texte affiché) ; ignorée si saisie invalide
-      const { frequency } = resolveStationParts(tag, lang, formStore);
-      return /\d/.test(frequency) ? frequency : '';
-    }
-    default:
-      // ALT, NIV, CAP, VIT, SQU, STA, WPT, HLD, VOI, INF : valeur brute du formulaire
-      return formStore.form[tag] || '';
-  }
-};
-
-/** Construit la liste des éléments critiques présents dans un texte source. */
-const buildCriticals = (rawText: string, lang: 'fr' | 'en'): Critical[] => {
-  return Object.keys(CRITICAL_TAGS)
-    .filter(tag => rawText.includes(`[${tag}]`))
-    .map(tag => ({ label: CRITICAL_TAGS[tag], value: String(resolveCriticalValue(tag, lang) ?? '') }))
-    .filter(c => c.value.trim() !== '')
-    // [CAL] et [CAA] dans la même réplique : un seul contrôle d'indicatif
-    .filter((c, i, all) => all.findIndex(o => o.label === c.label) === i);
-};
 
 const tooltipHtml = (processed: string): string =>
   processed.replace(/\{([^}]+)\}/g, (_match, note: string) => {
@@ -266,7 +234,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
       content: tooltipHtml(processed),
       expectedSpoken: requiredText(processed),
       // Un tag entre parenthèses est optionnel : il n'est pas exigé
-      criticals: buildCriticals(requiredText(text), lang),
+      criticals: buildCriticals(requiredText(text), lang, formStore, weatherStore),
       intents,
       ask,
     };
@@ -334,11 +302,7 @@ const resetQuiz = () => {
 };
 
 // Le callsign complet (CAL) et sa forme abrégée (CAA) sont interchangeables
-const callsignEquivalences = (): string[][] => {
-  const caa = formStore.form.CAA?.trim();
-  const cal = formStore.form.CAL?.trim();
-  return caa && cal && caa !== cal ? [[caa, cal]] : [];
-};
+const callsignEquivalences = () => callsignEquivalencesOf(formStore);
 
 /** Étape à évaluation souple (ex. message de fin) : seul l'indicatif compte, formulation libre */
 const lenientStep = computed(() => flight.active && !!flight.currentStep?.lenient);

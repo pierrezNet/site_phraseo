@@ -12,7 +12,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    include: ['src/**/*.{test,spec}.ts', 'worker/src/**/*.test.ts'],
+    include: ['src/**/*.{test,spec}.ts', 'worker/src/**/*.test.ts', 'bench/**/*.test.ts'],
     alias: {
       '@': new URL('./src', import.meta.url).pathname
     }
