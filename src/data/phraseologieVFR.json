@@ -732,12 +732,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], control service terminated, air-to-air frequency, one hundred twenty two decimal eight."
+							"__text": "[CAA], control service terminated, air-to-air frequency, 1_2_2 decimal 8."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Air-to-air frequency, one hundred twenty two decimal eight, thank you, [CAA]."
+							"__text": "Air-to-air frequency, 1_2_2 decimal 8, thank you, [CAA]."
 						}
 					],
 					"_level": "débutant"

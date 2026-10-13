@@ -9,6 +9,7 @@
  * - nombres (wiki IVAO France / manuel DGAC) :
  *   - FR : langage courant (« transpondeur mille », « niveau cent dix »), même écrits 1_1_0 ;
  *     chiffre par chiffre seulement avec un zéro initial ; « unité » pour un chiffre 1 seul dans un identifiant
+ *   - cap : toujours trois chiffres, un par un (manuel DGAC p. 17 : « cap zéro six zéro »)
  *   - EN : chiffre par chiffre, sauf centaines/milliers ronds et heures de trafic ; « tree », « fife », « niner »
  * - quelques mots réécrits pour la voix française (Whiskey, Boeing)
  */
@@ -168,6 +169,9 @@ export function toSpeech(text: string, lang: SpeechLang): string {
 
   // Position horaire d'un trafic : « eleven o'clock » (pas chiffre par chiffre)
   if (lang === 'en') s = s.replace(/\b(1[0-2]|[1-9])(?=\s*o['’]clock)/g, (n) => EN_CLOCK[Number(n)]);
+
+  // Cap : trois chiffres, un par un, dans les deux langues
+  s = s.replace(/\b(cap|heading)\s+(\d{1,3})\b/gi, (_m, word: string, n: string) => `${word} ${digitByDigit(n.padStart(3, '0'), lang)}`);
 
   // Nombres restants, avec signe éventuel (température)
   s = s.replace(/(^|[^\w-])-(\d+)\b/g, (_m, pre: string, n: string) => `${pre}${lang === 'fr' ? 'moins' : 'minus'} ${n}`);

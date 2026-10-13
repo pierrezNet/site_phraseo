@@ -33,6 +33,12 @@ describe('toSpeech — français', () => {
     expect(fr('piste 04')).toBe('piste zéro quatre')
   })
 
+  it('cap sur trois chiffres, un par un (manuel DGAC)', () => {
+    expect(fr('tournez à droite cap 270')).toBe('tournez à droite cap deux sept zéro')
+    expect(fr('cap 60, cap 0_60')).toBe('cap zéro six zéro, cap zéro soixante')
+    expect(toSpeech('turn right heading 60', 'en')).toBe('turn right heading zero six zero')
+  })
+
   it('points de report et procédures lus comme des mots', () => {
     expect(fr('départ Bubli_3_Papa, direct BASIP')).toBe('départ Bubli trois Papa, direct Basip')
     expect(fr('autorisé ODILO 1A')).toBe('autorisé Odilo unité Alfa')

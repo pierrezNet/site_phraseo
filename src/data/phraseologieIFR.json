@@ -1331,12 +1331,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], control service terminated, air-to-air frequency, one hundred twenty two decimal eight."
+							"__text": "[CAL], control service terminated, air-to-air frequency, 1_2_2 decimal 8."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Air-to-air frequency, one hundred twenty two decimal eight, thank you, [CAL]."
+							"__text": "Air-to-air frequency, 1_2_2 decimal 8, thank you, [CAL]."
 						}
 					],
 					"_id": "TRANSFERT_UNICOM",
@@ -3818,12 +3818,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], I_F_R cancelled at [HOU], you are now V_F_R with flight plan, [ARR] estimated at (1035), squawk [SQU], flight information available on one hundred twenty four decimal five."
+							"__text": "[CAL], I_F_R cancelled at [HOU], you are now V_F_R with flight plan, [ARR] estimated at (1035), squawk [SQU], flight information available on 1_2_4 decimal 5."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Squawk [SQU], one hundred twenty four decimal five, [CAL], goodbye."
+							"__text": "Squawk [SQU], 1_2_4 decimal 5, [CAL], goodbye."
 						}
 					],
 					"_id": "ANNULATION_IFR",
@@ -5470,12 +5470,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAL], disregard C_P_D_L_C frequency change message, break, contact [NCTR] one hundred thirty two decimal eight three zero."
+							"__text": "[CAL], disregard C_P_D_L_C frequency change message, break, contact [NCTR] 1_3_2 decimal 8_3_0."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[NCTR] one hundred thirty two decimal eight three zero, [CAL]."
+							"__text": "[NCTR] 1_3_2 decimal 8_3_0, [CAL]."
 						}
 					],
 					"_id": "CPDLC_TRANSFERT",
