@@ -117,6 +117,36 @@ function compoundValue(words: string[]): number {
   return total + current
 }
 
+const TENS = new Set([20, 30, 40, 50, 60, 80])
+
+/**
+ * Nombre dit par groupes de deux chiffres (numéro de vol, heure) : chaque groupe est écrit à la suite.
+ * « zéro douze » → 012, « douze trente quatre » → 1234, « quatre vingt dix neuf » → 99, « soixante onze » → 71.
+ */
+function spokenGroups(words: string[]): string {
+  const chunks: number[] = []
+  // Dizaine encore ouverte : elle peut recevoir des unités (« trente quatre ») ou, pour 60 et 80, « dix »…« dix-neuf »
+  let open = false
+  words.forEach((w, i) => {
+    const v = DIGIT_WORDS[w] ?? COMPOUND_WORDS[w] ?? 0
+    const last = chunks.length - 1
+    if ((w === 'vingt' || w === 'vingts') && words[i - 1] === 'quatre' && chunks[last] === 4) {
+      chunks[last] = 80 // « quatre vingt »
+      open = true
+    } else if (open && v > 0 && v < 10) {
+      chunks[last] += v // « trente quatre »
+      open = false
+    } else if (open && v >= 10 && v < 20 && (chunks[last] === 60 || chunks[last] === 80)) {
+      chunks[last] += v // « soixante onze », « quatre vingt dix »
+      open = v === 10 // 70 et 90 peuvent encore recevoir une unité (« quatre vingt dix neuf »)
+    } else {
+      chunks.push(v)
+      open = TENS.has(v)
+    }
+  })
+  return chunks.map(String).join('')
+}
+
 /**
  * Convertit les nombres dits en toutes lettres en chiffres :
  * - une suite de chiffres isolés est épelée (« un un zéro » → 110) ;
@@ -140,7 +170,9 @@ function wordsToNumbers(words: string[]): string[] {
       i++
     }
     const compound = group.some((w) => !(w in DIGIT_WORDS))
-    out.push(compound ? String(compoundValue(group)) : group.map((w) => DIGIT_WORDS[w]).join(''))
+    if (!compound) out.push(group.map((w) => DIGIT_WORDS[w]).join(''))
+    else if (group.some((w) => HUNDRED.has(w) || THOUSAND.has(w))) out.push(String(compoundValue(group)))
+    else out.push(spokenGroups(group))
   }
   return out
 }
@@ -169,7 +201,10 @@ function splitAlphanumeric(words: string[]): string[] {
  */
 export function normalizeText(input: string): string {
   return input
-    .replace(/(\d)[.,](\d)/g, '$1 decimale $2') // 118.7 → 118 décimale 7
+    // Virgule ou point entre chiffres : décimale d'une fréquence (118,7), sinon simple séparateur
+    // (Whisper écrit « Air Europe 0,12 » pour « zéro douze »)
+    .replace(/(\d{3})[.,](\d)/g, '$1 decimale $2')
+    .replace(/(\d)[.,](\d)/g, '$1 $2')
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()

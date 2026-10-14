@@ -301,3 +301,28 @@ describe('requiredText — parenthèses = valeur libre ou segment optionnel', ()
     expect(r.passed).toBe(true)
   })
 })
+
+describe('nombres dits par groupes et virgule de Whisper', () => {
+  it.each([
+    ['zéro douze', '012'],
+    ['douze trente quatre', '1234'],
+    ['quatre vingt dix neuf', '99'],
+    ['soixante et onze', '71'],
+    ['soixante dix', '70'],
+    ['vingt et un trente', '2130'],
+    ['cent dix', '110'],
+    ['deux mille cinq cents', '2500'],
+  ])('« %s » → %s', (spoken, digits) => expect(tokenize(spoken).join(' ')).toBe(digits))
+
+  it('virgule : décimale d’une fréquence, simple séparateur sinon', () => {
+    expect(tokenize('118,7').join(' ')).toBe('118 decimale 7')
+    expect(tokenize('Air Europe 0,12').join(' ')).toBe('air europe 012')
+  })
+
+  it('indicatif de compagnie reconnu par Whisper (« 0,12 », « zéro douze »)', () => {
+    const crit = [{ label: 'Indicatif', value: 'Air Europe 012' }]
+    for (const answer of ['Orly Tour, Air Europe 0,12, demande repoussage', 'Orly Tour, Air Europe zéro douze, demande repoussage']) {
+      expect(scoreAnswer(answer, 'Orly Tour, Air Europe 012, demande repoussage.', crit).passed).toBe(true)
+    }
+  })
+})
