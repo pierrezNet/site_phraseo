@@ -51,6 +51,12 @@ export const useVoiceStore = defineStore('voice', () => {
   const quotaBlockedDay = ref<string | null>(null)
   const quotaBlocked = () => quotaBlockedDay.value === utcDay(new Date())
 
+  /** Quota du jour atteint (voix ou reconnaissance) : plus de voix automatique ni de réponse vocale imposée */
+  function quotaReached() {
+    quotaLeft.value = 0
+    quotaBlockedDay.value = utcDay(new Date())
+  }
+
   // Chaque lecture invalide la précédente : une séquence interrompue ne reprend pas
   let generation = 0
 
@@ -75,8 +81,7 @@ export const useVoiceStore = defineStore('voice', () => {
     } catch (e) {
       if (mine !== generation) return
       if (e instanceof VoiceQuotaError) {
-        quotaLeft.value = 0
-        quotaBlockedDay.value = utcDay(new Date())
+        quotaReached()
         error.value = quotaMessage(e.scope)
       } else {
         console.error(e)
@@ -109,5 +114,5 @@ export const useVoiceStore = defineStore('voice', () => {
     if (!enabled.value) stop()
   }
 
-  return { available, enabled, loading, playing, error, quotaLeft, quotaBlocked, play, playAll, stop, toggle }
+  return { available, enabled, loading, playing, error, quotaLeft, quotaBlocked, quotaReached, play, playAll, stop, toggle }
 })

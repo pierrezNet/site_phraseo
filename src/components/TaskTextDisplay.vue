@@ -29,7 +29,7 @@
       >
         <!-- Icône avion : maintenir pour parler tant que la réponse est attendue ; écoute de la réponse attendue après correction -->
         <span
-          class="select-none touch-none"
+          class="select-none touch-none talk-btn"
           @pointerdown="!resultOf(line.key) && startTalk(line.key)"
           @pointerup="endTalk()"
           @pointerleave="endTalk()"
@@ -44,11 +44,14 @@
           />
         </span>
         <span class="text-sm font-medium">À vous — que dit le pilote ?</span>
-        <span v-if="radio.recording === line.key" class="ml-2 px-2 py-0.5 rounded text-xs font-bold bg-red-600 text-white animate-pulse">● ÉMISSION</span>
+        <span v-if="radio.recording === line.key && radio.live" class="ml-2 px-2 py-0.5 rounded text-xs font-bold bg-red-600 text-white animate-pulse">● ÉMISSION</span>
+        <span v-else-if="radio.recording === line.key" class="ml-2 text-xs opacity-80">Ouverture du micro…</span>
         <span v-else-if="radio.transcribing === line.key" class="ml-2 text-xs opacity-80">Transcription…</span>
 
         <template v-if="!resultOf(line.key)">
+          <!-- Mobile : réponse à la voix uniquement (pas de clavier), sauf si le micro ou le quota manque -->
           <textarea
+            v-if="!voiceOnly"
             :ref="(el) => { textareas[line.key] = el as HTMLTextAreaElement | null }"
             v-model="answers[line.key]"
             @focus="lastFocused = line.key"
@@ -64,7 +67,8 @@
               v-if="radio.available"
               type="button"
               :class="[
-                'mr-auto px-3 py-1.5 text-sm rounded border select-none touch-none transition-colors',
+                'rounded border select-none touch-none transition-colors talk-btn',
+                voiceOnly ? 'w-full py-4 text-base font-medium' : 'mr-auto px-3 py-1.5 text-sm',
                 radio.recording === line.key ? 'bg-red-600 text-white border-red-600' : 'border-blue-500 hover:bg-blue-500/10'
               ]"
               :disabled="!!radio.transcribing"
@@ -73,9 +77,10 @@
               @pointercancel="endTalk()"
               @contextmenu.prevent
             >
-              {{ radio.recording === line.key ? '● Relâchez pour envoyer' : '🎙 Maintenir pour parler (Espace)' }}
+              {{ talkLabel(line.key) }}
             </button>
             <button
+              v-if="!voiceOnly"
               @click="verify(line)"
               :disabled="!(answers[line.key] && answers[line.key].trim())"
               class="px-4 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -476,6 +481,18 @@ const startTalk = (key: string) => {
   radio.talk(key, () => endTalk());
 };
 
+/** Écran tactile (mobile, tablette) : pas de clavier pour répondre */
+const isTouch = typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
+
+/** Mobile : la réponse se donne à la voix, sauf micro refusé ou quota atteint (retour au clavier) */
+const voiceOnly = computed(() => isTouch && radio.available && !radio.micDenied && !voice.quotaBlocked());
+
+const talkLabel = (key: string): string => {
+  if (radio.transcribing === key) return 'Transcription…';
+  if (radio.recording === key) return radio.live ? '● Relâchez pour envoyer' : 'Ouverture du micro…';
+  return isTouch ? '🎙 Maintenir pour parler' : '🎙 Maintenir pour parler (Espace)';
+};
+
 /** Bouton maintenu : le pointeur est capturé, un léger glissement du doigt ne coupe pas l'émission */
 const holdTalk = (e: PointerEvent, key: string) => {
   (e.currentTarget as Element | null)?.setPointerCapture?.(e.pointerId);
@@ -540,10 +557,22 @@ onMounted(() => {
   window.addEventListener('keyup', onKeyUp);
   window.addEventListener('blur', endTalk);
 });
+// Quiz quitté : micro fermé (il reste ouvert une minute entre deux réponses pour ne pas couper le début du message)
+watch(quizActive, (on) => !on && radio.dispose());
+
 onBeforeUnmount(() => {
+  radio.dispose();
   window.removeEventListener('keydown', onKeyDown);
   window.removeEventListener('keyup', onKeyUp);
   window.removeEventListener('blur', endTalk);
   voice.stop();
 });
 </script>
+
+<style scoped>
+/* iOS : pas de loupe ni de menu de sélection pendant l'appui long sur le bouton d'alternat */
+.talk-btn {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+</style>

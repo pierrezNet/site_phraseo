@@ -10,6 +10,8 @@ import { useVoiceStore, quotaMessage } from './voice'
 export const MAX_TALK_MS = 15000
 /** En dessous, rien n'a été dit (appui accidentel) */
 const MIN_TALK_MS = 300
+/** Micro gardé ouvert entre deux réponses : sur mobile, l'ouvrir à chaque appui coupe le début du message */
+const MIC_IDLE_MS = 60000
 
 /** Petit « clic » d'alternat : bruit bref et filtré, sans fichier audio */
 function radioClick() {
@@ -57,8 +59,30 @@ export const useRadioStore = defineStore('radio', () => {
   const available = !!API_BASE && typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getUserMedia
   /** Réplique en émission / en cours de transcription */
   const recording = ref<string | null>(null)
+  /** Micro prêt et enregistrement lancé : on peut parler (avant, le micro s'ouvre encore) */
+  const live = ref(false)
   const transcribing = ref<string | null>(null)
   const error = ref('')
+  /** Accès au micro refusé : la saisie au clavier redevient le seul moyen de répondre */
+  const micDenied = ref(false)
+
+  let stream: MediaStream | null = null
+  let idleTimer: ReturnType<typeof setTimeout> | null = null
+
+  function closeMic() {
+    stream?.getTracks().forEach((t) => t.stop())
+    stream = null
+  }
+
+  async function openMic(): Promise<MediaStream> {
+    if (idleTimer) clearTimeout(idleTimer)
+    idleTimer = null
+    if (stream?.getAudioTracks().some((t) => t.readyState === 'live')) return stream
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1 },
+    })
+    return stream
+  }
 
   let recorder: MediaRecorder | null = null
   let chunks: Blob[] = []
@@ -75,30 +99,25 @@ export const useRadioStore = defineStore('radio', () => {
     recording.value = key
     onAutoStop = autoStop ?? null
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 },
-      })
-      // Relâché pendant la demande d'autorisation : on n'enregistre pas
-      if (recording.value !== key) {
-        stream.getTracks().forEach((t) => t.stop())
-        return
-      }
+      const mic = await openMic()
+      // Relâché pendant l'ouverture du micro (ou la demande d'autorisation) : on n'enregistre pas
+      if (recording.value !== key) return
       chunks = []
-      recorder = new MediaRecorder(stream)
+      // Débit élevé : moins d'artefacts de compression pour la reconnaissance
+      recorder = new MediaRecorder(mic, { audioBitsPerSecond: 128000 })
       recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data)
       stopped = new Promise((resolve) => {
-        recorder!.onstop = () => {
-          stream.getTracks().forEach((t) => t.stop())
-          resolve(chunks.length ? new Blob(chunks, { type: recorder!.mimeType }) : null)
-        }
+        recorder!.onstop = () => resolve(chunks.length ? new Blob(chunks, { type: recorder!.mimeType }) : null)
       })
       radioClick()
       recorder.start()
       startedAt = Date.now()
+      live.value = true
       timer = setTimeout(() => onAutoStop?.(), MAX_TALK_MS)
     } catch (e) {
       console.error(e)
       recording.value = null
+      micDenied.value = e instanceof DOMException && e.name === 'NotAllowedError'
       error.value = 'Micro inaccessible : autorisez le micro pour ce site, ou tapez votre réponse.'
     }
   }
@@ -110,7 +129,14 @@ export const useRadioStore = defineStore('radio', () => {
     if (timer) clearTimeout(timer)
     timer = null
     recording.value = null
-    if (!recorder || recorder.state === 'inactive' || !stopped) return null
+    live.value = false
+    // Micro libéré après une minute sans nouvelle réponse
+    idleTimer = setTimeout(closeMic, MIC_IDLE_MS)
+    if (!recorder || recorder.state === 'inactive' || !stopped) {
+      // Relâché avant que le micro soit prêt (souvent le premier appui, pendant l'autorisation)
+      if (!micDenied.value) error.value = 'Micro en cours d’ouverture : maintenez jusqu’au signal « ● ÉMISSION », puis parlez.'
+      return null
+    }
     const duration = Date.now() - startedAt
     recorder.stop()
     radioClick()
@@ -135,7 +161,7 @@ export const useRadioStore = defineStore('radio', () => {
       return text
     } catch (e) {
       if (e instanceof VoiceQuotaError) {
-        voice.quotaLeft = 0
+        voice.quotaReached()
         error.value = quotaMessage(e.scope)
       } else {
         console.error(e)
@@ -147,5 +173,12 @@ export const useRadioStore = defineStore('radio', () => {
     }
   }
 
-  return { available, recording, transcribing, error, talk, release }
+  /** Fin du quiz (changement de page) : micro fermé tout de suite */
+  function dispose() {
+    if (idleTimer) clearTimeout(idleTimer)
+    idleTimer = null
+    if (!recording.value) closeMic()
+  }
+
+  return { available, recording, live, transcribing, error, micDenied, talk, release, dispose }
 })

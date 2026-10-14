@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import TaskTextDisplay from './TaskTextDisplay.vue'
@@ -187,5 +187,37 @@ describe('TaskTextDisplay', () => {
     expect(space().defaultPrevented).toBe(false)
     expect(talk).not.toHaveBeenCalled()
     wrapper.unmount()
+  })
+
+  describe('mobile (écran tactile)', () => {
+    const touch = vi.fn(() => ({ matches: true }))
+    beforeEach(() => vi.stubGlobal('matchMedia', touch))
+    afterEach(() => vi.unstubAllGlobals())
+
+    const mountMobile = () => {
+      useQuizStore().enabled = true
+      const radio = useRadioStore()
+      ;(radio as unknown as { available: boolean }).available = true
+      const wrapper = mount(TaskTextDisplay, {
+        global: { plugins: [pinia] },
+        props: { selectedTaskTexts: makeTasks('Rappellerai prêt, [CAA].', 'fr', 'Pilot') },
+      })
+      return { wrapper, radio }
+    }
+
+    it('réponse à la voix uniquement : ni clavier ni « Vérifier », un grand bouton sans mention d’Espace', () => {
+      const { wrapper } = mountMobile()
+      expect(wrapper.find('textarea').exists()).toBe(false)
+      expect(wrapper.findAll('button').some((b) => b.text() === 'Vérifier')).toBe(false)
+      expect(wrapper.text()).toContain('🎙 Maintenir pour parler')
+      expect(wrapper.text()).not.toContain('(Espace)')
+    })
+
+    it('micro refusé : retour à la saisie au clavier', async () => {
+      const { wrapper, radio } = mountMobile()
+      radio.micDenied = true
+      await wrapper.vm.$nextTick()
+      expect(wrapper.find('textarea').exists()).toBe(true)
+    })
   })
 })

@@ -39,6 +39,7 @@
             <li>Touche <strong>R</strong> : réécoute (ou arrête) la dernière réplique de l'ATC.</li>
             <li>En mode quiz, <strong>maintenez Espace</strong> (ou le bouton « 🎙 Maintenir pour parler », ou l'icône avion) pendant que vous parlez, relâchez pour envoyer : votre réponse s'affiche (« Entendu : … ») et est notée aussitôt. 15 secondes maximum ; le navigateur demande l'accès au micro la première fois.</li>
             <li>Dans la zone de réponse, Espace sert à parler tant qu'elle est vide ; dès que vous tapez, Espace écrit normalement (et R aussi).</li>
+            <li>Sur mobile, en mode quiz, on répond à la voix : maintenez le bouton « 🎙 Maintenir pour parler », attendez « ● ÉMISSION », parlez, relâchez. Si le micro est refusé ou le quota atteint, la saisie au clavier revient.</li>
             <li>Après correction, l'icône avion fait écouter la réponse attendue.</li>
             <li>Bouton <strong>🔊 ON/OFF</strong> de la barre : en vol complet, l'ATC parle automatiquement. Au survol : part du quota voix restante aujourd'hui.</li>
             <li>Voix de synthèse avec effet radio ; la voix et la reconnaissance ont un quota quotidien, les textes restent toujours disponibles.</li>
