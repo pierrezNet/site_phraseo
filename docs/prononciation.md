@@ -75,3 +75,9 @@ Réglages dans `VOICES` ([`src/utils/atcAudio.ts`](../src/utils/atcAudio.ts)) :
 ## Tester une graphie sans l'écouter : l'aller-retour
 
 Faire dire la graphie par MeloTTS, puis transcrire l'audio avec Whisper (les deux sur Workers AI, avec les clés de `bench/voice/.env.bench`). Si Whisper retrouve le sigle ou le mot, la graphie est bonne. Whisper reste un juge imparfait : tester chaque variante dans deux phrases différentes. Par exemple, « approche i elle esse piste » est mal découpé par Whisper, alors qu'une oreille humaine comprend.
+
+## Reconnaissance de la réponse du pilote (quiz)
+
+- Whisper large-v3-turbo via `POST /stt` du relais (WAV 16 kHz mono, 15 s maximum).
+- Le moteur reçoit la langue et un vocabulaire **sans aucun nombre** ([`src/utils/sttVocabulary.ts`](../src/utils/sttVocabulary.ts)) : alphabet OACI, stations, noms propres de la réplique attendue. Avec des nombres, il « corrigerait » l'élève vers la bonne valeur.
+- Le texte reconnu est noté par le scoring du quiz, qui accepte les graphies phonétiques (IVAO), l'alphabet OACI, « unité », les chiffres en mots ou en nombres.

@@ -33,13 +33,15 @@
             <li>Chevron <strong>&gt;</strong> : ouvre un choix de sous-options</li>
           </ul>
 
-          <h3 class="font-semibold text-base mt-4">Écouter les échanges</h3>
+          <h3 class="font-semibold text-base mt-4">Écouter et parler</h3>
           <ul class="list-disc ml-5 space-y-1">
             <li>Cliquez sur l'icône <strong>micro</strong> d'une réplique pour écouter l'ATC, sur l'icône <strong>avion</strong> pour écouter le pilote. Un nouveau clic arrête la lecture.</li>
-            <li>Touche <strong>Espace</strong> : écoute (ou arrête) la dernière réplique de l'ATC. En mode quiz, elle servira bientôt aussi à enregistrer votre réponse à la voix.</li>
-            <li>En mode quiz, l'icône avion fait écouter la réponse attendue une fois la correction affichée.</li>
-            <li>Bouton <strong>🔊 ON/OFF</strong> de la barre : en vol complet, l'ATC parle automatiquement.</li>
-            <li>Voix de synthèse avec effet radio ; la première écoute d'une réplique peut prendre une seconde.</li>
+            <li>Touche <strong>R</strong> : réécoute (ou arrête) la dernière réplique de l'ATC.</li>
+            <li>En mode quiz, <strong>maintenez Espace</strong> (ou le bouton « 🎙 Maintenir pour parler », ou l'icône avion) pendant que vous parlez, relâchez pour envoyer : votre réponse s'affiche (« Entendu : … ») et est notée aussitôt. 15 secondes maximum ; le navigateur demande l'accès au micro la première fois.</li>
+            <li>Dans la zone de réponse, Espace sert à parler tant qu'elle est vide ; dès que vous tapez, Espace écrit normalement (et R aussi).</li>
+            <li>Après correction, l'icône avion fait écouter la réponse attendue.</li>
+            <li>Bouton <strong>🔊 ON/OFF</strong> de la barre : en vol complet, l'ATC parle automatiquement. Au survol : part du quota voix restante aujourd'hui.</li>
+            <li>Voix de synthèse avec effet radio ; la voix et la reconnaissance ont un quota quotidien, les textes restent toujours disponibles.</li>
           </ul>
 
           <h3 class="font-semibold text-base mt-4">Carte interactive (VFR débutant)</h3>

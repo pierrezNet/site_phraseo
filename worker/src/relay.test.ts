@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import {
   TTS_MAX_CHARS,
+  checkSttAudio,
+  sttNeurons,
+  sttPrompt,
   discordPayload,
   parseFeedback,
   parseTts,
@@ -183,4 +186,39 @@ describe('wavSeconds / ttsNeurons', () => {
 
 describe('quotaDay', () => {
   it('jour UTC', () => expect(quotaDay(new Date('2026-10-13T23:30:00-02:00'))).toBe('2026-10-14'))
+})
+
+// ── Reconnaissance vocale ────────────────────────────────────────────────────
+
+describe('checkSttAudio', () => {
+  // WAV 16 kHz mono 16 bits : 32 000 octets par seconde
+  const wav16k = (seconds: number) => {
+    const bytes = new Uint8Array(44 + Math.round(32000 * seconds))
+    bytes.set([0x52, 0x49, 0x46, 0x46])
+    new DataView(bytes.buffer).setUint32(28, 32000, true)
+    return bytes
+  }
+
+  it('accepte une réponse de quelques secondes', () => {
+    expect(checkSttAudio(wav16k(4))).toEqual({ ok: true, seconds: 4 })
+  })
+
+  it('refuse trop court, trop long ou pas un WAV', () => {
+    expect(checkSttAudio(wav16k(0.1))).toMatchObject({ ok: false, status: 400 })
+    expect(checkSttAudio(wav16k(17))).toMatchObject({ ok: false, status: 413 })
+    expect(checkSttAudio(new Uint8Array(1000))).toMatchObject({ ok: false, status: 400 })
+  })
+
+  it('décompte 45,5 neurones par minute', () => {
+    expect(sttNeurons(60)).toBeCloseTo(45.5)
+  })
+})
+
+describe('sttPrompt', () => {
+  it('garde les mots, retire chiffres et caractères inattendus', () => {
+    expect(sttPrompt('fr', 'Strasbourg, Tour, 118 décimale 7, <script>')).toBe(
+      'Radiotéléphonie aéronautique. Strasbourg, Tour, décimale, script.'
+    )
+    expect(sttPrompt('en', null)).toBe('Aviation radiotelephony.')
+  })
 })

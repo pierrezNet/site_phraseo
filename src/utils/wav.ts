@@ -1,6 +1,6 @@
 /**
  * Conversion d'un enregistrement (webm/opus du navigateur) en WAV PCM 16 bits, 16 kHz mono :
- * le format le plus largement accepté par les moteurs de reconnaissance.
+ * le format le plus largement accepté par les moteurs de reconnaissance (quiz vocal et banc bench/voice).
  */
 export const TARGET_RATE = 16000;
 
@@ -33,7 +33,9 @@ export function encodeWav(samples: Float32Array, sampleRate = TARGET_RATE): Arra
 
 /** Enregistrement navigateur → WAV 16 kHz mono (navigateur uniquement : AudioContext) */
 export async function toWav(recording: Blob): Promise<{ wav: Blob; durationMs: number }> {
-  const decoded = await new AudioContext().decodeAudioData(await recording.arrayBuffer());
+  // Contexte fermé après décodage : un enregistrement par réponse, sans accumuler de contextes audio
+  const context = new AudioContext();
+  const decoded = await context.decodeAudioData(await recording.arrayBuffer()).finally(() => context.close());
   const length = Math.ceil(decoded.duration * TARGET_RATE);
   const offline = new OfflineAudioContext(1, length, TARGET_RATE);
   const source = offline.createBufferSource();

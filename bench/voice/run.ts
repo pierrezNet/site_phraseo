@@ -27,7 +27,7 @@ async function withRetry<T>(call: () => Promise<T>, attempts = 5): Promise<T> {
   }
 }
 import { markdownReport, type Take, type Trial } from './report';
-import { vocabulary } from './vocabulary';
+import { vocabulary } from '../../src/utils/sttVocabulary';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const envFile = join(here, '.env.bench');

@@ -5,16 +5,20 @@
  *   POST /feedback     → message Discord (webhook stocké en secret)
  *   POST /tts          → voix de l'ATC (MeloTTS, Workers AI), WAV mis en cache 30 jours,
  *                        quotas du jour par utilisateur anonyme, par IP et au total (Durable Object VoiceQuota)
+ *   POST /stt?lang=fr  → réponse du pilote (WAV 16 kHz, 15 s max) transcrite par Whisper, mêmes quotas
  *
  * Le site statique (GitHub Pages) n'embarque ainsi plus aucun secret.
  */
 import {
   ICAO_RE,
   USER_ID_RE,
+  checkSttAudio,
   discordPayload,
   parseFeedback,
   parseTts,
   quotaLimits,
+  sttNeurons,
+  sttPrompt,
   toMetar,
   ttsAudioBytes,
   ttsCacheKey,
@@ -31,6 +35,7 @@ interface Env {
   ALLOWED_ORIGINS: string;
   FEEDBACK_LIMITER: RateLimit;
   TTS_LIMITER: RateLimit;
+  STT_LIMITER: RateLimit;
   AI: Ai;
   QUOTA: DurableObjectNamespace<VoiceQuota>;
   /** Plafonds quotidiens en neurones (wrangler.toml) */
@@ -49,7 +54,7 @@ function corsHeaders(origin: string | null, env: Env): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Phraseo-User',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Phraseo-User, X-Stt-Hint',
     'Access-Control-Expose-Headers': 'X-Voice-Quota-Left',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin',
@@ -112,6 +117,21 @@ async function handleFeedback(request: Request, env: Env, cors: Record<string, s
   return new Response(null, { status: 204, headers: cors });
 }
 
+/** Identité de quota : identifiant anonyme du navigateur, sinon l'IP */
+function voiceIdentity(request: Request, env: Env) {
+  const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown';
+  const header = request.headers.get('X-Phraseo-User') ?? '';
+  return {
+    ip,
+    user: USER_ID_RE.test(header) ? header.toLowerCase() : `ip:${ip}`,
+    limits: quotaLimits(env),
+    quota: env.QUOTA.get(env.QUOTA.idFromName('global')),
+  };
+}
+
+const quotaRefused = (scope: string | undefined, cors: Record<string, string>) =>
+  json({ error: 'Quota voix atteint', quota: scope }, 429, cors, { 'X-Voice-Quota-Left': '0' });
+
 async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors: Record<string, string>): Promise<Response> {
   if (!cors['Access-Control-Allow-Origin']) return json({ error: 'Origine non autorisée' }, 403, cors);
 
@@ -133,17 +153,12 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
   const cached = await cache.match(key);
   if (cached) return new Response(cached.body, { headers: { ...Object.fromEntries(cached.headers), ...cors } });
 
-  const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown';
+  const { ip, user, limits, quota } = voiceIdentity(request, env);
   const { success } = await env.TTS_LIMITER.limit({ key: ip });
   if (!success) return json({ error: 'Trop de requêtes, réessaie dans une minute' }, 429, cors);
 
-  // Quotas du jour : sans identifiant valide, l'IP tient lieu d'utilisateur
-  const header = request.headers.get('X-Phraseo-User') ?? '';
-  const user = USER_ID_RE.test(header) ? header.toLowerCase() : `ip:${ip}`;
-  const limits = quotaLimits(env);
-  const quota = env.QUOTA.get(env.QUOTA.idFromName('global'));
   const verdict = await quota.check(user, ip, limits);
-  if (!verdict.allowed) return json({ error: 'Quota voix atteint', quota: verdict.scope }, 429, cors, { 'X-Voice-Quota-Left': '0' });
+  if (!verdict.allowed) return quotaRefused(verdict.scope, cors);
 
   let audio: Uint8Array;
   try {
@@ -161,6 +176,42 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
   return new Response(audio, { headers: { ...headers, ...cors, 'X-Voice-Quota-Left': left.toFixed(3) } });
 }
 
+async function handleStt(request: Request, env: Env, cors: Record<string, string>): Promise<Response> {
+  if (!cors['Access-Control-Allow-Origin']) return json({ error: 'Origine non autorisée' }, 403, cors);
+
+  const params = new URL(request.url).searchParams;
+  const lang = params.get('lang');
+  if (lang !== 'fr' && lang !== 'en') return json({ error: 'Langue invalide' }, 400, cors);
+
+  const { ip, user, limits, quota } = voiceIdentity(request, env);
+  const { success } = await env.STT_LIMITER.limit({ key: ip });
+  if (!success) return json({ error: 'Trop de requêtes, réessaie dans une minute' }, 429, cors);
+
+  const audio = new Uint8Array(await request.arrayBuffer());
+  const check = checkSttAudio(audio);
+  if (!check.ok) return json({ error: check.error }, check.status, cors);
+
+  const verdict = await quota.check(user, ip, limits);
+  if (!verdict.allowed) return quotaRefused(verdict.scope, cors);
+
+  let text: string;
+  try {
+    const hint = request.headers.get('X-Stt-Hint');
+    const result = await env.AI.run('@cf/openai/whisper-large-v3-turbo', {
+      audio: btoa(Array.from(audio, (b) => String.fromCharCode(b)).join('')),
+      language: lang,
+      initial_prompt: sttPrompt(lang, hint ? decodeURIComponent(hint) : null),
+    });
+    text = (result.text ?? '').trim();
+  } catch (err) {
+    console.error('Whisper a échoué', err);
+    return json({ error: 'Reconnaissance indisponible' }, 502, cors);
+  }
+
+  const { left } = await quota.charge(user, ip, sttNeurons(check.seconds), limits);
+  return json({ text }, 200, cors, { 'X-Voice-Quota-Left': left.toFixed(3) });
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const cors = corsHeaders(request.headers.get('Origin'), env);
@@ -170,7 +221,7 @@ export default {
 
     // Racine : simple description, utile pour vérifier que le relais répond
     if (pathname === '/' && request.method === 'GET') {
-      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'POST /feedback', 'POST /tts'] }, 200, cors);
+      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'POST /feedback', 'POST /tts', 'POST /stt'] }, 200, cors);
     }
 
     const metar = pathname.match(/^\/metar\/([^/]+)$/);
@@ -179,6 +230,8 @@ export default {
     if (pathname === '/feedback' && request.method === 'POST') return handleFeedback(request, env, cors);
 
     if (pathname === '/tts' && request.method === 'POST') return handleTts(request, env, ctx, cors);
+
+    if (pathname === '/stt' && request.method === 'POST') return handleStt(request, env, cors);
 
     return json({ error: 'Not found' }, 404, cors);
   },

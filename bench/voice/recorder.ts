@@ -5,7 +5,7 @@
  */
 import { collectCandidates } from './collect';
 import { pickPhrases, type BenchPhrase } from './phrases';
-import { toWav } from './wav';
+import { toWav } from '../../src/utils/wav';
 
 const COUNTS = { fr: 35, en: 15 };
 

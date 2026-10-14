@@ -21,7 +21,7 @@ export class VoiceQuotaError extends Error {
 let sessionUserId: string | null = null;
 
 /** Identifiant anonyme du navigateur pour le quota voix (aucune donnée personnelle) */
-function voiceUserId(): string {
+export function voiceUserId(): string {
   try {
     const stored = localStorage.getItem(USER_ID_KEY);
     if (stored) return stored;

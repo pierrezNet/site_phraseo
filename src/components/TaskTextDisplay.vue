@@ -22,29 +22,59 @@
       <!-- Ligne pilote en mode quiz : saisie + correction -->
       <div
         v-if="line.isPilot && quizActive"
-        class="w-full p-4 rounded-md mb-4 shadow border-l-4 bg-blue-100 border-blue-500"
+        :class="[
+          'w-full p-4 rounded-md mb-4 shadow border-l-4 bg-blue-100 border-blue-500',
+          { 'ring-2 ring-red-500': radio.recording === line.key }
+        ]"
       >
-        <!-- Écoute de la réponse attendue, une fois la correction dévoilée (l'icône servira à enregistrer en phase 2) -->
-        <ListenButton
-          :line-key="line.key"
-          :speech="line.speech"
-          is-pilot
-          :listenable="!!resultOf(line.key) && isFinal(line.key) && !awaitingReply(line.key)"
-          class="mr-2"
-        />
+        <!-- Icône avion : maintenir pour parler tant que la réponse est attendue ; écoute de la réponse attendue après correction -->
+        <span
+          class="select-none touch-none"
+          @pointerdown="!resultOf(line.key) && startTalk(line.key)"
+          @pointerup="endTalk()"
+          @pointerleave="endTalk()"
+          @pointercancel="endTalk()"
+        >
+          <ListenButton
+            :line-key="line.key"
+            :speech="line.speech"
+            is-pilot
+            :listenable="!!resultOf(line.key) && isFinal(line.key) && !awaitingReply(line.key)"
+            class="mr-2"
+          />
+        </span>
         <span class="text-sm font-medium">À vous — que dit le pilote ?</span>
+        <span v-if="radio.recording === line.key" class="ml-2 px-2 py-0.5 rounded text-xs font-bold bg-red-600 text-white animate-pulse">● ÉMISSION</span>
+        <span v-else-if="radio.transcribing === line.key" class="ml-2 text-xs opacity-80">Transcription…</span>
 
         <template v-if="!resultOf(line.key)">
           <textarea
             :ref="(el) => { textareas[line.key] = el as HTMLTextAreaElement | null }"
             v-model="answers[line.key]"
             @focus="lastFocused = line.key"
+            @input="spokenAnswers[line.key] = false"
             rows="3"
-            placeholder="Tapez la phrase du pilote…"
+            :placeholder="radio.available ? 'Maintenez Espace pour parler, ou tapez la phrase du pilote…' : 'Tapez la phrase du pilote…'"
             class="w-full mt-2 border rounded px-3 py-2 text-sm resize-y"
             @keydown.ctrl.enter="verify(line)"
           ></textarea>
-          <div class="flex justify-end mt-2">
+          <div class="flex justify-end items-center gap-2 mt-2">
+            <!-- Alternat : maintenir pour parler (souris, tactile) ; Espace au clavier -->
+            <button
+              v-if="radio.available"
+              type="button"
+              :class="[
+                'mr-auto px-3 py-1.5 text-sm rounded border select-none touch-none transition-colors',
+                radio.recording === line.key ? 'bg-red-600 text-white border-red-600' : 'border-blue-500 hover:bg-blue-500/10'
+              ]"
+              :disabled="!!radio.transcribing"
+              @pointerdown.prevent="holdTalk($event, line.key)"
+              @pointerup="endTalk()"
+              @pointercancel="endTalk()"
+              @contextmenu.prevent
+            >
+              {{ radio.recording === line.key ? '● Relâchez pour envoyer' : '🎙 Maintenir pour parler (Espace)' }}
+            </button>
             <button
               @click="verify(line)"
               :disabled="!(answers[line.key] && answers[line.key].trim())"
@@ -82,7 +112,7 @@
           </ul>
 
           <div v-if="answers[line.key]" class="text-sm">
-            <span class="opacity-70">Votre réponse :</span>
+            <span class="opacity-70">{{ spokenAnswers[line.key] ? 'Entendu :' : 'Votre réponse :' }}</span>
             <div class="italic">{{ answers[line.key] }}</div>
           </div>
           <div v-if="isFinal(line.key) && !awaitingReply(line.key)" class="text-sm">
@@ -116,6 +146,7 @@
     </template>
 
     <p v-if="voice.error" class="ko-text text-sm mb-2">{{ voice.error }}</p>
+    <p v-if="radio.error" class="ko-text text-sm mb-2">{{ radio.error }}</p>
 
     <!-- Vol complet : passage à l'étape suivante une fois toutes les répliques pilote terminées -->
     <div v-if="flight.active && stepComplete" class="flex justify-end">
@@ -134,6 +165,8 @@ import { useWeatherStore } from '../stores/weather';
 import { useQuizStore } from '../stores/quiz';
 import { useFlightStore, MAX_ATTEMPTS } from '../stores/flight';
 import { useVoiceStore } from '../stores/voice';
+import { useRadioStore } from '../stores/radio';
+import { vocabulary } from '../utils/sttVocabulary';
 import { requirementsMet } from '../utils/flight';
 import { replacePlaceholders } from '../utils/phraseoHelpers';
 import { groupFlightNumber, toSpeech } from '../utils/speech';
@@ -153,6 +186,7 @@ const weatherStore = useWeatherStore();
 const quizStore = useQuizStore();
 const flight = useFlightStore();
 const voice = useVoiceStore();
+const radio = useRadioStore();
 
 // Le vol complet se joue toujours en mode quiz
 const quizActive = computed(() => quizStore.enabled || flight.active);
@@ -319,6 +353,7 @@ watch(
 const resetQuiz = () => {
   voice.stop();
   spokenKeys.clear();
+  for (const k of Object.keys(spokenAnswers)) delete spokenAnswers[k];
   for (const k of Object.keys(answers)) delete answers[k];
   for (const k of Object.keys(results)) delete results[k];
   for (const k of Object.keys(relaunched)) delete relaunched[k];
@@ -429,23 +464,86 @@ watch(
   { immediate: true }
 );
 
-// Espace (hors saisie et hors modale) : écoute ou arrête la dernière réplique de l'ATC affichée
-// (en phase 2, maintenir Espace en quiz servira à enregistrer sa réponse)
-const onSpace = (e: KeyboardEvent) => {
-  if (e.code !== 'Space' || e.repeat || !voice.available) return;
-  const target = e.target as HTMLElement | null;
-  if (target?.closest('input, textarea, select, [contenteditable="true"], .modal')) return;
-  const atc = displayedLines.value.filter((l) => !l.isPilot).at(-1);
-  if (!atc) return;
-  // Pas de défilement, ni de second clic sur l'icône qui a gardé le focus
-  e.preventDefault();
-  if (voice.playing === atc.key || voice.loading === atc.key) voice.stop();
-  else speak(atc);
+// ── Alternat du pilote (quiz) ────────────────────────────────────────────────
+
+/** Réponses données à la voix : affichées « Entendu : » */
+const spokenAnswers = reactive<Record<string, boolean>>({});
+
+const startTalk = (key: string) => {
+  if (!radio.available || resultOf(key)) return;
+  voice.stop();
+  // Coupure automatique à 15 s : la transcription part comme au relâchement
+  radio.talk(key, () => endTalk());
 };
 
-onMounted(() => window.addEventListener('keydown', onSpace));
+/** Bouton maintenu : le pointeur est capturé, un léger glissement du doigt ne coupe pas l'émission */
+const holdTalk = (e: PointerEvent, key: string) => {
+  (e.currentTarget as Element | null)?.setPointerCapture?.(e.pointerId);
+  startTalk(key);
+};
+
+/** Fin d'émission : le texte entendu devient la réponse, aussitôt vérifiée */
+const endTalk = async () => {
+  const key = radio.recording;
+  if (!key) return;
+  const lang = langStore.current as 'fr' | 'en';
+  const line = renderedLines.value.find((l) => l.key === key);
+  // Vocabulaire sans nombres (noms propres de la réplique, stations, alphabet) pour guider Whisper
+  const text = await radio.release(lang, line ? vocabulary(lang, [line.expectedSpoken]) : []);
+  if (!text || !line || resultOf(key)) return;
+  answers[key] = text;
+  spokenAnswers[key] = true;
+  verify(line);
+};
+
+// Clavier : Espace maintenu = parler (quiz) ; R = réécouter l'ATC.
+// Dans une zone de saisie, les touches écrivent normalement, sauf Espace dans une réponse encore vide
+// (une espace en début de réponse ne sert à rien) : on peut parler sans quitter le champ.
+const outsideTyping = (e: KeyboardEvent) =>
+  !(e.target as HTMLElement | null)?.closest('input, textarea, select, [contenteditable="true"], .modal');
+
+/** Réplique dont la zone de réponse vide a le focus */
+const emptyAnswerField = (e: KeyboardEvent): string | null => {
+  const entry = Object.entries(textareas).find(([, el]) => el && el === e.target);
+  return entry && !(answers[entry[0]] ?? '').trim() ? entry[0] : null;
+};
+
+const onKeyDown = (e: KeyboardEvent) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const field = e.code === 'Space' ? emptyAnswerField(e) : null;
+  if (!field && !outsideTyping(e)) return;
+  if (e.code === 'Space') {
+    const key = quizActive.value && radio.available ? field ?? insertionTarget() : null;
+    if (!key) return;
+    // Pas de défilement, ni de clic sur un bouton qui aurait gardé le focus
+    e.preventDefault();
+    if (!e.repeat && !radio.recording) startTalk(key);
+  } else if (e.code === 'KeyR' && !e.repeat && voice.available) {
+    const atc = displayedLines.value.filter((l) => !l.isPilot).at(-1);
+    if (!atc) return;
+    e.preventDefault();
+    if (voice.playing === atc.key || voice.loading === atc.key) voice.stop();
+    else speak(atc);
+  }
+};
+
+const onKeyUp = (e: KeyboardEvent) => {
+  if (e.code === 'Space' && radio.recording) {
+    e.preventDefault();
+    endTalk();
+  }
+};
+
+// Fenêtre quittée pendant l'émission : on envoie ce qui a été dit
+onMounted(() => {
+  window.addEventListener('keydown', onKeyDown);
+  window.addEventListener('keyup', onKeyUp);
+  window.addEventListener('blur', endTalk);
+});
 onBeforeUnmount(() => {
-  window.removeEventListener('keydown', onSpace);
+  window.removeEventListener('keydown', onKeyDown);
+  window.removeEventListener('keyup', onKeyUp);
+  window.removeEventListener('blur', endTalk);
   voice.stop();
 });
 </script>

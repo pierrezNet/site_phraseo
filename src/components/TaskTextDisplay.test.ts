@@ -1,10 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import TaskTextDisplay from './TaskTextDisplay.vue'
 import { useQuizStore } from '../stores/quiz'
 import { useWeatherStore } from '../stores/weather'
 import { useFormStore } from '../stores/form'
+import { useRadioStore } from '../stores/radio'
 
 const makeTasks = (text: string, lang = 'fr', cls = 'ATC') => [
   { __text: text, _lang: lang, _class: cls, icon: null },
@@ -139,5 +140,52 @@ describe('TaskTextDisplay', () => {
     // Le panneau ne doit pas être vide
     expect(wrapper.findAll('.rounded-md')).toHaveLength(1)
     expect(wrapper.text()).toContain('1013')
+  })
+
+  it('alternat : au relâchement d’Espace, le texte entendu est noté et affiché « Entendu : »', async () => {
+    useQuizStore().enabled = true
+    const caa = useFormStore().form.CAA
+    const wrapper = mount(TaskTextDisplay, {
+      global: { plugins: [pinia] },
+      props: { selectedTaskTexts: makeTasks('Rappellerai prêt, [CAA].', 'fr', 'Pilot') },
+      attachTo: document.body,
+    })
+    const radio = useRadioStore()
+    const release = vi.spyOn(radio, 'release').mockResolvedValue(`Rappellerai prêt, ${caa}.`)
+    // Émission en cours sur la réplique 0 (le micro n'existe pas sous jsdom)
+    radio.recording = '0'
+    window.dispatchEvent(new KeyboardEvent('keyup', { code: 'Space' }))
+    await vi.waitFor(() => expect(wrapper.text()).toContain('Validé'))
+    expect(release).toHaveBeenCalledWith('fr', expect.arrayContaining(['Alpha', 'Tour']))
+    expect(wrapper.text()).toContain('Entendu :')
+    wrapper.unmount()
+  })
+
+  it('alternat : Espace parle depuis une zone de réponse vide, écrit dès qu’elle contient du texte', async () => {
+    useQuizStore().enabled = true
+    const wrapper = mount(TaskTextDisplay, {
+      global: { plugins: [pinia] },
+      props: { selectedTaskTexts: makeTasks('Rappellerai prêt, [CAA].', 'fr', 'Pilot') },
+      attachTo: document.body,
+    })
+    const radio = useRadioStore()
+    // Micro présent (absent sous jsdom) : l'émission démarre
+    ;(radio as unknown as { available: boolean }).available = true
+    const talk = vi.spyOn(radio, 'talk').mockResolvedValue()
+    const field = wrapper.find('textarea')
+    const space = () => {
+      const e = new KeyboardEvent('keydown', { code: 'Space', key: ' ', bubbles: true, cancelable: true })
+      field.element.dispatchEvent(e)
+      return e
+    }
+
+    expect(space().defaultPrevented).toBe(true)
+    expect(talk).toHaveBeenCalledWith('0', expect.any(Function))
+
+    talk.mockClear()
+    await field.setValue('Rappellerai')
+    expect(space().defaultPrevented).toBe(false)
+    expect(talk).not.toHaveBeenCalled()
+    wrapper.unmount()
   })
 })

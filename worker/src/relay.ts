@@ -197,3 +197,40 @@ export function ttsNeurons(audio: Uint8Array, text: string): number {
   const seconds = wavSeconds(audio) ?? text.length / 12;
   return (seconds / 60) * NEURONS_PER_MINUTE.tts;
 }
+
+// ── Reconnaissance vocale (réponse du pilote, phase 2) ───────────────────────
+
+/** Une réponse radio tient en 15 s ; en dessous de 0,3 s, rien n'a été dit */
+export const STT_MAX_SECONDS = 15;
+export const STT_MIN_SECONDS = 0.3;
+/** WAV 16 kHz mono 16 bits de 15 s ≈ 480 Ko, avec marge */
+export const STT_MAX_BYTES = 600_000;
+
+export type SttCheck = { ok: true; seconds: number } | { ok: false; status: number; error: string };
+
+/** Valide l'enregistrement reçu (WAV PCM produit par le site) */
+export function checkSttAudio(bytes: Uint8Array): SttCheck {
+  if (bytes.length > STT_MAX_BYTES) return { ok: false, status: 413, error: 'Enregistrement trop long' };
+  const seconds = wavSeconds(bytes);
+  if (seconds === null) return { ok: false, status: 400, error: 'Format audio invalide (WAV attendu)' };
+  if (seconds > STT_MAX_SECONDS + 0.5) return { ok: false, status: 413, error: 'Enregistrement trop long' };
+  if (seconds < STT_MIN_SECONDS) return { ok: false, status: 400, error: 'Enregistrement trop court' };
+  return { ok: true, seconds };
+}
+
+/**
+ * Contexte fourni à Whisper : mots du vocabulaire envoyés par le site, sans aucun chiffre
+ * (sinon le moteur « corrigerait » l'élève vers la valeur attendue) ni caractère inattendu.
+ */
+export function sttPrompt(lang: 'fr' | 'en', hint: string | null): string {
+  const words = (hint ?? '')
+    .split(',')
+    .map((w) => w.replace(/[^\p{L}' -]/gu, '').trim())
+    .filter(Boolean)
+    .slice(0, 60);
+  const intro = lang === 'fr' ? 'Radiotéléphonie aéronautique.' : 'Aviation radiotelephony.';
+  return words.length ? `${intro} ${words.join(', ')}.`.slice(0, 600) : intro;
+}
+
+/** Neurones consommés par une transcription */
+export const sttNeurons = (seconds: number): number => (seconds / 60) * NEURONS_PER_MINUTE.stt;

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { pickPhrases, readable, type Candidate } from './phrases'
-import { encodeWav } from './wav'
+import { encodeWav } from '../../src/utils/wav'
 import { summarize, wer, markdownReport, type Trial } from './report'
-import { vocabulary, properNouns } from './vocabulary'
+import { vocabulary, properNouns } from '../../src/utils/sttVocabulary'
 
 const cand = (over: Partial<Candidate>): Candidate => ({
   lang: 'fr', mode: 'IFR', scenario: 'S', step: 'Étape', display: 'x', expected: 'x', criticals: [], equivalences: [], ...over,

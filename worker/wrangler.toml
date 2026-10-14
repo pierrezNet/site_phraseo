@@ -28,7 +28,16 @@ namespace_id = "1002"
   limit = 60
   period = 60
 
-# Workers AI (MeloTTS)
+# Reconnaissance vocale : 30 réponses par minute et par IP
+[[ratelimits]]
+name = "STT_LIMITER"
+namespace_id = "1003"
+
+  [ratelimits.simple]
+  limit = 30
+  period = 60
+
+# Workers AI (MeloTTS, Whisper)
 [ai]
 binding = "AI"
 
