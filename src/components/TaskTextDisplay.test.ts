@@ -213,6 +213,14 @@ describe('TaskTextDisplay', () => {
       expect(wrapper.text()).not.toContain('(Espace)')
     })
 
+    it('navigateur mobile sans signal tactile : réponse à la voix quand même', () => {
+      vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false })))
+      vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue('Mozilla/5.0 (Linux; Android 14; Pixel 8) Mobile Safari/537.36')
+      const { wrapper } = mountMobile()
+      expect(wrapper.find('textarea').exists()).toBe(false)
+      vi.restoreAllMocks()
+    })
+
     it('micro refusé : retour à la saisie au clavier', async () => {
       const { wrapper, radio } = mountMobile()
       radio.micDenied = true

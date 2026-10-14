@@ -481,8 +481,20 @@ const startTalk = (key: string) => {
   radio.talk(key, () => endTalk());
 };
 
-/** Écran tactile (mobile, tablette) : pas de clavier pour répondre */
-const isTouch = typeof window !== 'undefined' && !!window.matchMedia?.('(pointer: coarse)').matches;
+/**
+ * Mobile ou tablette : pas de clavier pour répondre. Le signal « pointeur tactile » ne suffit pas
+ * (certains navigateurs mobiles ne le donnent pas) : on retient aussi un navigateur qui s'annonce mobile,
+ * et l'iPad, qui se présente comme un Mac tactile.
+ */
+const isTouch = (() => {
+  if (typeof window === 'undefined') return false;
+  const ua = navigator.userAgent;
+  return (
+    !!window.matchMedia?.('(pointer: coarse)').matches ||
+    /Android|iPhone|iPad|iPod|Mobi/i.test(ua) ||
+    (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)
+  );
+})();
 
 /** Mobile : la réponse se donne à la voix, sauf micro refusé ou quota atteint (retour au clavier) */
 const voiceOnly = computed(() => isTouch && radio.available && !radio.micDenied && !voice.quotaBlocked());
