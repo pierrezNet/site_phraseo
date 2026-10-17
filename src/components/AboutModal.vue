@@ -3,7 +3,7 @@
     <!-- Backdrop -->
     <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm modal">
       <!-- Modal Content -->
-      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-screen overflow-y-auto">
         <div class="flex justify-between items-center border-b pb-2">
           <h2 class="text-lg font-semibold">À propos</h2>
           <button @click="close" class="text-gray-600 hover:text-gray-800">
@@ -22,8 +22,16 @@
               </div>
             </a>
             <p>Ces textes sont regroupés sur deux <a href="https://github.com/pierrezNet/site_phraseo/tree/main/src/data" target="_blank" rel="noopener noreferrer">fichiers en langage JSON</a>. Ils constituent le référentiel de phraséologie aéronautique.</p>
-            <h3 class="text-lg font-semibold mt-3">Utilisation</h3>
-            <p>Aucune information saisie dans le formulaire de vol n'est envoyée sur le réseau : vos paramètres restent sur votre appareil. Une mesure d'audience anonyme et sans cookie (Cloudflare Web Analytics) est utilisée pour comprendre l'usage du service, sans exploitation de vos adresses IP. Les retours que vous envoyez volontairement via le formulaire « J'ai un retour » sont transmis à notre <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer">salon Discord</a>. Le service de phraséologie peut être utilisé librement mais il convient de le réserver à la simulation de vol.</p>
+            <h3 class="text-lg font-semibold mt-3">Vos données</h3>
+            <p>Les paramètres de vol, le niveau et les réglages restent sur votre appareil (stockage local du navigateur). <strong>Sans utiliser la voix, seul le code OACI de la météo est envoyé.</strong> Les fonctions suivantes passent par le relais du site (hébergé chez Cloudflare), uniquement quand vous les utilisez&nbsp;:</p>
+            <ul class="list-disc ml-5 space-y-1 mt-1">
+              <li><strong>Météo</strong>&nbsp;: seul le code OACI de l'aérodrome est envoyé, pour obtenir le METAR (NOAA).</li>
+              <li><strong>Écoute des répliques</strong> (clic sur une icône, touche R, et lecture automatique en vol complet si le bouton 🔊 est sur ON)&nbsp;: le texte à prononcer (indicatif, aérodromes, fréquences…) est envoyé au service de synthèse vocale Cloudflare Workers AI. L'audio produit est gardé en cache 30 jours, sous une clé chiffrée, pour ne pas refaire la même synthèse.</li>
+              <li><strong>Réponse à la voix (quiz)</strong>&nbsp;: le micro ne s'ouvre que lorsque vous maintenez Espace ou le bouton pour parler&nbsp;; l'enregistrement de votre réponse est envoyé au service de reconnaissance vocale Cloudflare Workers AI (Whisper), uniquement le temps de la transcription. Il n'est pas conservé par le site.</li>
+              <li><strong>Quota voix</strong>&nbsp;: lors de ces deux usages, un identifiant anonyme tiré au hasard dans votre navigateur et votre adresse IP servent à compter l'usage du jour. Ces compteurs sont effacés chaque nuit à minuit UTC.</li>
+              <li><strong>Retours</strong>&nbsp;: les messages envoyés volontairement via «&nbsp;J'ai un retour&nbsp;» sont transmis à notre <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer">salon Discord</a>.</li>
+            </ul>
+            <p class="mt-2">Une mesure d'audience anonyme et sans cookie (Cloudflare Web Analytics) aide à comprendre l'usage du service, sans exploitation de vos adresses IP. Le service de phraséologie peut être utilisé librement mais il convient de le réserver à la simulation de vol.</p>
 		    </div>
         <div class="mt-6 flex justify-end">
           <button @click="close" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
