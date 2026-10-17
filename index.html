@@ -3,9 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="schema.dc" href="http://purl.org/dc/elements/1.1/">
+    <meta name="theme-color" content="#1e3a8a">
     <title>Phraséologie aéronautique pour les pilotes virtuels</title>
-    <meta name="description" content="Simulateur de phraséologie aéronautique VFR et IFR. Entraînez-vous aux communications radio pilote-contrôleur avec des textes conformes au manuel DGAC.">
+    <meta name="description" content="Simulateur de phraséologie aéronautique VFR et IFR, en français et en anglais : quiz, vol complet, voix de l'ATC et réponse à la voix. Textes conformes au manuel DGAC.">
+    <link rel="canonical" href="https://phraseo.aeronautique.xyz/">
+
+    <!-- Dublin Core -->
+    <link rel="schema.dc" href="http://purl.org/dc/terms/">
+    <meta name="dc.title" content="Phraséologie aéronautique pour les pilotes virtuels">
+    <meta name="dc.creator" content="Emmanuel Pierrez">
+    <meta name="dc.description" content="Simulateur de phraséologie aéronautique VFR et IFR, conforme au manuel DGAC.">
+    <meta name="dc.language" content="fr">
+    <meta name="dc.source" content="https://phraseo.aeronautique.xyz/">
+
+    <!-- Open Graph (aperçus Discord, forums, réseaux) -->
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Phraséologie aéronautique pour les pilotes virtuels">
+    <meta property="og:description" content="Entraînez-vous aux communications radio VFR et IFR, en français et en anglais : quiz, vol complet, voix de l'ATC et réponse à la voix.">
+    <meta property="og:url" content="https://phraseo.aeronautique.xyz/">
+    <meta property="og:image" content="https://phraseo.aeronautique.xyz/og-phraseo.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Icône de la phraséologie : bulle radio ATC / pilote autour d'un avion">
+    <meta property="og:site_name" content="Aero Hub">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Données structurées Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Phraséologie aéronautique pour les pilotes virtuels",
+      "url": "https://phraseo.aeronautique.xyz/",
+      "description": "Simulateur de phraséologie aéronautique VFR et IFR, en français et en anglais : trois niveaux, quiz noté, vol complet guidé, voix de l'ATC et réponse à la voix. Textes conformes au manuel de phraséologie DGAC.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Navigateur web",
+      "inLanguage": ["fr", "en"],
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "author": { "@type": "Person", "name": "Emmanuel Pierrez", "url": "https://pierrez.net" },
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "isPartOf": { "@type": "WebSite", "name": "Aero Hub", "url": "https://aeronautique.xyz/" }
+    }
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="/Headset_icon.svg" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -13,6 +56,11 @@
   </head>
   <body>
     <div id="app"></div>
+    <noscript>
+      <h1>Phraséologie aéronautique pour les pilotes virtuels</h1>
+      <p>Simulateur de communications radio pilote / contrôleur, en VFR et en IFR, en français et en anglais, d'après le manuel de phraséologie de la DGAC (10ᵉ édition). Trois niveaux d'apprentissage, quiz noté, vol complet guidé, voix de l'ATC et réponse à la voix.</p>
+      <p>Cette application nécessite JavaScript.</p>
+    </noscript>
     <script type="module" src="/src/main.ts"></script>
     <!-- Cloudflare Web Analytics (sans cookie, sans traçage d'IP exploitable) -->
     <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "eb7f159999e84819a7433bf825038538"}'></script>
