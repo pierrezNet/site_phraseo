@@ -97,7 +97,7 @@
                 <button :class="['block w-full text-left px-4 py-2', active ? 'bg-blue-600 text-white' : '']" @click="$emit('open-modal','feedback')">J'ai un retour</button>
               </MenuItem>
               <MenuItem v-slot="{ active }">
-                <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" :class="['block px-4 py-2 font-medium', active ? 'bg-blue-600 text-white' : '']">Discord</a>
+                <a href="https://discord.gg/PWnPWX7Qfe" target="_blank" rel="noopener noreferrer" :class="['block px-4 py-2 font-medium', active ? 'bg-blue-600 text-white' : '']">Discord</a>
               </MenuItem>
             </MenuItems>
           </Menu>
@@ -154,7 +154,7 @@
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','parametres')">Paramètres</a>
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','about')">À propos</a>
       <a class="block py-1 text-blue-100" @click="$emit('open-modal','feedback')">J'ai un retour</a>
-      <a href="https://discord.gg/aKJ8YVGzE" target="_blank" rel="noopener noreferrer" class="block py-1 text-blue-100 font-medium">Rejoindre le Discord</a>
+      <a href="https://discord.gg/PWnPWX7Qfe" target="_blank" rel="noopener noreferrer" class="block py-1 text-blue-100 font-medium">Rejoindre le Discord</a>
     </DisclosurePanel>
   </Disclosure>
 </template>
