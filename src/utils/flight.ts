@@ -159,3 +159,38 @@ export function buildFlight(
   }
   return steps;
 }
+
+/** Station radio sur laquelle on parle : lieu (tag [DEP], [ARR], [FIR]…) et organisme ([NTWR]…, ou [NSTA]) */
+export interface FlightStation {
+  place: string;
+  station: string;
+}
+
+const STATION_TAGS: Record<string, string> = { DEL: 'NDEL', GND: 'NGND', TWR: 'NTWR', APP: 'NAPP', CTR: 'NCTR' };
+
+/**
+ * Station en cours au début de chaque étape, déduite des répliques :
+ * - un appel du pilote qui commence par « [ARR] [NTWR] » fixe la station de l'étape ;
+ * - un « contactez [ARR] [APP] » de l'ATC fait changer de station à l'étape suivante
+ *   (le collationnement du transfert se fait encore sur l'ancienne fréquence) ;
+ * - sinon, on reste sur la station précédente. Null tant qu'aucune n'est connue.
+ */
+export function stepStations(steps: Pick<FlightStep, 'lines'>[]): (FlightStation | null)[] {
+  let current: FlightStation | null = null;
+  return steps.map((step) => {
+    const lines = step.lines.filter((l) => l._lang === 'fr');
+    for (const l of lines) {
+      const call = l._class === 'Pilot' && l.__text.match(/^\[(DEP|ARR|FIR)\] \[(N[A-Z]+)\]/);
+      if (call) {
+        current = { place: call[1], station: call[2] };
+        break;
+      }
+    }
+    const atStart = current;
+    for (const l of lines) {
+      const transfer = l._class === 'ATC' && l.__text.match(/contactez \[(DEP|ARR|FIR)\] \[(DEL|GND|TWR|APP|CTR)\]/i);
+      if (transfer) current = { place: transfer[1], station: STATION_TAGS[transfer[2]] };
+    }
+    return atStart;
+  });
+}

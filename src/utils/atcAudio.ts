@@ -98,9 +98,8 @@ let current: { audio: HTMLAudioElement; done: () => void } | null = null;
 export function stopRadio(): void {
   const playing = current;
   current = null;
-  if (!playing) return;
-  playing.audio.pause();
-  playing.done();
+  // done() met le lecteur en pause et le vide
+  playing?.done();
 }
 
 /**
@@ -124,17 +123,26 @@ export async function playRadio(wav: ArrayBuffer, lang: 'fr' | 'en', speaker: Sp
   if (voice.drive) chain = chain.connect(new WaveShaperNode(context, { curve: saturationCurve(voice.drive), oversample: '2x' }));
   chain.connect(new DynamicsCompressorNode(context, { threshold: -24, ratio: 6 })).connect(context.destination);
 
+  // Lecteur vidé après usage : sinon une commande « lecture » du système (touche multimédia, casque
+  // Bluetooth qui bascule à l'ouverture du micro…) relance la dernière réplique depuis le début
+  const release = () => {
+    audio.onended = null;
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+    URL.revokeObjectURL(url);
+    if (current?.audio === audio) current = null;
+  };
+
   return new Promise((resolve, reject) => {
     const done = () => {
-      if (current?.audio === audio) current = null;
-      URL.revokeObjectURL(url);
+      release();
       resolve();
     };
     current = { audio, done };
     audio.onended = done;
     audio.play().catch((err) => {
-      URL.revokeObjectURL(url);
-      if (current?.audio === audio) current = null;
+      release();
       reject(err);
     });
   });

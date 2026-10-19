@@ -199,6 +199,17 @@ describe('TaskTextDisplay', () => {
     expect(wrapper.text()).toContain('SELCAL Alpha-Delta-Romeo-Sierra transmitted')
   })
 
+  it('quiz : les éléments à donner sont annoncés, sans leur valeur', () => {
+    useQuizStore().enabled = true
+    const wrapper = mount(TaskTextDisplay, {
+      global: { plugins: [pinia] },
+      props: { selectedTaskTexts: makeTasks('Piste [RWY], Q_N_H [QNH], [CAA].', 'fr', 'Pilot') },
+    })
+    expect(wrapper.text()).toContain('À dire')
+    expect(wrapper.text()).toMatch(/piste · qnh · indicatif|qnh · piste · indicatif/)
+    expect(wrapper.text()).not.toContain('1013')
+  })
+
   describe('mobile (écran tactile)', () => {
     const touch = vi.fn(() => ({ matches: true }))
     beforeEach(() => vi.stubGlobal('matchMedia', touch))

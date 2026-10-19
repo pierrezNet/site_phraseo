@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildFlight, isTaskVisibleAtLevel, requirementsMet, scenarioName, FLIGHT_PHASES, type Scenario } from './flight'
+import { buildFlight, isTaskVisibleAtLevel, requirementsMet, scenarioName, stepStations, FLIGHT_PHASES, type Scenario } from './flight'
 import scenarios from '../data/scenarios.json'
 import phraseoVFR from '../data/phraseologieVFR.json'
 import phraseoIFR from '../data/phraseologieIFR.json'
@@ -143,4 +143,29 @@ describe('scenarios.json', () => {
       })
     }
   }
+})
+
+describe('stepStations', () => {
+  const step = (...lines: [string, string][]) => ({ lines: lines.map(([c, t]) => ({ _class: c, _lang: 'fr', __text: t })) })
+
+  it('suit les appels du pilote et les transferts de l’ATC', () => {
+    const stations = stepStations([
+      step(['Pilot', '[DEP] [NGND], [CAL], demande repoussage.'], ['ATC', '[CAL], repoussage approuvé.']),
+      step(['ATC', 'Contactez [DEP] [TWR].'], ['Pilot', 'Je contacte [DEP] [NTWR], [CAL].']),
+      step(['Pilot', '[CAL], au point d’attente.']),
+      step(['ATC', '[CAL], contactez [ARR] [APP].']),
+      step(['Pilot', '[ARR], [POL], [CAL] niveau [NIV].']),
+    ])
+    expect(stations).toEqual([
+      { place: 'DEP', station: 'NGND' },
+      { place: 'DEP', station: 'NGND' }, // le collationnement du transfert se fait encore au Sol
+      { place: 'DEP', station: 'NTWR' },
+      { place: 'DEP', station: 'NTWR' },
+      { place: 'ARR', station: 'NAPP' },
+    ])
+  })
+
+  it('rien de connu avant le premier appel', () => {
+    expect(stepStations([step(['ATC', '[CAL], roulez.'])])).toEqual([null])
+  })
 })

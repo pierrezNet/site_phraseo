@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { buildFlight, FLIGHT_PHASES, scenarioName, type FlightStep, type Scenario } from '../utils/flight'
+import { buildFlight, FLIGHT_PHASES, scenarioName, stepStations, type FlightStep, type Scenario } from '../utils/flight'
 import { useFormStore } from './form'
 import type { CriticalResult } from '../utils/quizScoring'
 import { REMARKS, type RemarkCode } from '../utils/debrief'
@@ -64,6 +64,9 @@ export const useFlightStore = defineStore('flight', () => {
   /** Nom du vol en cours, avec les paramètres (départ, arrivée) */
   const title = computed(() => (scenario.value ? scenarioName(scenario.value.name, useFormStore().form) : ''))
   const currentStep = computed(() => steps.value[index.value] ?? null)
+  /** Station radio sur laquelle on parle au début de l'étape (déduite des appels et des transferts) */
+  const stations = computed(() => stepStations(steps.value))
+  const currentStation = computed(() => stations.value[index.value] ?? null)
   const isLastStep = computed(() => index.value >= steps.value.length - 1)
 
   function start(sc: Scenario, userLevel: string) {
@@ -180,6 +183,6 @@ export const useFlightStore = defineStore('flight', () => {
 
   return {
     scenario, title, tagOverrides, level, steps, index, finished, active, currentStep, isLastStep,
-    start, restart, abort, next, goTo, recordAttempt, outcomeOf, stepMissed, summary, phaseProgress,
+    start, restart, abort, next, goTo, recordAttempt, outcomeOf, stepMissed, summary, phaseProgress, currentStation,
   }
 })

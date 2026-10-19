@@ -242,13 +242,17 @@ function collapseSpelledLetters(tokens: string[]): string[] {
   return out
 }
 
+/** Lettre d'un mot de l'alphabet OACI, y compris au pluriel transcrit par la reconnaissance (« hôtels » → h) */
+const oaciLetter = (w: string): string | undefined =>
+  OACI_ALPHABET[w] || (w.length > 3 && w.endsWith('s') ? OACI_ALPHABET[w.slice(0, -1)] : undefined)
+
 /**
  * Découpe un texte en mots normalisés : alphabet OACI mappé, nombres en chiffres
  * comparés un par un, lettres épelées regroupées.
  */
 export function tokenize(input: string, { collapse = true } = {}): string[] {
   const norm = normalizeText(input)
-  const words = (norm ? norm.split(' ') : []).map((w) => (w === 'decimal' ? 'decimale' : OACI_ALPHABET[w] || w))
+  const words = (norm ? norm.split(' ') : []).map((w) => (w === 'decimal' ? 'decimale' : oaciLetter(w) || w))
   // Après découpage lettres/chiffres (« 3PAPA » → 3 papa, « 26L » → 26 l) : alphabet OACI et côté de piste
   const tokens = normalizeRunwaySide(splitAlphanumeric(wordsToNumbers(words)).map((w) => OACI_ALPHABET[w] || w))
   return collapse ? collapseSpelledLetters(tokens) : tokens

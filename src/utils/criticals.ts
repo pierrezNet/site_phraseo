@@ -68,7 +68,9 @@ export function withSpelledRegistrations(groups: string[][]): string[][] {
 export function callsignEquivalences(formStore: FormStoreType): string[][] {
   const caa = formStore.form.CAA?.trim() ?? '';
   const cal = formStore.form.CAL?.trim() ?? '';
-  const forms = [...new Set([cal, caa, ...spelledRegistration(cal)].filter(Boolean))];
+  // « Air » se prononce comme la lettre R : la reconnaissance écrit souvent « R Europe » pour « Air Europe »
+  const heardAsR = [cal, caa].filter((c) => /^Air\s/i.test(c)).map((c) => c.replace(/^Air\s/i, 'R '));
+  const forms = [...new Set([cal, caa, ...spelledRegistration(cal), ...heardAsR].filter(Boolean))];
   return forms.length > 1 ? [forms] : [];
 }
 

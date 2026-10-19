@@ -335,3 +335,17 @@ describe('point de report épelé en alphabet OACI', () => {
     expect(scoreAnswer('départ Mirgu sept Hôtel', 'départ MIRGU 7H', crit).passed).toBe(true)
   })
 })
+
+describe('transcriptions approximatives de la reconnaissance vocale', () => {
+  it('« 7 hôtels » vaut 7H (alphabet OACI au pluriel)', () => {
+    const crit = [{ label: 'SID/STAR', value: 'MIRGU 7H' }]
+    expect(scoreAnswer('départ MIRGU 7 hôtels je monte au niveau 110', 'départ MIRGU 7H, je monte niveau 110', crit).criticals[0].ok).toBe(true)
+  })
+
+  it('« R Europe » vaut « Air Europe » (équivalence d’indicatif)', async () => {
+    const { callsignEquivalences } = await import('./criticals')
+    const eq = callsignEquivalences({ form: { CAL: 'Air Europe 012', CAA: 'Air Europe 012' } } as never)
+    const crit = [{ label: 'Indicatif', value: 'Air Europe 012' }]
+    expect(scoreAnswer('Strasbourg Tour R Europe 012 au point d’attente piste 23', 'Strasbourg Tour, Air Europe 012, au point d’attente piste 23', crit, eq).criticals[0].ok).toBe(true)
+  })
+})

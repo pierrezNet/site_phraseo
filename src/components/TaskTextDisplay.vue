@@ -54,6 +54,11 @@
         <span v-else-if="radio.transcribing === line.key" class="ml-2 text-xs opacity-80">Transcription…</span>
 
         <template v-if="!resultOf(line.key)">
+          <!-- Repères avant de répondre : station en cours (vol complet) et éléments à donner, sans leur valeur -->
+          <div class="mt-2 text-xs space-y-0.5 opacity-90">
+            <p v-if="stationLabel">📻 Vous êtes sur&nbsp;: <strong>{{ stationLabel }}</strong></p>
+            <p v-if="expectedLabels(line).length">À dire&nbsp;: {{ expectedLabels(line).join(' · ') }}</p>
+          </div>
           <!-- Mobile : réponse à la voix uniquement (pas de clavier), sauf si le micro ou le quota manque -->
           <textarea
             v-if="!voiceOnly"
@@ -178,7 +183,7 @@ import { useVoiceStore } from '../stores/voice';
 import { useRadioStore } from '../stores/radio';
 import { vocabulary } from '../utils/sttVocabulary';
 import { requirementsMet } from '../utils/flight';
-import { replacePlaceholders } from '../utils/phraseoHelpers';
+import { replacePlaceholders, resolveStationParts, STATION_NAME_HIERARCHY } from '../utils/phraseoHelpers';
 import { groupFlightNumber, toSpeech } from '../utils/speech';
 import { buildCriticals, callsignEquivalences as callsignEquivalencesOf, selcalEquivalences } from '../utils/criticals';
 import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
@@ -295,6 +300,25 @@ const exchangeLang = computed<'fr' | 'en'>(() => {
   return lines.some((t) => t._lang === 'en') ? 'en' : current;
 });
 const englishOnly = computed(() => exchangeLang.value !== langStore.current);
+
+/** Vol complet : station radio en cours (« Strasbourg Tour — 118 décimale 7 »), déduite des appels et transferts */
+const stationLabel = computed((): string => {
+  const st = flight.active ? flight.currentStation : null;
+  if (!st) return '';
+  const lang = exchangeLang.value;
+  const name = replacePlaceholders(`[${st.place}] [${st.station}]`, lang, formStore, weatherStore, flight.tagOverrides);
+  // [NSTA] : première station ouverte (Prévol, Sol, Tour…)
+  const freqKey = st.station === 'NSTA'
+    ? STATION_NAME_HIERARCHY.find(({ freq }) => formStore.isFrequencyOpen(freq))?.freq
+    : st.station.slice(1);
+  const frequency = freqKey ? resolveStationParts(freqKey, lang, formStore).frequency : '';
+  return /\d/.test(frequency) ? `${name} — ${frequency}` : name;
+});
+
+/** Éléments à donner dans la réponse (libellés des éléments critiques, sans leur valeur) */
+const expectedLabels = (line: RenderedLine): string[] => [
+  ...new Set([...line.criticals.map((c) => c.label.toLowerCase()), ...(line.intents.length ? ['intention'] : [])]),
+];
 
 const renderedLines = computed<RenderedLine[]>(() => {
   const lang = exchangeLang.value;
