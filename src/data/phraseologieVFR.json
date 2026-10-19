@@ -452,34 +452,34 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], fin de vent arrière pour un complet, piste [RWY].",
+							"__text": "[CAA], fin de vent arrière pour un complet, piste [RWYA].",
 							"_critical": ["pour un complet"]
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], end of downwind for a full stop, runway [RWY].",
+							"__text": "[CAA], end of downwind for a full stop, runway [RWYA].",
 							"_critical": ["for a full stop"]
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], rappelez finale piste [RWY]."
+							"__text": "[CAA], rappelez finale piste [RWYA]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je rappellerai finale piste [RWY], [CAA]."
+							"__text": "Je rappellerai finale piste [RWYA], [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], report final runway [RWY]."
+							"__text": "[CAA], report final runway [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Will report on final runway [RWY], [CAA]."
+							"__text": "Will report on final runway [RWYA], [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -492,34 +492,34 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], fin de vent arrière pour un toucher, piste [RWY].",
+							"__text": "[CAA], fin de vent arrière pour un toucher, piste [RWYA].",
 							"_critical": ["pour un toucher"]
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], end of downwind for a touch and go, runway [RWY].",
+							"__text": "[CAA], end of downwind for a touch and go, runway [RWYA].",
 							"_critical": ["for a touch and go"]
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], rappelez finale piste [RWY]."
+							"__text": "[CAA], rappelez finale piste [RWYA]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Je rappellerai finale piste [RWY], [CAA]."
+							"__text": "Je rappellerai finale piste [RWYA], [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], report final runway [RWY]."
+							"__text": "[CAA], report final runway [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Will report on final runway [RWY], [CAA]."
+							"__text": "Will report on final runway [RWYA], [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -788,22 +788,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], piste [RWY], autorisé toucher, vent 0_60 degrés 10 nœuds."
+							"__text": "[CAA], piste [RWYA], autorisé toucher, vent 0_60 degrés 10 nœuds."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Piste [RWY], toucher, [CAA]."
+							"__text": "Piste [RWYA], toucher, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], runway [RWY], cleared to touch and go, wind 0_6_0 degrees 10 knots."
+							"__text": "[CAA], runway [RWYA], cleared to touch and go, wind 0_6_0 degrees 10 knots."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], touch and go, [CAA]."
+							"__text": "Runway [RWYA], touch and go, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -816,22 +816,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], piste [RWY], autorisé atterrissage, vent 0_60 degrés 10 nœuds."
+							"__text": "[CAA], piste [RWYA], autorisé atterrissage, vent 0_60 degrés 10 nœuds."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Piste [RWY], j'atterris, [CAA]."
+							"__text": "Piste [RWYA], j'atterris, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], runway [RWY], cleared to land, wind 0_6_0 degrees 10 knots."
+							"__text": "[CAA], runway [RWYA], cleared to land, wind 0_6_0 degrees 10 knots."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], landing, [CAA]."
+							"__text": "Runway [RWYA], landing, [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -844,22 +844,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], piste [RWY], autorisé option, vent 0_60 degrés 10 nœuds."
+							"__text": "[CAA], piste [RWYA], autorisé option, vent 0_60 degrés 10 nœuds."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Piste [RWY], option, [CAA]."
+							"__text": "Piste [RWYA], option, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], runway [RWY], cleared option, wind 0_6_0 degrees 10 knots."
+							"__text": "[CAA], runway [RWYA], cleared option, wind 0_6_0 degrees 10 knots."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], option, [CAA]."
+							"__text": "Runway [RWYA], option, [CAA]."
 						}
 					],
 					"_level": "intermédiaire"
@@ -1172,7 +1172,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], numéro 2, suivez un (Cessna 172) en base main gauche, rappelez fin de vent arrière piste [RWY]."
+							"__text": "[CAA], numéro 2, suivez un (Cessna 172) en base main gauche, rappelez fin de vent arrière piste [RWYA]."
 						},
 						{
 							"_lang": "fr",
@@ -1182,12 +1182,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], number 2, follow (Cessna 172) on left-hand base, report end of downwind runway [RWY]."
+							"__text": "[CAA], number 2, follow (Cessna 172) on left-hand base, report end of downwind runway [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Number 2, (Cessna 172) in sight, will report end of downwind runway [RWY], [CAA]."
+							"__text": "Number 2, (Cessna 172) in sight, will report end of downwind runway [RWYA], [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -1200,7 +1200,7 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], rappelez fin de vent arrière piste [RWY]."
+							"__text": "[CAA], rappelez fin de vent arrière piste [RWYA]."
 						},
 						{
 							"_lang": "fr",
@@ -1210,12 +1210,12 @@
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], report end of downwind runway [RWY]."
+							"__text": "[CAA], report end of downwind runway [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Will report end of downwind runway [RWY], [CAA]."
+							"__text": "Will report end of downwind runway [RWYA], [CAA]."
 						}
 					],
 					"_level": "débutant"
@@ -1605,22 +1605,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], exécutez approche directe piste [RWY], rappelez longue finale."
+							"__text": "[CAA], exécutez approche directe piste [RWYA], rappelez longue finale."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "J'exécute approche directe piste [RWY], [CAA]."
+							"__text": "J'exécute approche directe piste [RWYA], [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], make straight-in approach runway [RWY], report long final."
+							"__text": "[CAA], make straight-in approach runway [RWYA], report long final."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Making straight-in approach runway [RWY], [CAA]."
+							"__text": "Making straight-in approach runway [RWYA], [CAA]."
 						}
 					],
 					"_id": "INTEGRATION_DIRECTE",
@@ -1633,22 +1633,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], entrez base main droite piste [RWY]."
+							"__text": "[CAA], entrez base main droite piste [RWYA]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "J'entre base main droite piste [RWY], [CAA]."
+							"__text": "J'entre base main droite piste [RWYA], [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], join right-hand base runway [RWY]."
+							"__text": "[CAA], join right-hand base runway [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Joining right-hand base runway [RWY], [CAA]."
+							"__text": "Joining right-hand base runway [RWYA], [CAA]."
 						}
 					],
 					"_id": "INTEGRATION_BASE",
@@ -1661,22 +1661,22 @@
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], piste en service [RWY], vent 0_6_0 degrés 10 nœuds, [QNH], entrez vent arrière main gauche piste [RWY], rappelez vent arrière."
+							"__text": "[CAA], piste en service [RWYA], vent 0_6_0 degrés 10 nœuds, [QNH], entrez vent arrière main gauche piste [RWYA], rappelez vent arrière."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Piste [RWY], [QNH], j'entre vent arrière main gauche piste [RWY], je rappellerai vent arrière, [CAA]."
+							"__text": "Piste [RWYA], [QNH], j'entre vent arrière main gauche piste [RWYA], je rappellerai vent arrière, [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], runway in use [RWY], wind 0_6_0 degrees 10 knots, [QNH], join left-hand downwind runway [RWY], report downwind."
+							"__text": "[CAA], runway in use [RWYA], wind 0_6_0 degrees 10 knots, [QNH], join left-hand downwind runway [RWYA], report downwind."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Runway [RWY], [QNH], joining left-hand downwind runway [RWY], will report downwind, [CAA]."
+							"__text": "Runway [RWYA], [QNH], joining left-hand downwind runway [RWYA], will report downwind, [CAA]."
 						}
 					],
 					"_id": "ENTREE_SANS_ATIS",
@@ -1811,32 +1811,32 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], vent arrière main droite piste [RWY]."
+							"__text": "[CAA], vent arrière main droite piste [RWYA]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "ATC",
-							"__text": "[CAA], numéro 3, suivez un (Cessna 172) en base, rappelez base main droite piste [RWY]."
+							"__text": "[CAA], numéro 3, suivez un (Cessna 172) en base, rappelez base main droite piste [RWYA]."
 						},
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "Numéro 3, trafic en vue, je rappelle base main droite piste [RWY], [CAA]."
+							"__text": "Numéro 3, trafic en vue, je rappelle base main droite piste [RWYA], [CAA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], right-hand downwind runway [RWY]."
+							"__text": "[CAA], right-hand downwind runway [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "ATC",
-							"__text": "[CAA], number 3, follow (Cessna 172) on base, report right-hand base runway [RWY]."
+							"__text": "[CAA], number 3, follow (Cessna 172) on base, report right-hand base runway [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "Number 3, traffic in sight, reporting right-hand base runway [RWY], [CAA]."
+							"__text": "Number 3, traffic in sight, reporting right-hand base runway [RWYA], [CAA]."
 						}
 					],
 					"_id": "SEQUENCEMENT_CIRCUIT",
@@ -2454,12 +2454,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[CAA], vent arrière main gauche piste [RWY]."
+							"__text": "[CAA], vent arrière main gauche piste [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[CAA], left-hand downwind runway [RWY]."
+							"__text": "[CAA], left-hand downwind runway [RWYA]."
 						}
 					],
 					"subgraph": [
@@ -2642,12 +2642,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[DEP] [NAPP], [CAL], départ [STA], je monte niveau [NIV]."
+							"__text": "[DEP] [NAPP], [CAL], départ [SID], je monte niveau [NIV]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[DEP] [NAPP], [CAL], [STA] departure, climbing level [NIV]."
+							"__text": "[DEP] [NAPP], [CAL], [SID] departure, climbing level [NIV]."
 						}
 					],
 					"subgraph": [
@@ -2674,12 +2674,12 @@
 						{
 							"_lang": "fr",
 							"_class": "Pilot",
-							"__text": "[ARR] [NTWR], [CAA], finale piste [RWY]."
+							"__text": "[ARR] [NTWR], [CAA], finale piste [RWYA]."
 						},
 						{
 							"_lang": "en",
 							"_class": "Pilot",
-							"__text": "[ARR] [NTWR], [CAA], final runway [RWY]."
+							"__text": "[ARR] [NTWR], [CAA], final runway [RWYA]."
 						}
 					],
 					"subgraph": [

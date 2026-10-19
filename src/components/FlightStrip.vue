@@ -50,6 +50,15 @@ const qnh = computed(() => weatherStore.metarQnh ?? formStore.form.QNH ?? '1013'
 const isVFR = computed(() => formStore.mode === 'VFR');
 const arr = computed(() => flightStore.tagOverrides.ARR ?? value(formStore.form.ARR));
 
+/** Vol complet en approche ou à l'arrivée : piste d'arrivée et STAR (sinon : départ et SID) */
+const arriving = computed(() => flightStore.active && ['AP', 'AT'].includes(flightStore.currentStep?.tab ?? ''));
+/** Piste utile maintenant ; en tours de piste, l'arrivée se fait sur la piste de départ */
+const runway = computed(() => {
+  const f = formStore.form;
+  const local = flightStore.tagOverrides.RWYA === '[RWY]';
+  return value(arriving.value && !local ? f.RWYA || f.RWY : f.RWY);
+});
+
 /** Éléments du bandeau : libellé fixe, valeur affichée, texte inséré dans la réponse */
 const items = computed(() => {
   const f = formStore.form;
@@ -67,12 +76,18 @@ const items = computed(() => {
     entry('DEP', '', value(f.DEP)),
     // Vol local (tours de piste) : retour au départ
     entry('ARR', '→ ', arr.value, arr.value, ' '),
-    entry('POS', 'Parking ', value(f.POS)),
+    entry('POS', 'Parking ', value(arriving.value ? f.POSA || f.POS : f.POS)),
     // Piste insérée sous sa forme prononcée (26 Gauche / 26 Left)
-    entry('RWY', 'Piste ', value(f.RWY), formStore.formatRunway(value(f.RWY), lang)),
+    entry('RWY', 'Piste ', runway.value, formStore.formatRunway(runway.value, lang)),
     entry('QNH', 'QNH ', String(qnh.value)),
     entry('INF', 'Info ', value(f.INF)),
-    isVFR.value ? entry('SORTIE', 'Sortie ', value(f.SORTIE)) : entry('NIV', 'Niveau ', value(f.NIV)),
+    ...(isVFR.value
+      ? [entry('SORTIE', 'Sortie ', value(f.SORTIE))]
+      : [
+          arriving.value ? entry('STAR', 'STAR ', value(f.STAR)) : entry('SID', 'SID ', value(f.SID)),
+          entry('NIV', 'Niveau ', value(f.NIV)),
+          entry('NIVC', 'Croisière ', value(f.NIVC)),
+        ]),
   ];
 });
 

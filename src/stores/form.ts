@@ -31,13 +31,22 @@ export interface FormData {
   CAA: string
   INF: string
   WPT: string
-  STA: string
+  /** SID (départ) et STAR (arrivée), ex. « MIRGU 7H », « EPINAL 9E » ; remplacent l'ancien STA */
+  SID: string
+  STAR: string
   VOI: string
   HLD: string
   QNH: string
+  /** Piste de départ ; RWYA : piste d'arrivée */
   RWY: string
+  RWYA: string
+  /** Poste et cheminement à l'arrivée (POS / VOI : au départ) */
+  POSA: string
+  VOIA: string
   SQU: string
+  /** Niveau donné avec le SID ou la STAR ; NIVC : niveau de croisière */
   NIV: string
+  NIVC: string
   VIT: string
   CAP: string
   /** Code SELCAL (IFR), ex. « AD-RS » */
@@ -135,8 +144,10 @@ const VFR_DEFAULTS: FormData = {
   CAA: 'F S T',
   INF: 'C',
   WPT: 'BUBLI',
-  STA: 'Bubli_3_Papa',
+  SID: 'Bubli_3_Papa',
+  STAR: 'EPINAL 9E',
   NIV: '110',
+  NIVC: '230',
   SORTIE: 'Melun',
   ALT: '2500',
   TTWR: 'Strasbourg',
@@ -144,6 +155,9 @@ const VFR_DEFAULTS: FormData = {
   HLD: 'F',
   MET: 'LFST',
   RWY: '23',
+  RWYA: '19',
+  POSA: 'Aviation générale',
+  VOIA: '',
   SQU: '7001',
   VIT: '360',
   CAP: '360',
@@ -168,8 +182,10 @@ const IFR_DEFAULTS: FormData = {
   CAA: 'AEL001',
   INF: 'E',
   WPT: 'BUBLI',
-  STA: 'Bubli_3_Papa',
+  SID: 'MIRGU 7H',
+  STAR: 'EPINAL 9E',
   NIV: '110',
+  NIVC: '230',
   SORTIE: 'Melun',
   ALT: '2500',
   TTWR: 'Strasbourg',
@@ -177,6 +193,9 @@ const IFR_DEFAULTS: FormData = {
   HLD: 'W41',
   MET: 'LFPO',
   RWY: '26L',
+  RWYA: '23',
+  POSA: 'P4',
+  VOIA: 'B',
   SQU: '1000',
   VIT: '360',
   CAP: '360',
@@ -188,6 +207,13 @@ const IFR_DEFAULTS: FormData = {
   CTR: '125.100',
   QNH: '1013',
   ...STATION_NAMES
+}
+
+/** Paramètres enregistrés avant la séparation SID / STAR : STA devient le SID (la STAR prend sa valeur par défaut) */
+export function migrateLegacyFields(data: Record<string, unknown> | undefined | null): void {
+  if (!data || !('STA' in data)) return
+  if (data.SID === undefined) data.SID = data.STA
+  delete data.STA
 }
 
 const defaultSnapshots = (): Record<FlightMode, FormData> => ({
@@ -308,6 +334,8 @@ export const useFormStore = defineStore('form', {
       if (saved) {
         try {
           const p = JSON.parse(saved)
+          // Ancien champ STA (SID et STAR confondus) : il devient le SID
+          for (const data of [p.snapshots?.VFR, p.snapshots?.IFR, p.form]) migrateLegacyFields(data)
           if (p.snapshots?.VFR) this.snapshots.VFR = { ...this.snapshots.VFR, ...p.snapshots.VFR }
           if (p.snapshots?.IFR) this.snapshots.IFR = { ...this.snapshots.IFR, ...p.snapshots.IFR }
           // Le formulaire persisté appartient à son mode
@@ -321,6 +349,7 @@ export const useFormStore = defineStore('form', {
         if (old) {
           try {
             const parsed = JSON.parse(old)
+            migrateLegacyFields(parsed)
             this.snapshots.VFR = { ...this.snapshots.VFR, ...parsed }
             this.snapshots.IFR = { ...this.snapshots.IFR, ...parsed }
           } catch (e) {

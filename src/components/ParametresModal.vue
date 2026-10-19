@@ -1,243 +1,71 @@
 <template>
   <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm modal w-full max-h-screen overflow-y-auto">
-  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-xl max-h-screen overflow-y-auto">
-    <div class="flex justify-between items-center border-b pb-2">
-      <h4 class="text-lg font-semibold">Paramètres</h4>
-      <button @click="close" class="text-gray-600 hover:text-gray-800">&times;</button>
-    </div>
-      <form class="mt-4 space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 md:space-x-4 gap-y-4">
-          <div>
-            <div>
-              <label for="FIR" class="label-field">FIR</label>
-              <input type="text" id="FIR" v-model="formStore.form.FIR" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="DEP" class="label-field">Aéroport de départ</label>
-              <input type="text" id="DEP" v-model="formStore.form.DEP" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="POS" class="label-field">Position</label>
-              <input type="text" id="POS" v-model="formStore.form.POS" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="ARR" class="label-field">Aéroport d'arrivée</label>
-              <input type="text" id="ARR" v-model="formStore.form.ARR" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="COM" class="label-field">{{ isVFR() ? "Type d'appareil" : "Compagnie" }}</label>
-              <input type="text" id="COM" v-model="formStore.form.COM" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="CAL" class="label-field">Indicatif d'appel</label>
-              <input type="text" id="CAL" v-model="formStore.form.CAL" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="CAA" class="label-field">Indicatif abrégé</label>
-              <input type="text" id="CAA" v-model="formStore.form.CAA" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="INF" class="label-field">Information contrôleur</label>
-              <input type="text" id="INF" v-model="formStore.form.INF" @change="updateForm" class="input-field">
-            </div>
-          </div>
-          <div>
-            <div v-if="!isVFR()">
-              <label for="WPT" class="label-field">Waypoint</label>
-              <input type="text" id="WPT" v-model="formStore.form.WPT" @change="updateForm" class="input-field">
-            </div>
-            <div v-if="!isVFR()">
-              <label for="STA" class="label-field">SID/STAR</label>
-              <input type="text" id="STA" v-model="formStore.form.STA" @change="updateForm" class="input-field">
-            </div>
-            <div v-if="!isVFR()">
-              <label for="SEL" class="label-field">Code SELCAL</label>
-              <div class="flex gap-2 items-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-screen overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h4 class="text-lg font-semibold">Paramètres</h4>
+        <button @click="close" class="text-gray-600 hover:text-gray-800" aria-label="Fermer les paramètres">&times;</button>
+      </div>
+
+      <form class="mt-4 space-y-5" @submit.prevent>
+        <fieldset v-for="section in visibleSections" :key="section.title" class="border rounded-lg px-4 pb-3 pt-1">
+          <legend class="px-1 text-sm font-semibold">{{ section.title }}</legend>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-3">
+            <div v-for="field in section.fields" :key="field.id" :class="{ relative: field.clearable }">
+              <label :for="field.id" class="label-field">{{ field.label }}</label>
+
+              <!-- Code SELCAL : écoute et validation -->
+              <template v-if="field.id === 'SEL'">
+                <div class="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    id="SEL"
+                    v-model="formStore.form.SEL"
+                    @change="updateForm"
+                    maxlength="5"
+                    placeholder="AD-RS"
+                    aria-describedby="SEL-erreur"
+                    class="input-field uppercase"
+                  >
+                  <button
+                    type="button"
+                    class="shrink-0 px-2 py-1 rounded border hover:bg-blue-500/10 disabled:opacity-40"
+                    :disabled="!selcal.valid"
+                    :title="`Écouter le code SELCAL ${selcalLabel}`"
+                    :aria-label="`Écouter le code SELCAL ${selcalLabel}`"
+                    @click="playSelcal(formStore.form.SEL ?? '')"
+                  >▶</button>
+                </div>
+                <p id="SEL-erreur" v-if="formStore.form.SEL && !selcal.valid" class="ko-text text-xs mt-1" aria-live="polite">{{ selcal.reasons[0] }}</p>
+              </template>
+
+              <template v-else>
                 <input
                   type="text"
-                  id="SEL"
-                  v-model="formStore.form.SEL"
+                  :id="field.id"
+                  v-model="formStore.form[field.id]"
                   @change="updateForm"
-                  maxlength="5"
-                  placeholder="AD-RS"
-                  aria-describedby="SEL-erreur"
-                  class="input-field uppercase"
-                >
+                  :placeholder="field.placeholder"
+                  :class="['input-field', { 'pr-10 w-full': field.clearable }]"
+                />
+                <!-- Fréquence : un champ vide ferme la station (les répliques qui en dépendent sont masquées) -->
                 <button
+                  v-if="field.clearable && formStore.form[field.id]"
                   type="button"
-                  class="shrink-0 px-2 py-1 rounded border hover:bg-blue-500/10 disabled:opacity-40"
-                  :disabled="!selcal.valid"
-                  :title="`Écouter le code SELCAL ${selcalLabel}`"
-                  :aria-label="`Écouter le code SELCAL ${selcalLabel}`"
-                  @click="playSelcal(formStore.form.SEL ?? '')"
-                >▶</button>
-              </div>
-              <p id="SEL-erreur" v-if="formStore.form.SEL && !selcal.valid" class="ko-text text-xs mt-1" aria-live="polite">{{ selcal.reasons[0] }}</p>
-            </div>
-            <div v-if="isVFR()">
-              <label for="SORTIE" class="label-field">Point de sortie</label>
-              <input type="text" id="SORTIE" v-model="formStore.form.SORTIE" @change="updateForm" class="input-field">
-            </div>
-            <div v-if="isVFR()">
-              <label for="ALT" class="label-field">Altitude (pieds)</label>
-              <input type="text" id="ALT" v-model="formStore.form.ALT" @change="updateForm" class="input-field">
-            </div>
-            <div v-if="isVFR()">
-              <label for="TTWR" class="label-field">Transit (aérodrome)</label>
-              <input type="text" id="TTWR" v-model="formStore.form.TTWR" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="VOI" class="label-field">Voies de circulation</label>
-              <input type="text" id="VOI" v-model="formStore.form.VOI" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="HLD" class="label-field">Point d'attente</label>
-              <input type="text" id="HLD" v-model="formStore.form.HLD" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="MET" class="label-field">Code OACI METAR</label>
-              <input type="text" id="MET" v-model="formStore.form.MET" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="RWY" class="label-field">Piste en service</label>
-              <input type="text" id="RWY" v-model="formStore.form.RWY" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="SQU" class="label-field">Code transpondeur</label>
-              <input type="text" id="SQU" v-model="formStore.form.SQU" @change="updateForm" class="input-field">
+                  @click="clearInput(field.id)"
+                  class="absolute right-3 top-9 text-gray-400 hover:text-red-500"
+                  :aria-label="`Effacer ${field.label}`"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1 1 0 011 1v1H9V4a1 1 0 011-1z"/>
+                  </svg>
+                </button>
+              </template>
             </div>
           </div>
-          <div>
-            <div v-if="!isVFR()">
-              <label for="NIV" class="label-field">Niveau</label>
-              <input type="text" id="NIV" v-model="formStore.form.NIV" @change="updateForm" class="input-field">
-            </div>
-            <div v-if="!isVFR()">
-              <label for="VIT" class="label-field">Vitesse</label>
-              <input type="text" id="VIT" v-model="formStore.form.VIT" @change="updateForm" class="input-field">
-            </div>
-            <div>
-              <label for="CAP" class="label-field">Cap</label>
-              <input type="text" id="CAP" v-model="formStore.form.CAP" @change="updateForm" class="input-field">
-            </div>
-            <div class="relative mb-4">
-              <label for="DEL" class="label-field">Prévol</label>
-              <input
-                type="text"
-                id="DEL"
-                v-model="formStore.form.DEL"
-                @change="updateForm"
-                class="input-field pr-10 w-full"
-              />
-              <button
-                type="button"
-                @click="clearInput('DEL')"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
-                v-if="formStore.form.DEL"
-                aria-label="Effacer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1 1 0 011 1v1H9V4a1 1 0 011-1z"/>
-                </svg>
-              </button>
-            </div>
-            <div class="relative mb-4">
-              <label for="GND" class="label-field">Sol</label>
-              <input
-                type="text"
-                id="GND"
-                v-model="formStore.form.GND"
-                @change="updateForm"
-                class="input-field pr-10 w-full"
-              />
-              <button
-                type="button"
-                @click="clearInput('GND')"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
-                v-if="formStore.form.GND"
-                aria-label="Effacer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1 1 0 011 1v1H9V4a1 1 0 011-1z"/>
-                </svg>
-              </button>
-            </div>
-            <div class="relative mb-4">
-              <label for="TWR" class="label-field">Tour</label>
-              <input
-                type="text"
-                id="TWR"
-                v-model="formStore.form.TWR"
-                @change="updateForm"
-                class="input-field pr-10 w-full"
-              />
-              <button
-                type="button"
-                @click="clearInput('TWR')"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
-                v-if="formStore.form.TWR"
-                aria-label="Effacer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1 1 0 011 1v1H9V4a1 1 0 011-1z"/>
-                </svg>
-              </button>
-            </div>
-            <div class="relative mb-4">
-              <label for="APP" class="label-field">Approche</label>
-              <input
-                type="text"
-                id="vAPP"
-                v-model="formStore.form.APP"
-                @change="updateForm"
-                class="input-field pr-10 w-full"
-              />
-              <button
-                type="button"
-                @click="clearInput('APP')"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
-                v-if="formStore.form.APP"
-                aria-label="Effacer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1 1 0 011 1v1H9V4a1 1 0 011-1z"/>
-                </svg>
-              </button>
-            </div>
-            <div v-if="!isVFR()" class="relative mb-4">
-              <label for="CTR" class="label-field">En route</label>
-              <input
-                type="text"
-                id="CTR"
-                v-model="formStore.form.CTR"
-                @change="updateForm"
-                class="input-field pr-10 w-full"
-              />
-              <button
-                type="button"
-                @click="clearInput('CTR')"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500"
-                v-if="formStore.form.CTR"
-                aria-label="Effacer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M10 3h4a1 1 0 011 1v1H9V4a1 1 0 011-1z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
+        </fieldset>
       </form>
+
       <div class="mt-6 flex justify-end">
         <button @click="close" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
           Fermer
@@ -247,63 +75,111 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
-import { checkSelcal, formatSelcal, playSelcal } from '../utils/selcal'
+<script setup lang="ts">
+import { computed, ref } from 'vue'
 import { useFormStore } from '../stores/form'
+import { checkSelcal, formatSelcal, playSelcal } from '../utils/selcal'
 
-export default defineComponent({
-  name: 'ParametresModal',
-  props: {
-    currentMode: {
-      type: String,
-      default: 'IFR'
-    }
+const props = withDefaults(defineProps<{ currentMode?: string }>(), { currentMode: 'IFR' })
+
+interface Field {
+  id: string
+  label: string
+  /** Champ propre à une règle de vol (absent : les deux) */
+  mode?: 'VFR' | 'IFR'
+  placeholder?: string
+  /** Fréquence : bouton pour vider le champ (station fermée) */
+  clearable?: boolean
+}
+
+const formStore = useFormStore()
+const isOpen = ref(false)
+const isVFR = computed(() => props.currentMode === 'VFR')
+
+/** Paramètres rangés par moment du vol */
+const SECTIONS = computed((): { title: string; fields: Field[] }[] => [
+  {
+    title: 'Avion et indicatif',
+    fields: [
+      { id: 'COM', label: isVFR.value ? "Type d'appareil" : 'Compagnie' },
+      { id: 'CAL', label: "Indicatif d'appel" },
+      { id: 'CAA', label: 'Indicatif abrégé' },
+      { id: 'SQU', label: 'Code transpondeur' },
+      { id: 'SEL', label: 'Code SELCAL', mode: 'IFR' },
+    ],
   },
-  setup(props) {
-    const isOpen = ref(false)
-    const formStore = useFormStore()
-    const isVFR = () => props.currentMode === 'VFR'
-    const selcal = computed(() => checkSelcal(formStore.form.SEL ?? ''))
-    const selcalLabel = computed(() => (selcal.value.valid ? formatSelcal(selcal.value.letters) : ''))
+  {
+    title: 'Départ',
+    fields: [
+      { id: 'DEP', label: 'Aéroport de départ' },
+      { id: 'POS', label: 'Position (parking)' },
+      { id: 'VOI', label: 'Voies de circulation' },
+      { id: 'HLD', label: "Point d'attente" },
+      { id: 'RWY', label: 'Piste de départ' },
+      { id: 'MET', label: 'Code OACI METAR' },
+      { id: 'INF', label: 'Information ATIS' },
+      { id: 'SID', label: 'SID', mode: 'IFR', placeholder: 'MIRGU 7H' },
+      { id: 'NIV', label: 'Niveau SID / STAR', mode: 'IFR' },
+    ],
+  },
+  {
+    title: 'En route',
+    fields: [
+      { id: 'FIR', label: 'FIR' },
+      { id: 'WPT', label: 'Point de report', mode: 'IFR' },
+      { id: 'NIVC', label: 'Niveau de croisière', mode: 'IFR' },
+      { id: 'VIT', label: 'Vitesse', mode: 'IFR' },
+      { id: 'CAP', label: 'Cap' },
+      { id: 'SORTIE', label: 'Point de sortie', mode: 'VFR' },
+      { id: 'ALT', label: 'Altitude (pieds)', mode: 'VFR' },
+      { id: 'TTWR', label: 'Transit (aérodrome)', mode: 'VFR' },
+    ],
+  },
+  {
+    title: 'Arrivée',
+    fields: [
+      { id: 'ARR', label: "Aéroport d'arrivée" },
+      { id: 'STAR', label: 'STAR', mode: 'IFR', placeholder: 'EPINAL 9E' },
+      { id: 'RWYA', label: "Piste d'arrivée" },
+      { id: 'POSA', label: 'Position (parking)' },
+      { id: 'VOIA', label: 'Voies de circulation', mode: 'IFR' },
+    ],
+  },
+  {
+    title: 'Fréquences',
+    fields: [
+      { id: 'DEL', label: 'Prévol', clearable: true },
+      { id: 'GND', label: 'Sol', clearable: true },
+      { id: 'TWR', label: 'Tour', clearable: true },
+      { id: 'APP', label: 'Approche', clearable: true },
+      { id: 'CTR', label: 'En route', mode: 'IFR', clearable: true },
+    ],
+  },
+])
 
-    const open = () => {
-      if (!formStore.form.DEP) {
-        // Si le store est vide (ou à adapter selon ton cas)
-        formStore.initializeFormData()
-      }
-      isOpen.value = true
-    }
+const visibleSections = computed(() =>
+  SECTIONS.value.map((s) => ({ ...s, fields: s.fields.filter((f) => !f.mode || f.mode === props.currentMode) }))
+)
 
-    const clearInput = (field: keyof typeof formStore.form) => {
-      formStore.form[field] = ''
-      updateForm()
-    }
+const selcal = computed(() => checkSelcal(formStore.form.SEL ?? ''))
+const selcalLabel = computed(() => (selcal.value.valid ? formatSelcal(selcal.value.letters) : ''))
 
-    const close = () => {
-      isOpen.value = false
-    }
+const updateForm = () => formStore.updateFormData(formStore.form)
 
-    const updateForm = () => {
-      formStore.updateFormData(formStore.form);
-    }
+const clearInput = (field: string) => {
+  formStore.form[field] = ''
+  updateForm()
+}
 
-    return {
-      isOpen,
-      formStore,
-      isVFR,
-      selcal,
-      selcalLabel,
-      playSelcal,
-      open,
-      close,
-      clearInput,
-      updateForm
-    }
-  }
-})
+const open = () => {
+  // Store encore vide : lecture des paramètres enregistrés
+  if (!formStore.form.DEP) formStore.initializeFormData()
+  isOpen.value = true
+}
+
+const close = () => {
+  isOpen.value = false
+}
+
+defineExpose({ open, close })
 </script>
-
-<style scoped>
-/* Ajouter des styles spécifiques au composant si nécessaire */
-</style>

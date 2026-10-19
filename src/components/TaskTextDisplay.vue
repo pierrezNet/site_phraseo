@@ -341,7 +341,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
       speech: toSpeech(replacePlaceholders(text, lang, formStore, weatherStore, speechOverrides), lang),
       selcal: selcal ? formStore.form.SEL ?? '' : undefined,
       // Un tag entre parenthèses est optionnel : il n'est pas exigé
-      criticals: buildCriticals(requiredText(text), lang, formStore, weatherStore),
+      criticals: buildCriticals(requiredText(text), lang, formStore, weatherStore, flight.tagOverrides),
       intents,
       ask,
     };

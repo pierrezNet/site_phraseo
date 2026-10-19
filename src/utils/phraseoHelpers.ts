@@ -134,7 +134,11 @@ export function replacePlaceholders(
   return text.replace(/\[([^\]]+)\]/g, (_match, p1: string) => escapeHtml(resolveTag(p1, _match)));
 
   function resolveTag(p1: string, raw: string): string {
-    if (p1 in overrides) return overrides[p1];
+    if (p1 in overrides) {
+      // Valeur imposée, ou renvoi vers un autre tag (« [RWY] » : en vol local, la piste d'arrivée est celle du départ)
+      const alias = overrides[p1].match(/^\[([A-Z]+)\]$/);
+      return alias ? resolveTag(alias[1], `[${alias[1]}]`) : overrides[p1];
+    }
     switch (p1) {
       case 'POL':
         return POL_STRINGS[getHeure()][lang];
@@ -154,8 +158,11 @@ export function replacePlaceholders(
         return formStore.form.CAA || 'Station';
       case 'RWY':
         return formStore.formatRunway(formStore.form.RWY, lang);
+      case 'RWYA':
+        return formStore.formatRunway(formStore.form.RWYA || formStore.form.RWY, lang);
       case 'RWYO':
-        return formStore.formatRunway(oppositeRunway(formStore.form.RWY), lang);
+        // Contre-QFU : opposé de la piste d'arrivée (approche suivie d'une manœuvre à vue)
+        return formStore.formatRunway(oppositeRunway(formStore.form.RWYA || formStore.form.RWY), lang);
       case 'SEL':
         // Code SELCAL épelé en alphabet OACI (« Alpha-Delta-Romeo-Sierra ») ; saisie invalide → code par défaut
         return spellSelcal(formStore.form.SEL ?? '');

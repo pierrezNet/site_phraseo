@@ -19,8 +19,10 @@ export function resolveCriticalValue(tag: string, lang: Lang, formStore: FormSto
       return formStore.formatRunway(formStore.form.RWY, lang);
     case 'SEL':
       return spellSelcal(formStore.form.SEL ?? '');
+    case 'RWYA':
+      return formStore.formatRunway(formStore.form.RWYA || formStore.form.RWY, lang);
     case 'RWYO':
-      return formStore.formatRunway(oppositeRunway(formStore.form.RWY), lang);
+      return formStore.formatRunway(oppositeRunway(formStore.form.RWYA || formStore.form.RWY), lang);
     case 'QNH':
       return weatherStore.metarQnh ?? formStore.form.QNH ?? '1013';
     case 'DEL':
@@ -33,7 +35,7 @@ export function resolveCriticalValue(tag: string, lang: Lang, formStore: FormSto
       return /\d/.test(frequency) ? frequency : '';
     }
     default:
-      // ALT, NIV, CAP, VIT, SQU, STA, WPT, HLD, VOI, INF, CAL, CAA : valeur brute du formulaire
+      // ALT, NIV, NIVC, CAP, VIT, SQU, SID, STAR, WPT, HLD, VOI, VOIA, INF, CAL, CAA : valeur brute du formulaire
       return formStore.form[tag] || '';
   }
 }
@@ -42,10 +44,21 @@ export function resolveCriticalValue(tag: string, lang: Lang, formStore: FormSto
  * Éléments critiques présents dans un texte source (avec ses tags).
  * Passer le texte déjà débarrassé de ses parties facultatives (requiredText).
  */
-export function buildCriticals(rawText: string, lang: Lang, formStore: FormStoreType, weatherStore: WeatherStoreType): Critical[] {
+export function buildCriticals(
+  rawText: string,
+  lang: Lang,
+  formStore: FormStoreType,
+  weatherStore: WeatherStoreType,
+  /** Tags imposés (vol complet) : un renvoi « [RWY] » fait exiger la valeur de ce tag */
+  overrides: Record<string, string> = {}
+): Critical[] {
+  const valueOf = (tag: string): string => {
+    const alias = overrides[tag]?.match(/^\[([A-Z]+)\]$/);
+    return String(resolveCriticalValue(alias ? alias[1] : tag, lang, formStore, weatherStore) ?? '');
+  };
   return Object.keys(CRITICAL_TAGS)
     .filter((tag) => rawText.includes(`[${tag}]`))
-    .map((tag) => ({ label: CRITICAL_TAGS[tag], value: String(resolveCriticalValue(tag, lang, formStore, weatherStore) ?? '') }))
+    .map((tag) => ({ label: CRITICAL_TAGS[tag], value: valueOf(tag) }))
     .filter((c) => c.value.trim() !== '')
     // [CAL] et [CAA] dans la même réplique : un seul contrôle d'indicatif
     .filter((c, i, all) => all.findIndex((o) => o.label === c.label) === i);

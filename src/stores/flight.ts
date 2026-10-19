@@ -57,7 +57,13 @@ export const useFlightStore = defineStore('flight', () => {
   /** Tags imposés pendant le vol : un vol local revient au départ ([ARR] = [DEP]) */
   const tagOverrides = computed(() => {
     const overrides: Record<string, string> = {}
-    if (scenario.value?.local) overrides.ARR = String(useFormStore().form.DEP ?? '')
+    if (scenario.value?.local) {
+      overrides.ARR = String(useFormStore().form.DEP ?? '')
+      // Tours de piste : on atterrit sur la piste de départ et on revient à son parking
+      overrides.RWYA = '[RWY]'
+      overrides.POSA = '[POS]'
+      overrides.VOIA = '[VOI]'
+    }
     return overrides
   })
 

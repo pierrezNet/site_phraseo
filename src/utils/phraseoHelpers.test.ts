@@ -222,3 +222,20 @@ describe('oppositeRunway', () => {
     (rwy, opposite) => expect(oppositeRunway(rwy)).toBe(opposite)
   )
 })
+
+describe('pistes de départ et d’arrivée', () => {
+  const store = makeFormStore({ RWY: '26L', RWYA: '23' })
+  const weatherStore = makeWeatherStore()
+
+  it('[RWY] départ, [RWYA] arrivée, [RWYO] opposée à la piste d’arrivée', () => {
+    expect(replacePlaceholders('[RWY] / [RWYA] / [RWYO]', 'fr', store as any, weatherStore as any)).toBe('26L / 23 / 05')
+  })
+
+  it('renvoi d’un tag vers un autre (vol local : on atterrit sur la piste de départ)', () => {
+    expect(replacePlaceholders('[RWYA]', 'fr', store as any, weatherStore as any, { RWYA: '[RWY]' })).toBe('26L')
+  })
+
+  it('sans piste d’arrivée renseignée : celle du départ', () => {
+    expect(replacePlaceholders('[RWYA]', 'fr', makeFormStore({ RWY: '26L', RWYA: '' }) as any, weatherStore as any)).toBe('26L')
+  })
+})
