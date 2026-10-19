@@ -45,6 +45,8 @@ describe('toSpeech — français', () => {
   it('points de report et procédures lus comme des mots', () => {
     expect(fr('départ Bubli_3_Papa, direct BASIP')).toBe('départ Bubli trois Papa, direct Basip')
     expect(fr('autorisé ODILO 1A')).toBe('autorisé Odilo unité Alfa')
+    expect(fr('départ MIRGU 7H, direct MIRGU')).toBe('départ Mire-gu sept Hotel, direct Mire-gu')
+    expect(toSpeech('departure MIRGU 7H', 'en')).toBe('departure Mirgu seven Hotel')
   })
 
   it('types d\'avions et mots réécrits pour la voix française', () => {

@@ -229,7 +229,8 @@ export function sttPrompt(lang: 'fr' | 'en', hint: string | null): string {
     .filter(Boolean)
     .slice(0, 60);
   const intro = lang === 'fr' ? 'Radiotéléphonie aéronautique.' : 'Aviation radiotelephony.';
-  return words.length ? `${intro} ${words.join(', ')}.`.slice(0, 600) : intro;
+  // Mots séparés par des espaces : avec des virgules, Whisper en met entre tous les mots de sa transcription
+  return words.length ? `${intro} ${words.join(' ')}`.slice(0, 600) : intro;
 }
 
 /** Neurones consommés par une transcription */

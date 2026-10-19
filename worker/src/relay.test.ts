@@ -217,7 +217,7 @@ describe('checkSttAudio', () => {
 describe('sttPrompt', () => {
   it('garde les mots, retire chiffres et caractères inattendus', () => {
     expect(sttPrompt('fr', 'Strasbourg, Tour, 118 décimale 7, <script>')).toBe(
-      'Radiotéléphonie aéronautique. Strasbourg, Tour, décimale, script.'
+      'Radiotéléphonie aéronautique. Strasbourg Tour décimale script'
     )
     expect(sttPrompt('en', null)).toBe('Aviation radiotelephony.')
   })

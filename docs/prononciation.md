@@ -47,6 +47,7 @@ MeloTTS prononce mal certains mots anglais. Ils sont réécrits uniquement dans 
 | Whiskey / Whisky | Ouisski | Oreille, aller-retour |
 | Boeing | Boïngue | Oreille |
 | Foxtrot | Fox trotte | Oreille ; aller-retour (« Foxtrotte » → « Fextrot ») |
+| Point de report finissant par consonne + « gu » (MIRGU) | Mire-gu (« Mirgu » est lu « Mirg ») | Oreille ; aller-retour |
 
 Pour en ajouter un : dictionnaire `FR_PRONUNCIATION` de `speech.ts`, plus un test.
 
@@ -79,5 +80,5 @@ Faire dire la graphie par MeloTTS, puis transcrire l'audio avec Whisper (les deu
 ## Reconnaissance de la réponse du pilote (quiz)
 
 - Whisper large-v3-turbo via `POST /stt` du relais (WAV 16 kHz mono, 15 s maximum).
-- Le moteur reçoit la langue et un vocabulaire **sans aucun nombre** ([`src/utils/sttVocabulary.ts`](../src/utils/sttVocabulary.ts)) : alphabet OACI, stations, noms propres de la réplique attendue. Avec des nombres, il « corrigerait » l'élève vers la bonne valeur.
+- Le moteur reçoit la langue et un vocabulaire, mots séparés par des espaces (avec des virgules, Whisper en met partout dans sa transcription), **sans aucun nombre** ([`src/utils/sttVocabulary.ts`](../src/utils/sttVocabulary.ts)) : alphabet OACI, stations, noms propres de la réplique attendue. Avec des nombres, il « corrigerait » l'élève vers la bonne valeur.
 - Le texte reconnu est noté par le scoring du quiz, qui accepte les graphies phonétiques (IVAO), l'alphabet OACI, « unité », les chiffres en mots ou en nombres.

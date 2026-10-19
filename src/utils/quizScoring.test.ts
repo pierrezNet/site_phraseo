@@ -326,3 +326,12 @@ describe('nombres dits par groupes et virgule de Whisper', () => {
     }
   })
 })
+
+describe('point de report épelé en alphabet OACI', () => {
+  it('« Mike India Romeo Golf Uniform » vaut MIRGU, en français comme en anglais', () => {
+    const crit = [{ label: 'SID/STAR', value: 'MIRGU 7H' }]
+    expect(scoreAnswer('départ Mike India Romeo Golf Uniform sept Hotel', 'départ MIRGU 7H', crit).passed).toBe(true)
+    expect(scoreAnswer('Mike India Romeo Golf Uniform seven Hotel departure', 'MIRGU 7H departure', crit).passed).toBe(true)
+    expect(scoreAnswer('départ Mirgu sept Hôtel', 'départ MIRGU 7H', crit).passed).toBe(true)
+  })
+})

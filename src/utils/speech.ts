@@ -213,6 +213,10 @@ export function toSpeech(text: string, lang: SpeechLang): string {
 
   if (lang === 'fr') s = s.replace(/\b[A-Z][a-z]+\b/g, (w) => FR_PRONUNCIATION[w] ?? w);
 
+  // Point de report finissant par consonne + « gu » (MIRGU) : la voix française avale le « u » final
+  // (« Mirg ») ; « Mire-gu » le fait entendre (vérifié par aller-retour MeloTTS → Whisper)
+  if (lang === 'fr') s = s.replace(/\b([A-Z][a-z]*?[^aeiouyàâéèêëîïôûü\W\d])gu\b/g, '$1e-gu');
+
   return s
     .replace(/\s+([,.;:!?])/g, '$1')
     .replace(/\s+/g, ' ')
