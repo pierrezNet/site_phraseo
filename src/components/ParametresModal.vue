@@ -50,6 +50,30 @@
               <label for="STA" class="label-field">SID/STAR</label>
               <input type="text" id="STA" v-model="formStore.form.STA" @change="updateForm" class="input-field">
             </div>
+            <div v-if="!isVFR()">
+              <label for="SEL" class="label-field">Code SELCAL</label>
+              <div class="flex gap-2 items-center">
+                <input
+                  type="text"
+                  id="SEL"
+                  v-model="formStore.form.SEL"
+                  @change="updateForm"
+                  maxlength="5"
+                  placeholder="AD-RS"
+                  aria-describedby="SEL-erreur"
+                  class="input-field uppercase"
+                >
+                <button
+                  type="button"
+                  class="shrink-0 px-2 py-1 rounded border hover:bg-blue-500/10 disabled:opacity-40"
+                  :disabled="!selcal.valid"
+                  :title="`Écouter le code SELCAL ${selcalLabel}`"
+                  :aria-label="`Écouter le code SELCAL ${selcalLabel}`"
+                  @click="playSelcal(formStore.form.SEL ?? '')"
+                >▶</button>
+              </div>
+              <p id="SEL-erreur" v-if="formStore.form.SEL && !selcal.valid" class="ko-text text-xs mt-1" aria-live="polite">{{ selcal.reasons[0] }}</p>
+            </div>
             <div v-if="isVFR()">
               <label for="SORTIE" class="label-field">Point de sortie</label>
               <input type="text" id="SORTIE" v-model="formStore.form.SORTIE" @change="updateForm" class="input-field">
@@ -224,7 +248,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
+import { checkSelcal, formatSelcal, playSelcal } from '../utils/selcal'
 import { useFormStore } from '../stores/form'
 
 export default defineComponent({
@@ -239,6 +264,8 @@ export default defineComponent({
     const isOpen = ref(false)
     const formStore = useFormStore()
     const isVFR = () => props.currentMode === 'VFR'
+    const selcal = computed(() => checkSelcal(formStore.form.SEL ?? ''))
+    const selcalLabel = computed(() => (selcal.value.valid ? formatSelcal(selcal.value.letters) : ''))
 
     const open = () => {
       if (!formStore.form.DEP) {
@@ -265,6 +292,9 @@ export default defineComponent({
       isOpen,
       formStore,
       isVFR,
+      selcal,
+      selcalLabel,
+      playSelcal,
       open,
       close,
       clearInput,

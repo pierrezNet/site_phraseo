@@ -524,6 +524,11 @@
 						"_refid": "ANNULATION_IFR_CD"
 					},
 					{
+						"_class": "info",
+						"_tab": "CR",
+						"_refid": "SELCAL_CHECK"
+					},
+					{
 						"_class": "option",
 						"_tab": "AP",
 						"_refid": "VITESSE_MACH_VARIATION"
@@ -5539,6 +5544,30 @@
 					"_id": "ANNULATION_IFR_CD",
 					"_name": "Annulation IFR classe C/D",
 					"_short": "Annule IFR C/D",
+					"_level": "avancé"
+				},
+				{
+					"para": [
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "(Gander Radio), [CAL], on frequency (1_2_7 decimal 6_5), requesting SELCAL check, code [SEL]."
+						},
+						{
+							"_lang": "en",
+							"_class": "ATC",
+							"__text": "[CAL], (Gander Radio), primary (1_2_7 decimal 6_5), secondary (1_3_2 decimal 3_3_5). SELCAL [SEL] transmitted.",
+							"_selcal": true
+						},
+						{
+							"_lang": "en",
+							"_class": "Pilot",
+							"__text": "(Gander Radio), [CAL], SELCAL okay."
+						}
+					],
+					"_id": "SELCAL_CHECK",
+					"_name": "Contrôle SELCAL (HF océanique)",
+					"_short": "SELCAL",
 					"_level": "avancé"
 				},
 				{

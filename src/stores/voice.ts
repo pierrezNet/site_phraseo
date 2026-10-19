@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { API_BASE } from '../utils/relay'
 import { fetchAtcAudio, playRadio, stopRadio, VoiceQuotaError, type QuotaScope } from '../utils/atcAudio'
+import { playSelcal, stopSelcal } from '../utils/selcal'
 
 const STORAGE_KEY = 'atcVoice'
 
@@ -31,6 +32,8 @@ export interface SpokenLine {
   text: string
   /** Réplique du pilote : voix plus grave et radio de bord */
   pilot?: boolean
+  /** Code SELCAL : ses bitonalités suivent la réplique (contrôle SELCAL) */
+  selcal?: string
 }
 
 /**
@@ -77,6 +80,10 @@ export const useVoiceStore = defineStore('voice', () => {
         playing.value = line.key
         await playRadio(wav, lang, line.pilot ? 'pilot' : 'atc')
         if (mine !== generation) return
+        if (line.selcal) {
+          await playSelcal(line.selcal)
+          if (mine !== generation) return
+        }
       }
     } catch (e) {
       if (mine !== generation) return
@@ -100,6 +107,7 @@ export const useVoiceStore = defineStore('voice', () => {
   function stop() {
     generation++
     stopRadio()
+    stopSelcal()
     loading.value = null
     playing.value = null
   }

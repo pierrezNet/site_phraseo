@@ -2,6 +2,7 @@ import type { Language } from '../stores/form';
 import type { useFormStore } from '../stores/form';
 import type { useWeatherStore } from '../stores/weather';
 import { replaceMetarTag } from './weatherFormatter';
+import { spellSelcal } from './selcal';
 
 type FormStoreType = ReturnType<typeof useFormStore>;
 type WeatherStoreType = ReturnType<typeof useWeatherStore>;
@@ -155,6 +156,9 @@ export function replacePlaceholders(
         return formStore.formatRunway(formStore.form.RWY, lang);
       case 'RWYO':
         return formStore.formatRunway(oppositeRunway(formStore.form.RWY), lang);
+      case 'SEL':
+        // Code SELCAL épelé en alphabet OACI (« Alpha-Delta-Romeo-Sierra ») ; saisie invalide → code par défaut
+        return spellSelcal(formStore.form.SEL ?? '');
       case 'QNH':
         return weatherStore.metarQnh || formStore.form.QNH || '1013';
       case 'MET':

@@ -35,6 +35,10 @@ const props = withDefaults(
     speech: string
     isPilot: boolean
     listenable?: boolean
+    /** Langue de la réplique (défaut : celle de l'application) */
+    lang?: 'fr' | 'en'
+    /** Code SELCAL dont les bitonalités suivent la réplique */
+    selcal?: string
   }>(),
   { listenable: true }
 );
@@ -51,7 +55,11 @@ const label = computed(() =>
 
 const toggle = () => {
   if (loading.value || playing.value) voice.stop();
-  else voice.play({ key: props.lineKey, text: props.speech, pilot: props.isPilot }, langStore.current as 'fr' | 'en');
+  else
+    voice.play(
+      { key: props.lineKey, text: props.speech, pilot: props.isPilot, selcal: props.selcal },
+      props.lang ?? (langStore.current as 'fr' | 'en')
+    );
 };
 </script>
 

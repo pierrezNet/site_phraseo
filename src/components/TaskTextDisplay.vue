@@ -7,6 +7,10 @@
       <span class="opacity-60">Étape : </span>{{ context.step }}<span v-if="context.option" class="opacity-60"> › </span>{{ context.option }}
     </p>
 
+    <p v-if="englishOnly && renderedLines.length" class="notice text-sm mb-3 px-3 py-2 rounded">
+      🇬🇧 Échange en anglais uniquement (HF océanique) : il s'affiche, se dit et se note en anglais.
+    </p>
+
     <!-- Vol complet : consigne d'instructeur (la décision du pilote, pas la phrase à dire) -->
     <div v-if="flight.active && flight.currentStep?.brief" class="strip strip--highlight text-sm mb-3 px-3 py-2 rounded border">
       📋 <strong>Consigne :</strong> {{ flight.currentStep.brief }}
@@ -38,6 +42,7 @@
           <ListenButton
             :line-key="line.key"
             :speech="line.speech"
+            :lang="exchangeLang"
             is-pilot
             :listenable="!!resultOf(line.key) && isFinal(line.key) && !awaitingReply(line.key)"
             class="mr-2"
@@ -145,7 +150,7 @@
           line.isPilot ? 'bg-blue-100 border-blue-500' : 'bg-orange-100 border-orange-500'
         ]"
       >
-        <ListenButton :line-key="line.key" :speech="line.speech" :is-pilot="line.isPilot" class="mr-2" />
+        <ListenButton :line-key="line.key" :speech="line.speech" :is-pilot="line.isPilot" :lang="exchangeLang" :selcal="line.selcal" class="mr-2" />
         <span v-html="line.content"></span>
       </div>
     </template>
@@ -175,7 +180,7 @@ import { vocabulary } from '../utils/sttVocabulary';
 import { requirementsMet } from '../utils/flight';
 import { replacePlaceholders } from '../utils/phraseoHelpers';
 import { groupFlightNumber, toSpeech } from '../utils/speech';
-import { buildCriticals, callsignEquivalences as callsignEquivalencesOf } from '../utils/criticals';
+import { buildCriticals, callsignEquivalences as callsignEquivalencesOf, selcalEquivalences } from '../utils/criticals';
 import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
 import ListenButton from './ListenButton.vue';
@@ -232,6 +237,8 @@ interface SourceLine {
   _ask?: string;
   /** Stations nécessaires : la réplique disparaît si l'une est fermée */
   _requires?: string[];
+  /** Réplique ATC suivie des bitonalités du code SELCAL ([SEL]) */
+  _selcal?: boolean;
 }
 
 interface RenderedLine {
@@ -244,6 +251,8 @@ interface RenderedLine {
   expectedSpoken: string;
   /** Texte prêt pour la synthèse vocale (voix de l'ATC) */
   speech: string;
+  /** Code SELCAL dont les bitonalités suivent la réplique (contrôle SELCAL) */
+  selcal?: string;
   criticals: Critical[];
   /** Formulations obligatoires : leur absence déclenche une relance de l'ATC */
   intents: string[];
@@ -275,8 +284,20 @@ const remarksFor = (line: RenderedLine, answer: string): RemarkCode[] =>
 const rogerOnly = (line: RenderedLine, answer: string): boolean =>
   isRogerInsteadOfReadback({ expected: line.expectedSpoken, answer, callsign: flightCallsign() });
 
+/**
+ * Langue de l'échange : celle de l'application, sauf tâche qui n'existe qu'en anglais
+ * (contrôle SELCAL, HF océanique) : affichée, dite et notée en anglais même en mode français.
+ */
+const exchangeLang = computed<'fr' | 'en'>(() => {
+  const current = langStore.current as 'fr' | 'en';
+  const lines = props.selectedTaskTexts as SourceLine[];
+  if (lines.some((t) => t._lang === current)) return current;
+  return lines.some((t) => t._lang === 'en') ? 'en' : current;
+});
+const englishOnly = computed(() => exchangeLang.value !== langStore.current);
+
 const renderedLines = computed<RenderedLine[]>(() => {
-  const lang = langStore.current as 'fr' | 'en';
+  const lang = exchangeLang.value;
   // Voix française : numéro de vol par groupes de deux chiffres (« Air Europe zéro douze »)
   const speechOverrides = lang === 'fr'
     ? {
@@ -285,7 +306,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
         CAA: groupFlightNumber(formStore.form.CAA || 'Station'),
       }
     : flight.tagOverrides;
-  const render = (key: string, cls: string, text: string, intents: string[] = [], ask?: string): RenderedLine => {
+  const render = (key: string, cls: string, text: string, intents: string[] = [], ask?: string, selcal = false): RenderedLine => {
     const processed = replacePlaceholders(text, lang, formStore, weatherStore, flight.tagOverrides);
     return {
       key,
@@ -294,6 +315,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
       content: tooltipHtml(processed),
       expectedSpoken: requiredText(processed),
       speech: toSpeech(replacePlaceholders(text, lang, formStore, weatherStore, speechOverrides), lang),
+      selcal: selcal ? formStore.form.SEL ?? '' : undefined,
       // Un tag entre parenthèses est optionnel : il n'est pas exigé
       criticals: buildCriticals(requiredText(text), lang, formStore, weatherStore),
       intents,
@@ -307,7 +329,7 @@ const renderedLines = computed<RenderedLine[]>(() => {
     .flatMap((item, i) => {
       const key = String(i);
       const intents = item._class === 'Pilot' ? item._critical ?? [] : [];
-      const line = render(key, item._class, item.__text, intents, item._ask);
+      const line = render(key, item._class, item.__text, intents, item._ask, !!item._selcal);
       if (!relaunched[key]) return [line];
       // Relance : l'ATC demande l'intention, le pilote doit la préciser
       const reply = `${capitalize(intents.join(', '))}, [CAA].`;
@@ -365,8 +387,8 @@ const resetQuiz = () => {
   for (const k of Object.keys(lineRemarks)) delete lineRemarks[k];
 };
 
-// Le callsign complet (CAL) et sa forme abrégée (CAA) sont interchangeables
-const callsignEquivalences = () => callsignEquivalencesOf(formStore);
+// Le callsign complet (CAL) et sa forme abrégée (CAA) sont interchangeables ; de même le code SELCAL épelé ou écrit
+const callsignEquivalences = () => [...callsignEquivalencesOf(formStore), ...selcalEquivalences(formStore)];
 
 /** Étape à évaluation souple (ex. message de fin) : seul l'indicatif compte, formulation libre */
 const lenientStep = computed(() => flight.active && !!flight.currentStep?.lenient);
@@ -451,7 +473,8 @@ watch(() => quizStore.enabled, resetQuiz);
 
 // ── Voix de l'ATC ────────────────────────────────────────────────────────────
 
-const speak = (line: RenderedLine) => voice.play({ key: line.key, text: line.speech }, langStore.current as 'fr' | 'en');
+const speak = (line: RenderedLine) =>
+  voice.play({ key: line.key, text: line.speech, pilot: line.isPilot, selcal: line.selcal }, exchangeLang.value);
 
 /** Répliques ATC déjà lues automatiquement pour la tâche en cours */
 const spokenKeys = new Set<string>();
@@ -464,7 +487,7 @@ watch(
     const fresh = atcLines.filter((l) => !spokenKeys.has(l.key));
     if (!fresh.length) return;
     fresh.forEach((l) => spokenKeys.add(l.key));
-    voice.playAll(fresh.map((l) => ({ key: l.key, text: l.speech })), langStore.current as 'fr' | 'en');
+    voice.playAll(fresh.map((l) => ({ key: l.key, text: l.speech, selcal: l.selcal })), exchangeLang.value);
   },
   { immediate: true }
 );
@@ -515,7 +538,7 @@ const holdTalk = (e: PointerEvent, key: string) => {
 const endTalk = async () => {
   const key = radio.recording;
   if (!key) return;
-  const lang = langStore.current as 'fr' | 'en';
+  const lang = exchangeLang.value;
   const line = renderedLines.value.find((l) => l.key === key);
   // Vocabulaire sans nombres (noms propres de la réplique, stations, alphabet) pour guider Whisper
   const text = await radio.release(lang, line ? vocabulary(lang, [line.expectedSpoken]) : []);

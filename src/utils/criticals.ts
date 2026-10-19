@@ -5,6 +5,7 @@
 import type { useFormStore } from '../stores/form';
 import type { useWeatherStore } from '../stores/weather';
 import { oppositeRunway, resolveStationParts } from './phraseoHelpers';
+import { checkSelcal, formatSelcal, spellSelcal } from './selcal';
 import { CRITICAL_TAGS, type Critical } from './quizScoring';
 
 type FormStoreType = ReturnType<typeof useFormStore>;
@@ -16,6 +17,8 @@ export function resolveCriticalValue(tag: string, lang: Lang, formStore: FormSto
   switch (tag) {
     case 'RWY':
       return formStore.formatRunway(formStore.form.RWY, lang);
+    case 'SEL':
+      return spellSelcal(formStore.form.SEL ?? '');
     case 'RWYO':
       return formStore.formatRunway(oppositeRunway(formStore.form.RWY), lang);
     case 'QNH':
@@ -67,4 +70,10 @@ export function callsignEquivalences(formStore: FormStoreType): string[][] {
   const cal = formStore.form.CAL?.trim() ?? '';
   const forms = [...new Set([cal, caa, ...spelledRegistration(cal)].filter(Boolean))];
   return forms.length > 1 ? [forms] : [];
+}
+
+/** Code SELCAL épelé (« Alpha-Delta-Romeo-Sierra ») ou écrit (« AD-RS », « ADRS ») : interchangeables */
+export function selcalEquivalences(formStore: FormStoreType): string[][] {
+  const { valid, letters } = checkSelcal(formStore.form.SEL ?? '');
+  return valid ? [[spellSelcal(formStore.form.SEL ?? ''), formatSelcal(letters), letters.join('')]] : [];
 }

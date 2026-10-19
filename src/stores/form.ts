@@ -40,6 +40,8 @@ export interface FormData {
   NIV: string
   VIT: string
   CAP: string
+  /** Code SELCAL (IFR), ex. « AD-RS » */
+  SEL: string
   DEL: string
   GND: string
   TWR: string
@@ -145,6 +147,7 @@ const VFR_DEFAULTS: FormData = {
   SQU: '7001',
   VIT: '360',
   CAP: '360',
+  SEL: 'AD-RS',
   DEL: '',
   GND: '121.8',
   TWR: '119.250',
@@ -177,6 +180,7 @@ const IFR_DEFAULTS: FormData = {
   SQU: '1000',
   VIT: '360',
   CAP: '360',
+  SEL: 'AD-RS',
   DEL: '121.050',
   GND: '121.825',
   TWR: '118.700',

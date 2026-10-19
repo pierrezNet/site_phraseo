@@ -189,6 +189,16 @@ describe('TaskTextDisplay', () => {
     wrapper.unmount()
   })
 
+  it('tâche en anglais seulement (SELCAL) : affichée en anglais en mode français, avec mention', () => {
+    const tasks = [
+      { __text: '(Gander Radio), [CAL], requesting SELCAL check, code [SEL].', _lang: 'en', _class: 'Pilot' },
+      { __text: '[CAL], (Gander Radio), SELCAL [SEL] transmitted.', _lang: 'en', _class: 'ATC', _selcal: true },
+    ]
+    const wrapper = mount(TaskTextDisplay, { global: { plugins: [pinia] }, props: { selectedTaskTexts: tasks } })
+    expect(wrapper.text()).toContain('Échange en anglais uniquement')
+    expect(wrapper.text()).toContain('SELCAL Alpha-Delta-Romeo-Sierra transmitted')
+  })
+
   describe('mobile (écran tactile)', () => {
     const touch = vi.fn(() => ({ matches: true }))
     beforeEach(() => vi.stubGlobal('matchMedia', touch))

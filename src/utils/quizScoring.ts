@@ -44,6 +44,7 @@ export const CRITICAL_TAGS: Record<string, string> = {
   CAP: 'Cap',
   VIT: 'Vitesse',
   SQU: 'Transpondeur',
+  SEL: 'Code SELCAL',
   STA: 'SID/STAR',
   WPT: 'Point de report',
   HLD: "Point d'attente",
