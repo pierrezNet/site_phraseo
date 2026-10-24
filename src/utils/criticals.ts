@@ -78,12 +78,16 @@ export function withSpelledRegistrations(groups: string[][]): string[][] {
 }
 
 /** Indicatif complet, abrégé et épelé interchangeables dans les réponses. */
-export function callsignEquivalences(formStore: FormStoreType): string[][] {
+export function callsignEquivalences(formStore: FormStoreType, { spoken = false } = {}): string[][] {
   const caa = formStore.form.CAA?.trim() ?? '';
   const cal = formStore.form.CAL?.trim() ?? '';
+  const withAir = [cal, caa].filter((c) => /^Air\s/i.test(c));
   // « Air » se prononce comme la lettre R : la reconnaissance écrit souvent « R Europe » pour « Air Europe »
-  const heardAsR = [cal, caa].filter((c) => /^Air\s/i.test(c)).map((c) => c.replace(/^Air\s/i, 'R '));
-  const forms = [...new Set([cal, caa, ...spelledRegistration(cal), ...heardAsR].filter(Boolean))];
+  const heardAsR = withAir.map((c) => c.replace(/^Air\s/i, 'R '));
+  // Réponse dite au micro : la reconnaissance avale parfois ce « Air » initial, court et peu accentué
+  // (« Europe 012 ») ; à l'écrit, l'indicatif complet reste exigé
+  const airDropped = spoken ? withAir.map((c) => c.replace(/^Air\s+/i, '')) : [];
+  const forms = [...new Set([cal, caa, ...spelledRegistration(cal), ...heardAsR, ...airDropped].filter(Boolean))];
   return forms.length > 1 ? [forms] : [];
 }
 

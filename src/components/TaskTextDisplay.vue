@@ -412,7 +412,10 @@ const resetQuiz = () => {
 };
 
 // Le callsign complet (CAL) et sa forme abrégée (CAA) sont interchangeables ; de même le code SELCAL épelé ou écrit
-const callsignEquivalences = () => [...callsignEquivalencesOf(formStore), ...selcalEquivalences(formStore)];
+const callsignEquivalences = (spoken = false) => [
+  ...callsignEquivalencesOf(formStore, { spoken }),
+  ...selcalEquivalences(formStore),
+];
 
 /** Étape à évaluation souple (ex. message de fin) : seul l'indicatif compte, formulation libre */
 const lenientStep = computed(() => flight.active && !!flight.currentStep?.lenient);
@@ -422,20 +425,21 @@ type Grade = { result: QuizResult; relaunch: boolean };
 /** Évaluation souple : seul l'indicatif compte (mais « Roger » seul reste faux) */
 const gradeLenient = (line: RenderedLine, answer: string): Grade => {
   const callsign = line.criticals.filter((c) => c.label === CRITICAL_TAGS.CAL);
-  const scored = scoreAnswer(answer, line.expectedSpoken, callsign, callsignEquivalences());
+  const scored = scoreAnswer(answer, line.expectedSpoken, callsign, callsignEquivalences(!!spokenAnswers[line.key]));
   return { result: { ...scored, passed: scored.criticals.every((c) => c.ok) && !rogerOnly(line, answer) }, relaunch: false };
 };
 
 /** Évaluation normale ; si seule l'intention manque (le reste serait validé), l'ATC relance au lieu de refuser */
 const gradeStrict = (line: RenderedLine, answer: string): Grade => {
   const intentCriticals = line.intents.map((value) => ({ label: INTENT_LABEL, value }));
-  const scored = scoreAnswer(answer, line.expectedSpoken, [...line.criticals, ...intentCriticals], callsignEquivalences());
+  const eq = callsignEquivalences(!!spokenAnswers[line.key]);
+  const scored = scoreAnswer(answer, line.expectedSpoken, [...line.criticals, ...intentCriticals], eq);
   const result = rogerOnly(line, answer) ? { ...scored, passed: false } : scored;
   const intentMissing = result.criticals.some((c) => c.label === INTENT_LABEL && !c.ok);
   const relaunch =
     intentMissing &&
     !line.key.endsWith('.reply') &&
-    scoreAnswer(answer, line.expectedSpoken, line.criticals, callsignEquivalences()).passed;
+    scoreAnswer(answer, line.expectedSpoken, line.criticals, eq).passed;
   return { result, relaunch };
 };
 
@@ -565,7 +569,10 @@ const endTalk = async () => {
   const lang = exchangeLang.value;
   const line = renderedLines.value.find((l) => l.key === key);
   // Vocabulaire sans nombres (noms propres de la réplique, stations, alphabet) pour guider Whisper
-  const text = await radio.release(lang, line ? vocabulary(lang, [line.expectedSpoken]) : []);
+  // L'indicatif sans ses chiffres (« Air Europe ») en tête, d'un seul tenant : Whisper avale souvent le « Air »
+  const callsignWords = (formStore.form.CAL ?? '').replace(/[\d_-]+/g, ' ').trim();
+  const hint = line ? [...(callsignWords ? [callsignWords] : []), ...vocabulary(lang, [line.expectedSpoken])] : [];
+  const text = await radio.release(lang, hint);
   if (!text || !line || resultOf(key)) return;
   answers[key] = text;
   spokenAnswers[key] = true;

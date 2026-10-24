@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildCriticals, spelledRegistration, withSpelledRegistrations } from './criticals'
+import { buildCriticals, callsignEquivalences, spelledRegistration, withSpelledRegistrations } from './criticals'
 import { scoreAnswer, CRITICAL_TAGS } from './quizScoring'
 
 describe('immatriculation épelée', () => {
@@ -32,5 +32,21 @@ describe('éléments critiques des pistes et niveaux', () => {
 
   it('vol local : la piste d’arrivée exigée est celle du départ', () => {
     expect(buildCriticals('Piste [RWYA]', 'fr', formStore, weatherStore, { RWYA: '[RWY]' })).toEqual([{ label: 'Piste', value: '26L' }])
+  })
+})
+
+describe('indicatif « Air … » et reconnaissance vocale', () => {
+  const formStore = { form: { CAL: 'Air Europe 012', CAA: 'Air Europe 012' } } as never
+  const crit = [{ label: CRITICAL_TAGS.CAL, value: 'Air Europe 012' }]
+  const expected = 'Je repousse, Air Europe 012.'
+
+  it('« R Europe » accepté, à l’écrit comme à la voix', () => {
+    expect(scoreAnswer('Je repousse R Europe 012', expected, crit, callsignEquivalences(formStore)).criticals[0].ok).toBe(true)
+  })
+
+  it('« Air » avalé : accepté seulement pour une réponse dite au micro', () => {
+    const answer = 'Je repousse Europe 012'
+    expect(scoreAnswer(answer, expected, crit, callsignEquivalences(formStore, { spoken: true })).criticals[0].ok).toBe(true)
+    expect(scoreAnswer(answer, expected, crit, callsignEquivalences(formStore)).criticals[0].ok).toBe(false)
   })
 })
