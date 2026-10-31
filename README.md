@@ -2,10 +2,9 @@
 
 Ce dépôt contient la version **statique buildée** du site *Phraséo*, dédiée à la phraseologie aéronautique (FR/EN).
 
-Le site est généré en amont (build) puis déployé tel quel sur GitHub Pages. Seul un petit relais (Cloudflare Worker, dossier `worker/`) détient les secrets : METAR et retours Discord.
+Le site est généré en amont (build) puis déployé tel quel sur GitHub Pages. Seul un petit relais (Cloudflare Worker, dossier `worker/`) sert ce qui demande un serveur : METAR, voix de l'ATC et reconnaissance vocale, retours « J'ai un retour » (transmis au forum AvroBB).
 
-🌍 Site en ligne :  
-https://phraseo.aeronautique.xyz/
+🌍 **En ligne : [phraseo.aeronautique.xyz](https://phraseo.aeronautique.xyz/)** · 💬 Retours et échanges : [forum de la phraséologie](https://avrobb.org/forum/4-phraseologie-aeronautique)
 
 ## Stack
 - HTML statique
