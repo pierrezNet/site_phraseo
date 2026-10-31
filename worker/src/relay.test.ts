@@ -71,6 +71,7 @@ describe('parseFeedback', () => {
   const valid = {
     type: 'Bug technique',
     message: '  Le QNH ne se met pas à jour  ',
+    pseudo: 'Pilote42',
     contact: 'pilote@example.org',
     mode: 'VFR',
     level: 'débutant',
@@ -79,6 +80,13 @@ describe('parseFeedback', () => {
 
   it('accepte et nettoie un retour valide', () => {
     expect(parseFeedback(valid)).toEqual({ ...valid, message: 'Le QNH ne se met pas à jour' })
+  })
+
+  it('pseudo facultatif (ancien formulaire), espaces réduits, 40 caractères au plus', () => {
+    const { pseudo: _pseudo, ...withoutPseudo } = valid
+    expect(parseFeedback(withoutPseudo)?.pseudo).toBe('')
+    expect(parseFeedback({ ...valid, pseudo: '  Pilote   42 ' })?.pseudo).toBe('Pilote 42')
+    expect(parseFeedback({ ...valid, pseudo: 'x'.repeat(41) })).toBeNull()
   })
 
   it('refuse un type inconnu', () => {

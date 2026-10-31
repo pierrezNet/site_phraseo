@@ -51,12 +51,27 @@
           </div>
 
           <div>
-            <label class="block font-medium mb-1 label-field">Contact (optionnel)</label>
+            <label for="feedback-pseudo" class="block font-medium mb-1 label-field">Pseudo (optionnel, affiché avec ton retour)</label>
             <input
+              id="feedback-pseudo"
+              v-model="pseudo"
+              type="text"
+              maxlength="40"
+              autocomplete="nickname"
+              placeholder="Ton pseudo de pilote"
+              class="w-full border rounded px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label for="feedback-contact" class="block font-medium mb-1 label-field">Contact (optionnel, jamais publié)</label>
+            <input
+              id="feedback-contact"
               v-model="contact"
               type="text"
               maxlength="120"
-              placeholder="E-mail, si tu veux une réponse (jamais publié)"
+              autocomplete="email"
+              placeholder="Email, si tu veux une réponse"
               class="w-full border rounded px-3 py-2"
             />
           </div>
@@ -100,12 +115,14 @@ const status = ref<Status>('idle');
 const type = ref('Erreur de phraséologie');
 const message = ref('');
 const contact = ref('');
+const pseudo = ref('');
 
 const open = () => {
   // Réinitialise l'état à chaque ouverture
   status.value = 'idle';
   message.value = '';
   contact.value = '';
+  pseudo.value = '';
   isOpen.value = true;
 };
 
@@ -131,6 +148,7 @@ const submit = async () => {
       type: type.value,
       message: message.value.slice(0, 1800),
       contact: contact.value.trim(),
+      pseudo: pseudo.value.trim(),
       mode: formStore.mode,
       level: formStore.form.LEVEL || '',
       lang: langStore.current,

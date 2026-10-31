@@ -64,6 +64,8 @@ export const FEEDBACK_TYPES = [
 export interface Feedback {
   type: (typeof FEEDBACK_TYPES)[number];
   message: string;
+  /** Pseudo publié avec le retour (facultatif) */
+  pseudo: string;
   contact: string;
   mode: 'VFR' | 'IFR' | '';
   level: string;
@@ -80,16 +82,17 @@ export function parseFeedback(body: unknown): Feedback | null {
   const type = str(b.type);
   const message = str(b.message);
   const contact = str(b.contact);
+  const pseudo = str(b.pseudo).replace(/\s+/g, ' ');
   const mode = str(b.mode);
   const level = str(b.level);
   const lang = str(b.lang);
 
   if (!(FEEDBACK_TYPES as readonly string[]).includes(type)) return null;
   if (!message || message.length > 1800) return null;
-  if (contact.length > 120 || level.length > 20) return null;
+  if (contact.length > 120 || pseudo.length > 40 || level.length > 20) return null;
   if (!['VFR', 'IFR', ''].includes(mode) || !['fr', 'en', ''].includes(lang)) return null;
 
-  return { type: type as Feedback['type'], message, contact, mode: mode as Feedback['mode'], level, lang: lang as Feedback['lang'] };
+  return { type: type as Feedback['type'], message, pseudo, contact, mode: mode as Feedback['mode'], level, lang: lang as Feedback['lang'] };
 }
 
 // ── Synthèse vocale (voix de l'ATC) ──────────────────────────────────────────
