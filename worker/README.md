@@ -5,7 +5,7 @@ Le site est statique (GitHub Pages) : tout ce qui est injecté au build via `VIT
 | Route | Rôle |
 |---|---|
 | `GET /metar/:icao` | METAR depuis aviationweather.gov (NOAA, sans clé), converti au format du front, cache 10 min |
-| `POST /feedback` | Valide le retour et le poste sur Discord. Origine autorisée uniquement, 5 envois/min/IP, mentions désactivées |
+| `POST /feedback` | Valide le retour et le transmet au forum AvroBB (liaison de service `FORUM`, point d'entrée `PhraseoFeedback`) : sujet du forum privé « Retours Phraséo (à trier) », contact envoyé par e-mail aux administrateurs seulement. Origine autorisée uniquement, 5 envois/min/IP |
 | `POST /tts` | Voix : `{ text, lang }` (texte préparé par `src/utils/speech.ts`, 600 caractères max) → WAV MeloTTS (Workers AI). Origine autorisée uniquement, 60 synthèses/min/IP, cache 30 jours (une réplique déjà dite ne coûte rien), quotas quotidiens (ci-dessous) |
 | `POST /stt?lang=fr` | Réponse du pilote : WAV 16 kHz mono (15 s max), vocabulaire sans nombres dans `X-Stt-Hint` → `{ text }` (Whisper large-v3-turbo). Origine autorisée uniquement, 30 réponses/min/IP, mêmes quotas que la voix |
 
@@ -14,10 +14,11 @@ Le site est statique (GitHub Pages) : tout ce qui est injecté au build via `VIT
 ```bash
 cd worker
 npm install
-npx wrangler login                          # compte Cloudflare
-npx wrangler secret put DISCORD_WEBHOOK_URL # coller la NOUVELLE URL du webhook
-npm run deploy                              # affiche l'URL https://phraseo-relay.<compte>.workers.dev
+npx wrangler login     # compte Cloudflare (le même que le forum AvroBB)
+npm run deploy         # affiche l'URL https://phraseo-relay.<compte>.workers.dev
 ```
+
+Le forum **AvroBB** doit être déployé avant, avec sa migration `0005_phraseo_feedback.sql` (compte système et forum privé « Retours Phraséo (à trier) ») : la liaison `FORUM` vise son point d'entrée `PhraseoFeedback`.
 
 Puis côté GitHub (Settings → Secrets and variables → Actions) :
 - onglet **Variables** : créer `VITE_API_BASE` = l'URL du Worker (sans `/` final) ;
@@ -26,11 +27,10 @@ Puis côté GitHub (Settings → Secrets and variables → Actions) :
 ## Développement local
 
 ```bash
-# worker/.dev.vars (ignoré par git)
-DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
-
 npm run dev   # http://localhost:8787 (Workers AI s'exécute à distance : la voix est facturée, même en local)
 ```
+
+Pour tester « J'ai un retour » en local, lancer aussi le forum sur un autre port (`cd ../avrobb && npm run dev -- --port 8788`, migrations locales appliquées) : `wrangler dev` relie les deux Workers par son registre local.
 
 Et à la racine du projet, dans `.env.local` : `VITE_API_BASE=http://localhost:8787`.
 

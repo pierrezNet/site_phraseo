@@ -50,5 +50,10 @@ class_name = "VoiceQuota"
 tag = "v1"
 new_sqlite_classes = ["VoiceQuota"]
 
-# Secret (jamais dans ce fichier) :
-#   npx wrangler secret put DISCORD_WEBHOOK_URL
+# Retours « J'ai un retour » : forum AvroBB, point d'entrée interne (aucune adresse publique)
+[[services]]
+binding = "FORUM"
+service = "avrobb"
+entrypoint = "PhraseoFeedback"
+
+# Aucun secret : le relais n'a plus de webhook (les retours passent par la liaison FORUM).

@@ -2,7 +2,7 @@
  * Relais Phraséo (Cloudflare Worker)
  *
  *   GET  /metar/:icao  → METAR NOAA (sans clé), mis en cache 10 min
- *   POST /feedback     → message Discord (webhook stocké en secret)
+ *   POST /feedback     → retour « J'ai un retour » : sujet du forum privé d'AvroBB (liaison de service FORUM)
  *   POST /tts          → voix de l'ATC (MeloTTS, Workers AI), WAV mis en cache 30 jours,
  *                        quotas du jour par utilisateur anonyme, par IP et au total (Durable Object VoiceQuota)
  *   POST /stt?lang=fr  → réponse du pilote (WAV 16 kHz, 15 s max) transcrite par Whisper, mêmes quotas
@@ -13,7 +13,6 @@ import {
   ICAO_RE,
   USER_ID_RE,
   checkSttAudio,
-  discordPayload,
   parseFeedback,
   parseTts,
   quotaLimits,
@@ -23,14 +22,22 @@ import {
   ttsAudioBytes,
   ttsCacheKey,
   ttsNeurons,
+  type Feedback,
   type NoaaMetar,
 } from './relay';
 import type { VoiceQuota } from './quota';
 
 export { VoiceQuota } from './quota';
 
+/** Réponse du forum : sujet créé, ou retour refusé / fonction non configurée côté forum. */
+type ForumFeedbackResult = { ok: true; topicId: number } | { ok: false; reason: string };
+
 interface Env {
-  DISCORD_WEBHOOK_URL: string;
+  /**
+   * Forum AvroBB (même compte Cloudflare) : point d'entrée PhraseoFeedback, appelable seulement par
+   * liaison de service, sans adresse publique ni secret à partager.
+   */
+  FORUM: { submit(feedback: Feedback): Promise<ForumFeedbackResult> };
   /** Origines autorisées, séparées par des virgules */
   ALLOWED_ORIGINS: string;
   FEEDBACK_LIMITER: RateLimit;
@@ -104,13 +111,16 @@ async function handleFeedback(request: Request, env: Env, cors: Record<string, s
   const feedback = parseFeedback(body);
   if (!feedback) return json({ error: 'Champs invalides' }, 400, cors);
 
-  const res = await fetch(env.DISCORD_WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(discordPayload(feedback)),
-  });
-  if (!res.ok) {
-    console.error('Discord a répondu', res.status);
+  // Sujet du forum privé « à trier » d'AvroBB ; le contact part seulement par e-mail aux administrateurs
+  let result: ForumFeedbackResult;
+  try {
+    result = await env.FORUM.submit(feedback);
+  } catch (err) {
+    console.error('Le forum n’a pas reçu le retour', err);
+    return json({ error: 'Envoi impossible' }, 502, cors);
+  }
+  if (!result.ok) {
+    console.error('Le forum a refusé le retour', result.reason);
     return json({ error: 'Envoi impossible' }, 502, cors);
   }
 

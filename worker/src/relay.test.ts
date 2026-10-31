@@ -4,7 +4,6 @@ import {
   checkSttAudio,
   sttNeurons,
   sttPrompt,
-  discordPayload,
   parseFeedback,
   parseTts,
   quotaDay,
@@ -99,15 +98,6 @@ describe('parseFeedback', () => {
   it('refuse un corps qui n\'est pas un objet', () => {
     expect(parseFeedback(null)).toBeNull()
     expect(parseFeedback('texte')).toBeNull()
-  })
-})
-
-describe('discordPayload', () => {
-  it('désactive toutes les mentions Discord', () => {
-    const f = parseFeedback({ type: 'Autre', message: '@everyone test', contact: '', mode: '', level: '', lang: '' })!
-    const p = discordPayload(f)
-    expect(p.allowed_mentions).toEqual({ parse: [] })
-    expect(p.embeds[0].fields.map((x) => x.value)).toEqual(['—', '—', '—', '—'])
   })
 })
 

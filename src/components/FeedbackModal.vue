@@ -15,7 +15,7 @@
         <div v-if="status === 'success'" class="mt-6 text-center space-y-3">
           <p class="text-3xl">✅</p>
           <p class="font-medium">Merci ! Ton retour a bien été envoyé.</p>
-          <p class="text-sm text-gray-500">Il arrive directement sur notre Discord.</p>
+          <p class="text-sm text-gray-500">Il est lu sur le forum ; s'il intéresse tout le monde, il sera publié sur le <a href="https://avrobb.org/forum/4-phraseologie-aeronautique" target="_blank" rel="noopener noreferrer" class="underline">forum de la phraséologie</a>, sans ton contact.</p>
           <button @click="close" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
             Fermer
           </button>
@@ -56,13 +56,13 @@
               v-model="contact"
               type="text"
               maxlength="120"
-              placeholder="Email ou pseudo Discord, si tu veux une réponse"
+              placeholder="E-mail, si tu veux une réponse (jamais publié)"
               class="w-full border rounded px-3 py-2"
             />
           </div>
 
           <p v-if="status === 'error'" class="text-red-600 text-sm">
-            L'envoi a échoué. Réessaie, ou rejoins-nous directement sur Discord.
+            L'envoi a échoué. Réessaie, ou écris-nous sur le <a href="https://avrobb.org/forum/4-phraseologie-aeronautique" target="_blank" rel="noopener noreferrer" class="underline">forum</a>.
           </p>
 
           <div class="flex justify-end gap-2 pt-2">
@@ -124,7 +124,7 @@ const submit = async () => {
 
   status.value = 'sending';
 
-  // Le relais construit le message Discord ; on n'envoie que les champs utiles.
+  // Le relais transmet au forum (sujet privé, contact envoyé aux administrateurs seulement) ; on n'envoie que les champs utiles.
   // Le contexte technique (mode, niveau, langue) facilite le tri.
   try {
     await postJson(`${API_BASE}/feedback`, {

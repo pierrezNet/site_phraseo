@@ -92,27 +92,6 @@ export function parseFeedback(body: unknown): Feedback | null {
   return { type: type as Feedback['type'], message, contact, mode: mode as Feedback['mode'], level, lang: lang as Feedback['lang'] };
 }
 
-/** Message Discord construit côté relais : les mentions (@everyone, rôles…) sont désactivées */
-export function discordPayload(f: Feedback) {
-  return {
-    username: 'Phraséo — Feedback',
-    allowed_mentions: { parse: [] },
-    embeds: [
-      {
-        title: `Nouveau retour — ${f.type}`,
-        description: f.message,
-        color: 0x1e40af,
-        fields: [
-          { name: 'Mode', value: f.mode || '—', inline: true },
-          { name: 'Niveau', value: f.level || '—', inline: true },
-          { name: 'Langue', value: f.lang || '—', inline: true },
-          { name: 'Contact', value: f.contact || '—', inline: false },
-        ],
-      },
-    ],
-  };
-}
-
 // ── Synthèse vocale (voix de l'ATC) ──────────────────────────────────────────
 
 export const TTS_MAX_CHARS = 600;
