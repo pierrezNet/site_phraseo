@@ -101,9 +101,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import { useLangStore } from '../stores/lang';
 import { useFormStore } from '../stores/form';
-import { iconTaxonomy } from '../stores/taxonomy';
+import { iconTaxonomy, phaseLabel } from '../stores/taxonomy';
 import { useWeatherStore } from '../stores/weather';
 import { useSimulatorStore } from '../stores/simulator';
 import PilotIcon from './icons/PilotIcon.vue';
@@ -120,7 +119,6 @@ const props = defineProps<{
 
 const emit = defineEmits(['task-selected', 'update:context']);
 
-const langStore = useLangStore();
 const formStore = useFormStore();
 const weatherStore = useWeatherStore();
 const simulatorStore = useSimulatorStore();
@@ -199,7 +197,7 @@ const phaseTabs = computed(() => {
     id,
     icon: iconTaxonomy[id]?.icon || `<strong>${id}</strong>`,
     color: iconTaxonomy[id]?.color || 'gray',
-    label: iconTaxonomy[id]?.label || id
+    label: phaseLabel(id)
   }));
 });
 
@@ -414,7 +412,6 @@ const resetDisplay = () => {
 // --- Lifecycle ---
 
 onMounted(() => {
-  langStore.loadLanguage();
   initializeTasks();
   resetOpenGroups();
 });

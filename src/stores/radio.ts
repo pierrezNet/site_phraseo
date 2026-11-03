@@ -5,6 +5,8 @@ import { fetchWithTimeout } from '../utils/api'
 import { voiceUserId, VoiceQuotaError, type QuotaScope } from '../utils/atcAudio'
 import { toWav } from '../utils/wav'
 import { useVoiceStore, quotaMessage } from './voice'
+import { useLangStore } from './lang'
+import { translate } from '../i18n'
 
 /** Une réponse radio tient en 15 s (coupure automatique, comme le relais) */
 export const MAX_TALK_MS = 15000
@@ -56,6 +58,7 @@ async function transcribe(wav: Blob, lang: 'fr' | 'en', hint: string[]): Promise
  * `talk` démarre l'émission pour une réplique, `release` l'arrête et renvoie le texte entendu.
  */
 export const useRadioStore = defineStore('radio', () => {
+  const langStore = useLangStore()
   const available = !!API_BASE && typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getUserMedia
   /** Réplique en émission / en cours de transcription */
   const recording = ref<string | null>(null)
@@ -118,7 +121,7 @@ export const useRadioStore = defineStore('radio', () => {
       console.error(e)
       recording.value = null
       micDenied.value = e instanceof DOMException && e.name === 'NotAllowedError'
-      error.value = 'Micro inaccessible : autorisez le micro pour ce site, ou tapez votre réponse.'
+      error.value = translate(langStore.ui, 'error.micDenied')
     }
   }
 
@@ -134,7 +137,7 @@ export const useRadioStore = defineStore('radio', () => {
     idleTimer = setTimeout(closeMic, MIC_IDLE_MS)
     if (!recorder || recorder.state === 'inactive' || !stopped) {
       // Relâché avant que le micro soit prêt (souvent le premier appui, pendant l'autorisation)
-      if (!micDenied.value) error.value = 'Micro en cours d’ouverture : maintenez jusqu’au signal « ● ÉMISSION », puis parlez.'
+      if (!micDenied.value) error.value = translate(langStore.ui, 'error.micOpening')
       return null
     }
     const duration = Date.now() - startedAt
@@ -144,7 +147,7 @@ export const useRadioStore = defineStore('radio', () => {
     recorder = null
     stopped = null
     if (!blob || duration < MIN_TALK_MS) {
-      error.value = 'Maintenez la touche Espace (ou le bouton) pendant que vous parlez.'
+      error.value = translate(langStore.ui, 'error.holdKey')
       return null
     }
 
@@ -155,17 +158,17 @@ export const useRadioStore = defineStore('radio', () => {
       const { text, left } = await transcribe(wav, lang, hint)
       if (left !== null) voice.quotaLeft = left
       if (!text) {
-        error.value = 'Rien entendu : réessayez en parlant plus près du micro.'
+        error.value = translate(langStore.ui, 'error.nothingHeard')
         return null
       }
       return text
     } catch (e) {
       if (e instanceof VoiceQuotaError) {
         voice.quotaReached()
-        error.value = quotaMessage(e.scope)
+        error.value = quotaMessage(e.scope, new Date(), langStore.ui)
       } else {
         console.error(e)
-        error.value = 'Reconnaissance vocale indisponible pour le moment : tapez votre réponse.'
+        error.value = translate(langStore.ui, 'error.sttDown')
       }
       return null
     } finally {

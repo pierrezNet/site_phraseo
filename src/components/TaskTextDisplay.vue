@@ -1,25 +1,25 @@
 <template>
   <div class="m-1 md:space-y-4 md:pr-6">
-    <h2 class="hidden md:block custom-h2">Dialogues</h2>
+    <h2 class="hidden md:block custom-h2">{{ t('dialog.title') }}</h2>
 
     <!-- Fil d'Ariane : étape (et option) en cours -->
     <p v-if="context?.step" class="text-sm font-medium mb-2">
-      <span class="opacity-60">Étape : </span>{{ context.step }}<span v-if="context.option" class="opacity-60"> › </span>{{ context.option }}
+      <span class="opacity-60">{{ t('dialog.step') }}</span>{{ context.step }}<span v-if="context.option" class="opacity-60"> › </span>{{ context.option }}
     </p>
 
     <p v-if="englishOnly && renderedLines.length" class="notice text-sm mb-3 px-3 py-2 rounded">
-      🇬🇧 Échange en anglais uniquement (HF océanique) : il s'affiche, se dit et se note en anglais.
+      {{ t('dialog.englishOnly') }}
     </p>
 
     <!-- Vol complet : consigne d'instructeur (la décision du pilote, pas la phrase à dire) -->
     <div v-if="flight.active && flight.currentStep?.brief" class="strip strip--highlight text-sm mb-3 px-3 py-2 rounded border">
-      📋 <strong>Consigne :</strong> {{ flight.currentStep.brief }}
+      📋 <strong>{{ t('dialog.brief') }}</strong> {{ flight.currentStep.brief }}
     </div>
 
     <!-- Rappel du mode quiz (seulement quand une étape/option est sélectionnée) -->
     <div v-if="quizActive && renderedLines.length > 0" class="notice text-sm mb-3 px-3 py-2 rounded">
-      <template v-if="flight.active">✈ Vol complet : répondez comme le pilote. {{ MAX_ATTEMPTS }} essais par réplique.</template>
-      <template v-else>🎯 Mode quiz : reproduisez la phrase du pilote, puis vérifiez.</template>
+      <template v-if="flight.active">{{ t('dialog.flightHint', { n: MAX_ATTEMPTS }) }}</template>
+      <template v-else>{{ t('dialog.quizHint') }}</template>
     </div>
 
     <template v-for="line in displayedLines" :key="line.key">
@@ -48,16 +48,16 @@
             class="mr-2"
           />
         </span>
-        <span class="text-sm font-medium">À vous — que dit le pilote ?</span>
-        <span v-if="radio.recording === line.key && radio.live" class="ml-2 px-2 py-0.5 rounded text-xs font-bold bg-red-600 text-white animate-pulse">● ÉMISSION</span>
-        <span v-else-if="radio.recording === line.key" class="ml-2 text-xs opacity-80">Ouverture du micro…</span>
-        <span v-else-if="radio.transcribing === line.key" class="ml-2 text-xs opacity-80">Transcription…</span>
+        <span class="text-sm font-medium">{{ t('quiz.yourTurn') }}</span>
+        <span v-if="radio.recording === line.key && radio.live" class="ml-2 px-2 py-0.5 rounded text-xs font-bold bg-red-600 text-white animate-pulse">{{ t('radio.onAir') }}</span>
+        <span v-else-if="radio.recording === line.key" class="ml-2 text-xs opacity-80">{{ t('radio.opening') }}</span>
+        <span v-else-if="radio.transcribing === line.key" class="ml-2 text-xs opacity-80">{{ t('radio.transcribing') }}</span>
 
         <template v-if="!resultOf(line.key)">
           <!-- Repères avant de répondre : station en cours (vol complet) et éléments à donner, sans leur valeur -->
           <div class="mt-2 text-xs space-y-0.5 opacity-90">
-            <p v-if="stationLabel">📻 Vous êtes sur&nbsp;: <strong>{{ stationLabel }}</strong></p>
-            <p v-if="expectedLabels(line).length">À dire&nbsp;: {{ expectedLabels(line).join(' · ') }}</p>
+            <p v-if="stationLabel">{{ t('quiz.station') }}<strong>{{ stationLabel }}</strong></p>
+            <p v-if="expectedLabels(line).length">{{ t('quiz.toSay') }}{{ expectedLabels(line).join(' · ') }}</p>
           </div>
           <!-- Mobile : réponse à la voix uniquement (pas de clavier), sauf si le micro ou le quota manque -->
           <textarea
@@ -67,7 +67,7 @@
             @focus="lastFocused = line.key"
             @input="spokenAnswers[line.key] = false"
             rows="3"
-            :placeholder="radio.available ? 'Maintenez Espace pour parler, ou tapez la phrase du pilote…' : 'Tapez la phrase du pilote…'"
+            :placeholder="t(radio.available ? 'quiz.placeholderVoice' : 'quiz.placeholder')"
             class="w-full mt-2 border rounded px-3 py-2 text-sm resize-y"
             @keydown.ctrl.enter="verify(line)"
           ></textarea>
@@ -95,7 +95,7 @@
               :disabled="!(answers[line.key] && answers[line.key].trim())"
               class="px-4 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Vérifier
+              {{ t('quiz.check') }}
             </button>
           </div>
         </template>
@@ -109,29 +109,29 @@
             >
               {{ verdictLabel(line.key) }}
             </span>
-            <span class="text-sm font-medium">Score : {{ resultOf(line.key)!.score }} %</span>
+            <span class="text-sm font-medium">{{ t('quiz.score', { n: resultOf(line.key)!.score }) }}</span>
           </div>
 
           <!-- En vol, avant le dernier essai, on ne dévoile ni les valeurs manquées ni la réponse -->
           <ul v-if="resultOf(line.key)!.criticals.length" class="text-sm space-y-0.5">
             <li v-for="c in resultOf(line.key)!.criticals" :key="c.label">
               <span :class="c.ok ? 'ok-text' : 'ko-text'">
-                {{ c.ok ? '✓' : '✗' }} {{ c.label }}<template v-if="c.ok || (isFinal(line.key) && !awaitingReply(line.key))"> : <strong>{{ c.value }}</strong></template>
+                {{ c.ok ? '✓' : '✗' }} {{ criticalLabel(c.label, lang.ui) }}<template v-if="c.ok || (isFinal(line.key) && !awaitingReply(line.key))"> : <strong>{{ c.value }}</strong></template>
               </span>
             </li>
           </ul>
 
           <!-- Débriefing : erreurs de phraséologie repérées dans la réponse -->
           <ul v-if="lineRemarks[line.key]?.length" class="text-sm space-y-0.5">
-            <li v-for="code in lineRemarks[line.key]" :key="code" class="ko-text">💬 {{ REMARKS[code].title }}</li>
+            <li v-for="code in lineRemarks[line.key]" :key="code" class="ko-text">💬 {{ remarkText(code, lang.ui).title }}</li>
           </ul>
 
           <div v-if="answers[line.key]" class="text-sm">
-            <span class="opacity-70">{{ spokenAnswers[line.key] ? 'Entendu :' : 'Votre réponse :' }}</span>
+            <span class="opacity-70">{{ t(spokenAnswers[line.key] ? 'quiz.heard' : 'quiz.yourAnswer') }}</span>
             <div class="italic">{{ answers[line.key] }}</div>
           </div>
           <div v-if="isFinal(line.key) && !awaitingReply(line.key)" class="text-sm">
-            <span class="opacity-70">Réponse attendue :</span>
+            <span class="opacity-70">{{ t('quiz.expected') }}</span>
             <div v-html="line.content"></div>
           </div>
 
@@ -141,7 +141,7 @@
               @click="retry(line.key)"
               class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
             >
-              Réessayer
+              {{ t('quiz.retry') }}
             </button>
           </div>
         </div>
@@ -166,7 +166,7 @@
     <!-- Vol complet : passage à l'étape suivante une fois toutes les répliques pilote terminées -->
     <div v-if="flight.active && stepComplete" class="flex justify-end">
       <button type="button" class="task-btn task-btn--active rounded-md px-4 py-2" @click="flight.next()">
-        {{ flight.isLastStep ? 'Terminer le vol ✓' : 'Étape suivante →' }}
+        {{ t(flight.isLastStep ? 'flight.finish' : 'flight.next') }}
       </button>
     </div>
   </div>
@@ -186,7 +186,8 @@ import { requirementsMet } from '../utils/flight';
 import { replacePlaceholders, resolveStationParts, STATION_NAME_HIERARCHY } from '../utils/phraseoHelpers';
 import { groupFlightNumber, toSpeech } from '../utils/speech';
 import { buildCriticals, callsignEquivalences as callsignEquivalencesOf, selcalEquivalences } from '../utils/criticals';
-import { detectRemarks, isRogerInsteadOfReadback, REMARKS, type RemarkCode } from '../utils/debrief';
+import { detectRemarks, isRogerInsteadOfReadback, remarkText, type RemarkCode } from '../utils/debrief';
+import { criticalLabel, useI18n } from '../i18n';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
 import ListenButton from './ListenButton.vue';
 
@@ -197,6 +198,7 @@ const props = defineProps<{
 
 const formStore = useFormStore();
 const langStore = useLangStore();
+const { t, lang } = useI18n();
 const weatherStore = useWeatherStore();
 const quizStore = useQuizStore();
 const flight = useFlightStore();
@@ -317,7 +319,11 @@ const stationLabel = computed((): string => {
 
 /** Éléments à donner dans la réponse (libellés des éléments critiques, sans leur valeur) */
 const expectedLabels = (line: RenderedLine): string[] => [
-  ...new Set([...line.criticals.map((c) => c.label.toLowerCase()), ...(line.intents.length ? ['intention'] : [])]),
+  ...new Set(
+    [...line.criticals.map((c) => c.label), ...(line.intents.length ? [INTENT_LABEL] : [])].map((l) =>
+      criticalLabel(l, lang.ui).toLowerCase()
+    )
+  ),
 ];
 
 const renderedLines = computed<RenderedLine[]>(() => {
@@ -477,10 +483,10 @@ const resultOf = (key: string) => {
 
 const verdictLabel = (key: string): string => {
   const r = resultOf(key)!;
-  if (r.passed) return lenientStep.value ? '✓ Validé (formulation libre)' : '✓ Validé';
-  if (relaunched[key]) return '↪ Intention non annoncée';
-  if (!flight.active) return '✗ À revoir';
-  return isFinal(key) ? '✗ Échoué' : `✗ Essai ${flight.outcomeOf(key)?.attempts ?? 1}/${MAX_ATTEMPTS} — à revoir`;
+  if (r.passed) return t(lenientStep.value ? 'verdict.passedLenient' : 'verdict.passed');
+  if (relaunched[key]) return t('verdict.intent');
+  if (!flight.active) return t('verdict.review');
+  return isFinal(key) ? t('verdict.failed') : t('verdict.attempt', { n: flight.outcomeOf(key)?.attempts ?? 1, max: MAX_ATTEMPTS });
 };
 
 /** En vol, les répliques se dévoilent au fil de l'échange : jusqu'à la première réplique pilote non terminée */
@@ -551,9 +557,9 @@ const isTouch = (() => {
 const voiceOnly = computed(() => isTouch && radio.available && !radio.micDenied && !voice.quotaBlocked());
 
 const talkLabel = (key: string): string => {
-  if (radio.transcribing === key) return 'Transcription…';
-  if (radio.recording === key) return radio.live ? '● Relâchez pour envoyer' : 'Ouverture du micro…';
-  return isTouch ? '🎙 Maintenir pour parler' : '🎙 Maintenir pour parler (Espace)';
+  if (radio.transcribing === key) return t('radio.transcribing');
+  if (radio.recording === key) return t(radio.live ? 'radio.release' : 'radio.opening');
+  return t(isTouch ? 'radio.hold' : 'radio.holdKey');
 };
 
 /** Bouton maintenu : le pointeur est capturé, un léger glissement du doigt ne coupe pas l'émission */

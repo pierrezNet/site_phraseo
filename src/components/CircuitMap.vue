@@ -17,7 +17,7 @@
       <!-- Taxiway parking -->
       <line x1="200" y1="200" x2="200" y2="320" stroke-width="3" stroke-dasharray="6,4" style="stroke: var(--task-muted)"/>
       <rect x="160" y="320" width="80" height="30" fill="none" stroke-width="1.5" rx="3" style="stroke: var(--task-muted)"/>
-      <text x="200" y="340" text-anchor="middle" font-size="1em" style="fill: var(--task-muted)">PARKING</text>
+      <text x="200" y="340" text-anchor="middle" font-size="1em" style="fill: var(--task-muted)">{{ t('map.parking') }}</text>
 
       <!-- Circuit de piste (sens main gauche) -->
       <!-- Montée initiale -->
@@ -57,11 +57,11 @@
         />
         <text :x="point.x" :y="point.y + 5" text-anchor="middle" font-size="1em" font-weight="bold"
           :style="{ fill: isVisited(point.id) ? '#fff' : 'var(--accent-line)' }">{{ point.num }}</text>
-        <text :x="point.lx" :y="point.ly" :text-anchor="point.anchor || 'middle'" font-size="1em" style="fill: var(--task-text)">{{ point.label }}</text>
+        <text :x="point.lx" :y="point.ly" :text-anchor="point.anchor || 'middle'" font-size="1em" style="fill: var(--task-text)">{{ t(`map.${point.id}` as MessageKey) }}</text>
       </g>
 
       <!-- Légende -->
-      <text x="450" y="390" font-size="1em" style="fill: var(--task-muted)">Circuit main gauche</text>
+      <text x="450" y="390" font-size="1em" style="fill: var(--task-muted)">{{ t('map.legend') }}</text>
     </svg>
   </div>
 </template>
@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useFormStore } from '../stores/form';
-import { useLangStore } from '../stores/lang';
+import { useI18n, type MessageKey } from '../i18n';
 import { useSimulatorStore } from '../stores/simulator';
 
 const props = defineProps<{
@@ -79,13 +79,13 @@ const props = defineProps<{
 defineEmits(['select-task']);
 
 const formStore = useFormStore();
-const langStore = useLangStore();
+const { t, lang } = useI18n();
 const simulatorStore = useSimulatorStore();
 
 const runwayLabel = computed(() => {
-  const lang = langStore.current as 'fr' | 'en';
-  const rwy = formStore.formatRunway(formStore.form.RWY, lang);
-  return `${lang === 'fr' ? 'PISTE' : 'RUNWAY'} ${rwy}`.trim();
+  // Carte = interface : mot et piste dans la langue de l'interface
+  const rwy = formStore.formatRunway(formStore.form.RWY, lang.ui);
+  return `${t('map.runway')} ${rwy}`.trim();
 });
 
 const isVisited = (taskId: string) => props.selectedTaskIds.includes(taskId);
@@ -98,16 +98,16 @@ const pointStyle = (taskId: string) => {
   return { fill: 'var(--task-bg)', stroke: 'var(--accent-line)' };
 };
 
-const points = [
-  { id: 'MISE_EN_ROUTE',    tab: 'SO', num: 1, x: 200, y: 305, lx: 130, ly: 308, label: 'Mise en route' },
-  { id: 'PRET_DEPART',      tab: 'SO', num: 2, x: 200, y: 230, lx: 130, ly: 245, label: 'Prêt au départ' },
-  { id: 'PRET_DEPART1',     tab: 'DE', num: 3, x: 200, y: 200, lx: 200, ly: 185, label: 'Décollage' },
-  { id: 'SORTIE_ZONE',      tab: 'CR', num: 4, x: 575, y: 32,  lx: 455, ly: 35,  label: 'Sortie de zone', anchor: 'start' },
-  { id: 'VENT_ARRIERE',     tab: 'CR', num: 5, x: 350, y: 80,  lx: 350, ly: 60,  label: 'Vent arrière' },
-  { id: 'FIN_VENT_ARRIERE', tab: 'AP', num: 6, x: 100, y: 80,  lx: 100, ly: 60,  label: 'Fin vent arr.' },
-  { id: 'ATTERRISSAGE',     tab: 'AP', num: 7, x: 100, y: 200, lx: 70,  ly: 185, label: 'Finale' },
-  { id: 'DEGAGEMENT',       tab: 'AT', num: 8, x: 300, y: 200, lx: 300, ly: 235, label: 'Dégagement' },
-  { id: 'QUITTER',          tab: 'AT', num: 9, x: 230, y: 290, lx: 250, ly: 293, label: 'Quitter', anchor: 'start' }
+const points: { id: string; tab: string; num: number; x: number; y: number; lx: number; ly: number; anchor?: string }[] = [
+  { id: 'MISE_EN_ROUTE',    tab: 'SO', num: 1, x: 200, y: 305, lx: 130, ly: 308 },
+  { id: 'PRET_DEPART',      tab: 'SO', num: 2, x: 200, y: 230, lx: 130, ly: 245 },
+  { id: 'PRET_DEPART1',     tab: 'DE', num: 3, x: 200, y: 200, lx: 200, ly: 185 },
+  { id: 'SORTIE_ZONE',      tab: 'CR', num: 4, x: 575, y: 32,  lx: 455, ly: 35, anchor: 'start' },
+  { id: 'VENT_ARRIERE',     tab: 'CR', num: 5, x: 350, y: 80,  lx: 350, ly: 60 },
+  { id: 'FIN_VENT_ARRIERE', tab: 'AP', num: 6, x: 100, y: 80,  lx: 100, ly: 60 },
+  { id: 'ATTERRISSAGE',     tab: 'AP', num: 7, x: 100, y: 200, lx: 70,  ly: 185 },
+  { id: 'DEGAGEMENT',       tab: 'AT', num: 8, x: 300, y: 200, lx: 300, ly: 235 },
+  { id: 'QUITTER',          tab: 'AT', num: 9, x: 230, y: 290, lx: 250, ly: 293, anchor: 'start' }
 ];
 
 </script>

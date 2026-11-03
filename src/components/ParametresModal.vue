@@ -2,8 +2,8 @@
   <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm modal w-full max-h-screen overflow-y-auto">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-screen overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2">
-        <h4 class="text-lg font-semibold">Paramètres</h4>
-        <button @click="close" class="text-gray-600 hover:text-gray-800" aria-label="Fermer les paramètres">&times;</button>
+        <h4 class="text-lg font-semibold">{{ t('nav.flightParams') }}</h4>
+        <button @click="close" class="text-gray-600 hover:text-gray-800" :aria-label="t('params.close')">&times;</button>
       </div>
 
       <form class="mt-4 space-y-5" @submit.prevent>
@@ -30,8 +30,8 @@
                     type="button"
                     class="shrink-0 px-2 py-1 rounded border hover:bg-blue-500/10 disabled:opacity-40"
                     :disabled="!selcal.valid"
-                    :title="`Écouter le code SELCAL ${selcalLabel}`"
-                    :aria-label="`Écouter le code SELCAL ${selcalLabel}`"
+                    :title="t('params.listenSelcal', { code: selcalLabel })"
+                    :aria-label="t('params.listenSelcal', { code: selcalLabel })"
                     @click="playSelcal(formStore.form.SEL ?? '')"
                   >▶</button>
                 </div>
@@ -53,7 +53,7 @@
                   type="button"
                   @click="clearInput(field.id)"
                   class="absolute right-3 top-9 text-gray-400 hover:text-red-500"
-                  :aria-label="`Effacer ${field.label}`"
+                  :aria-label="t('params.clear', { field: field.label })"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -68,7 +68,7 @@
 
       <div class="mt-6 flex justify-end">
         <button @click="close" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
-          Fermer
+          {{ t('common.close') }}
         </button>
       </div>
     </div>
@@ -79,6 +79,7 @@
 import { computed, ref } from 'vue'
 import { useFormStore } from '../stores/form'
 import { checkSelcal, formatSelcal, playSelcal } from '../utils/selcal'
+import { useI18n } from '../i18n'
 
 const props = withDefaults(defineProps<{ currentMode?: string }>(), { currentMode: 'IFR' })
 
@@ -93,66 +94,67 @@ interface Field {
 }
 
 const formStore = useFormStore()
+const { t, lang } = useI18n()
 const isOpen = ref(false)
 const isVFR = computed(() => props.currentMode === 'VFR')
 
 /** Paramètres rangés par moment du vol */
 const SECTIONS = computed((): { title: string; fields: Field[] }[] => [
   {
-    title: 'Avion et indicatif',
+    title: t('section.aircraft'),
     fields: [
-      { id: 'COM', label: isVFR.value ? "Type d'appareil" : 'Compagnie' },
-      { id: 'CAL', label: "Indicatif d'appel" },
-      { id: 'CAA', label: 'Indicatif abrégé' },
-      { id: 'SQU', label: 'Code transpondeur' },
-      { id: 'SEL', label: 'Code SELCAL', mode: 'IFR' },
+      { id: 'COM', label: t(isVFR.value ? 'field.COM.VFR' : 'field.COM.IFR') },
+      { id: 'CAL', label: t('field.CAL') },
+      { id: 'CAA', label: t('field.CAA') },
+      { id: 'SQU', label: t('field.SQU') },
+      { id: 'SEL', label: t('field.SEL'), mode: 'IFR' },
     ],
   },
   {
-    title: 'Départ',
+    title: t('section.departure'),
     fields: [
-      { id: 'DEP', label: 'Aéroport de départ' },
-      { id: 'POS', label: 'Position (parking)' },
-      { id: 'VOI', label: 'Voies de circulation' },
-      { id: 'HLD', label: "Point d'attente" },
-      { id: 'RWY', label: 'Piste de départ' },
-      { id: 'MET', label: 'Code OACI METAR' },
-      { id: 'INF', label: 'Information ATIS' },
-      { id: 'SID', label: 'SID', mode: 'IFR', placeholder: 'MIRGU 7H' },
-      { id: 'NIV', label: 'Niveau SID / STAR', mode: 'IFR' },
+      { id: 'DEP', label: t('field.DEP') },
+      { id: 'POS', label: t('field.POS') },
+      { id: 'VOI', label: t('field.VOI') },
+      { id: 'HLD', label: t('field.HLD') },
+      { id: 'RWY', label: t('field.RWY') },
+      { id: 'MET', label: t('field.MET') },
+      { id: 'INF', label: t('field.INF') },
+      { id: 'SID', label: t('field.SID'), mode: 'IFR', placeholder: 'MIRGU 7H' },
+      { id: 'NIV', label: t('field.NIV'), mode: 'IFR' },
     ],
   },
   {
-    title: 'En route',
+    title: t('section.enroute'),
     fields: [
-      { id: 'FIR', label: 'FIR' },
-      { id: 'WPT', label: 'Point de report', mode: 'IFR' },
-      { id: 'NIVC', label: 'Niveau de croisière', mode: 'IFR' },
-      { id: 'VIT', label: 'Vitesse', mode: 'IFR' },
-      { id: 'CAP', label: 'Cap' },
-      { id: 'SORTIE', label: 'Point de sortie', mode: 'VFR' },
-      { id: 'ALT', label: 'Altitude (pieds)', mode: 'VFR' },
-      { id: 'TTWR', label: 'Transit (aérodrome)', mode: 'VFR' },
+      { id: 'FIR', label: t('field.FIR') },
+      { id: 'WPT', label: t('field.WPT'), mode: 'IFR' },
+      { id: 'NIVC', label: t('field.NIVC'), mode: 'IFR' },
+      { id: 'VIT', label: t('field.VIT'), mode: 'IFR' },
+      { id: 'CAP', label: t('field.CAP') },
+      { id: 'SORTIE', label: t('field.SORTIE'), mode: 'VFR' },
+      { id: 'ALT', label: t('field.ALT'), mode: 'VFR' },
+      { id: 'TTWR', label: t('field.TTWR'), mode: 'VFR' },
     ],
   },
   {
-    title: 'Arrivée',
+    title: t('section.arrival'),
     fields: [
-      { id: 'ARR', label: "Aéroport d'arrivée" },
-      { id: 'STAR', label: 'STAR', mode: 'IFR', placeholder: 'EPINAL 9E' },
-      { id: 'RWYA', label: "Piste d'arrivée" },
-      { id: 'POSA', label: 'Position (parking)' },
-      { id: 'VOIA', label: 'Voies de circulation', mode: 'IFR' },
+      { id: 'ARR', label: t('field.ARR') },
+      { id: 'STAR', label: t('field.STAR'), mode: 'IFR', placeholder: 'EPINAL 9E' },
+      { id: 'RWYA', label: t('field.RWYA') },
+      { id: 'POSA', label: t('field.POSA') },
+      { id: 'VOIA', label: t('field.VOIA'), mode: 'IFR' },
     ],
   },
   {
-    title: 'Fréquences',
+    title: t('section.frequencies'),
     fields: [
-      { id: 'DEL', label: 'Prévol', clearable: true },
-      { id: 'GND', label: 'Sol', clearable: true },
-      { id: 'TWR', label: 'Tour', clearable: true },
-      { id: 'APP', label: 'Approche', clearable: true },
-      { id: 'CTR', label: 'En route', mode: 'IFR', clearable: true },
+      { id: 'DEL', label: t('field.DEL'), clearable: true },
+      { id: 'GND', label: t('field.GND'), clearable: true },
+      { id: 'TWR', label: t('field.TWR'), clearable: true },
+      { id: 'APP', label: t('field.APP'), clearable: true },
+      { id: 'CTR', label: t('field.CTR'), mode: 'IFR', clearable: true },
     ],
   },
 ])
@@ -161,7 +163,7 @@ const visibleSections = computed(() =>
   SECTIONS.value.map((s) => ({ ...s, fields: s.fields.filter((f) => !f.mode || f.mode === props.currentMode) }))
 )
 
-const selcal = computed(() => checkSelcal(formStore.form.SEL ?? ''))
+const selcal = computed(() => checkSelcal(formStore.form.SEL ?? '', lang.ui))
 const selcalLabel = computed(() => (selcal.value.valid ? formatSelcal(selcal.value.letters) : ''))
 
 const updateForm = () => formStore.updateFormData(formStore.form)

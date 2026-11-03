@@ -1,7 +1,7 @@
 <template>
   <!-- Options (subgraph) de la tâche active -->
   <div class="flex flex-wrap md:grid md:grid-cols-1 gap-1 mt-1">
-    <h2 class="custom-h2 hidden md:flex w-full">Options</h2>
+    <h2 class="custom-h2 hidden md:flex w-full">{{ t('tasks.options') }}</h2>
     <button
       v-for="subgraph in subgraphs"
       :key="subgraph.refid"
@@ -27,6 +27,9 @@
 <script setup lang="ts">
 import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
+import { useI18n } from '../i18n';
+
+const { t } = useI18n();
 
 interface Subgraph {
   refid: string;

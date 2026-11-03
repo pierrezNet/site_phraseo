@@ -211,6 +211,16 @@ div#instructions > div:not(:has(div)):after {
     }
 }
 
+/* Interface anglaise (lang du document posé par le store des langues) */
+html[lang="en"] div#instructions > div:not(:has(div)):after {
+    content: "👆 Pick a step or an option to show the exchange.";
+}
+@media (min-width: 768px) {
+    html[lang="en"] div#instructions > div:not(:has(div)):after {
+        content: "👈 Pick a step or an option to show the exchange.";
+    }
+}
+
 .modal a {
     @apply text-blue-600 hover:underline;
 }

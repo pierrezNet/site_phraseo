@@ -3,6 +3,8 @@
  * (selcal/selcal-commun.js) : mêmes 16 tonalités, mêmes règles, même séquence.
  */
 import { OACI_WORDS } from './speech';
+import { translate } from '../i18n';
+import type { Language } from '../stores/form';
 
 /** 16 tonalités (A à S sans I, N, O), alignées avec leurs fréquences en Hz */
 export const SELCAL_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'P', 'Q', 'R', 'S'] as const;
@@ -23,18 +25,18 @@ export interface SelcalCheck {
  * Valide un code saisi (« AD-RS », « adrs »…) : 4 lettres distinctes parmi les 16 tonalités,
  * ordre alphabétique strict dans chaque paire, aucune contrainte entre les paires.
  */
-export function checkSelcal(input: string): SelcalCheck {
+export function checkSelcal(input: string, lang: Language = 'fr'): SelcalCheck {
   const letters = (input ?? '').toUpperCase().replace(/[^A-Z]/g, '').split('');
   const reasons: string[] = [];
-  if (letters.length !== 4) reasons.push('Le code doit comporter 4 lettres.');
+  if (letters.length !== 4) reasons.push(translate(lang, 'selcal.length'));
   const indices = letters.map((l) => (SELCAL_LETTERS as readonly string[]).indexOf(l));
   letters.forEach((l, i) => {
-    if (indices[i] === -1) reasons.push(`La lettre « ${l} » n'est pas une tonalité SELCAL (A à S, sans I, N ni O).`);
+    if (indices[i] === -1) reasons.push(translate(lang, 'selcal.letter', { letter: l }));
   });
   if (letters.length === 4 && indices.every((i) => i !== -1)) {
-    if (new Set(letters).size !== 4) reasons.push('Les 4 lettres doivent être différentes.');
-    if (indices[0] >= indices[1]) reasons.push('Dans la 1re paire, la 1re lettre doit précéder la 2e (ordre alphabétique).');
-    if (indices[2] >= indices[3]) reasons.push('Dans la 2e paire, la 1re lettre doit précéder la 2e (ordre alphabétique).');
+    if (new Set(letters).size !== 4) reasons.push(translate(lang, 'selcal.distinct'));
+    if (indices[0] >= indices[1]) reasons.push(translate(lang, 'selcal.pair1'));
+    if (indices[2] >= indices[3]) reasons.push(translate(lang, 'selcal.pair2'));
   }
   return { valid: reasons.length === 0, letters, reasons };
 }

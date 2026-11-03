@@ -20,6 +20,7 @@
 import { computed } from 'vue';
 import { useVoiceStore } from '../stores/voice';
 import { useLangStore } from '../stores/lang';
+import { useI18n } from '../i18n';
 import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
 
@@ -45,12 +46,13 @@ const props = withDefaults(
 
 const voice = useVoiceStore();
 const langStore = useLangStore();
+const { t } = useI18n();
 
 const enabled = computed(() => voice.available && props.listenable && !!props.speech);
 const loading = computed(() => voice.loading === props.lineKey);
 const playing = computed(() => voice.playing === props.lineKey);
 const label = computed(() =>
-  loading.value || playing.value ? 'Arrêter' : props.isPilot ? 'Écouter le pilote' : "Écouter l'ATC"
+  t(loading.value || playing.value ? 'listen.stop' : props.isPilot ? 'listen.pilot' : 'listen.atc')
 );
 
 const toggle = () => {

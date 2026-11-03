@@ -16,7 +16,7 @@
         <FlightPanel v-if="flight.active" />
         <div v-else-if="quizStore.enabled" class="px-1 md:px-4 pt-1 md:pt-4">
           <button type="button" class="task-btn w-full rounded-md px-3 py-1.5 text-sm font-medium" @click="flightPickerModal?.open()">
-            ✈ Vol complet
+            ✈ {{ t('flight.full') }}
           </button>
         </div>
         <Tabs
@@ -59,6 +59,7 @@ import FlightPickerModal from '@/components/FlightPickerModal.vue';
 import { useFlightStore } from '@/stores/flight';
 import { useQuizStore } from '@/stores/quiz';
 import { useFormStore } from '@/stores/form';
+import { useI18n } from '@/i18n';
 
 // Import des deux bases de données
 import phraseoIFR from '@/data/phraseologieIFR.json';
@@ -121,6 +122,7 @@ const currentPhraseoData = computed(() => {
 
 provide('phraseoData', currentPhraseoData);
 
+const { t } = useI18n();
 const quizStore = useQuizStore();
 const flight = useFlightStore();
 // Le bandeau de vol n'apparaît qu'en mode quiz ou en vol complet (rappel des paramètres)

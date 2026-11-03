@@ -3,6 +3,9 @@ import { ref } from 'vue'
 import { API_BASE } from '../utils/relay'
 import { fetchAtcAudio, playRadio, stopRadio, VoiceQuotaError, type QuotaScope } from '../utils/atcAudio'
 import { playSelcal, stopSelcal } from '../utils/selcal'
+import { timeIn, translate } from '../i18n'
+import { useLangStore } from './lang'
+import type { Language } from './form'
 
 const STORAGE_KEY = 'atcVoice'
 
@@ -18,12 +21,9 @@ function readEnabled(): boolean {
 const utcDay = (now: Date) => now.toISOString().slice(0, 10)
 
 /** Message affiché quand le quota voix du jour est atteint ; le texte reste toujours disponible */
-export function quotaMessage(scope: QuotaScope, now = new Date()): string {
+export function quotaMessage(scope: QuotaScope, now = new Date(), lang: Language = 'fr'): string {
   const reset = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1))
-  const at = reset.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
-  return scope === 'global'
-    ? `Quota voix de l'application atteint pour aujourd'hui : la voix revient à ${at}. Les textes restent disponibles.`
-    : `Quota voix du jour atteint : il se renouvelle à ${at}. Les textes restent disponibles.`
+  return translate(lang, scope === 'global' ? 'quota.global' : 'quota.user', { at: timeIn(reset, lang) })
 }
 
 export interface SpokenLine {
@@ -42,6 +42,7 @@ export interface SpokenLine {
  */
 export const useVoiceStore = defineStore('voice', () => {
   const available = !!API_BASE
+  const langStore = useLangStore()
   /** Lecture automatique en vol complet */
   const enabled = ref(readEnabled())
   /** Réplique en cours de chargement / de lecture */
@@ -89,10 +90,10 @@ export const useVoiceStore = defineStore('voice', () => {
       if (mine !== generation) return
       if (e instanceof VoiceQuotaError) {
         quotaReached()
-        error.value = quotaMessage(e.scope)
+        error.value = quotaMessage(e.scope, new Date(), langStore.ui)
       } else {
         console.error(e)
-        error.value = 'Voix indisponible pour le moment.'
+        error.value = translate(langStore.ui, 'error.voiceDown')
       }
     } finally {
       if (mine === generation) {

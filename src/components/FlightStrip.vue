@@ -7,7 +7,7 @@
   >
     <span class="text-lg shrink-0">✈</span>
     <span class="flex-1 text-sm min-w-0">
-      <button v-if="highlight" type="button" class="strip__invite font-semibold" @click="onEdit">👉 Personnalisez votre vol — </button>
+      <button v-if="highlight" type="button" class="strip__invite font-semibold" @click="onEdit">{{ t('strip.invite') }}</button>
       <!-- Chaque élément s'insère dans la réponse en cours (évite de tout retaper) -->
       <template v-for="(item, i) in items" :key="item.key">
         <span v-if="i > 0" class="opacity-70">{{ item.sep }}</span>
@@ -15,7 +15,7 @@
           {{ item.label }}<button
             type="button"
             class="strip__chip"
-            :title="`Insérer « ${item.insert} » dans la réponse`"
+            :title="t('strip.insert', { text: item.insert })"
             :disabled="!item.insert"
             @mousedown.prevent
             @click="quizStore.insertIntoAnswer(item.insert)"
@@ -23,7 +23,7 @@
         </span>
       </template>
     </span>
-    <button type="button" class="strip__edit shrink-0 text-sm font-medium whitespace-nowrap" @click="onEdit">✎ Modifier</button>
+    <button type="button" class="strip__edit shrink-0 text-sm font-medium whitespace-nowrap" @click="onEdit">{{ t('strip.edit') }}</button>
   </div>
 </template>
 
@@ -34,9 +34,11 @@ import { useWeatherStore } from '../stores/weather';
 import { useLangStore } from '../stores/lang';
 import { useQuizStore } from '../stores/quiz';
 import { useFlightStore } from '../stores/flight';
+import { useI18n } from '../i18n';
 
 const emit = defineEmits(['edit']);
 
+const { t } = useI18n();
 const formStore = useFormStore();
 const weatherStore = useWeatherStore();
 const langStore = useLangStore();
@@ -76,17 +78,17 @@ const items = computed(() => {
     entry('DEP', '', value(f.DEP)),
     // Vol local (tours de piste) : retour au départ
     entry('ARR', '→ ', arr.value, arr.value, ' '),
-    entry('POS', 'Parking ', value(arriving.value ? f.POSA || f.POS : f.POS)),
+    entry('POS', t('strip.parking'), value(arriving.value ? f.POSA || f.POS : f.POS)),
     // Piste insérée sous sa forme prononcée (26 Gauche / 26 Left)
-    entry('RWY', 'Piste ', runway.value, formStore.formatRunway(runway.value, lang)),
+    entry('RWY', t('strip.runway'), runway.value, formStore.formatRunway(runway.value, lang)),
     entry('QNH', 'QNH ', String(qnh.value)),
-    entry('INF', 'Info ', value(f.INF)),
+    entry('INF', t('strip.info'), value(f.INF)),
     ...(isVFR.value
-      ? [entry('SORTIE', 'Sortie ', value(f.SORTIE))]
+      ? [entry('SORTIE', t('strip.exit'), value(f.SORTIE))]
       : [
           arriving.value ? entry('STAR', 'STAR ', value(f.STAR)) : entry('SID', 'SID ', value(f.SID)),
-          entry('NIV', 'Niveau ', value(f.NIV)),
-          entry('NIVC', 'Croisière ', value(f.NIVC)),
+          entry('NIV', t('strip.level'), value(f.NIV)),
+          entry('NIVC', t('strip.cruise'), value(f.NIVC)),
         ]),
   ];
 });

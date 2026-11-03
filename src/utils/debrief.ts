@@ -39,6 +39,38 @@ export const REMARKS: Record<RemarkCode, { title: string; advice: string }> = {
   },
 };
 
+/** Les mêmes remarques en anglais (interface anglaise) */
+export const REMARKS_EN: Record<RemarkCode, { title: string; advice: string }> = {
+  CALLSIGN_ABBREVIATED_EARLY: {
+    title: 'Abbreviated callsign used too early',
+    advice:
+      'An abbreviated callsign may only be used after a first exchange with the full callsign, and only once the controller has used it. On first contact with a new unit, use the full callsign.',
+  },
+  INTENT_MISSING: {
+    title: 'Intention not stated',
+    advice:
+      'State your intention (full stop, touch and go…) in the message: otherwise the controller has to ask for it, which adds traffic on the frequency.',
+  },
+  ATC_RESERVED: {
+    title: 'Expression reserved for ATC',
+    advice:
+      'In French phraseology, « autorisé atterrissage / décollage » is reserved for the controller: the pilot reads back with the action verb (« j’atterris », « je décolle ») (DGAC manual p. 59-61).',
+  },
+  ROGER_INSTEAD_OF_READBACK: {
+    title: '“Roger” instead of a readback',
+    advice:
+      '“Roger” only means “message received”: it never replaces the readback of mandatory items (frequency, squawk, QNH, heading, level, runway…).',
+  },
+  MISSING_UNIT: {
+    title: 'Value read back without its unit',
+    advice:
+      'Read back the value with its unit (feet, knots, degrees…): “2500” alone is ambiguous (altitude? level? speed?).',
+  },
+};
+
+/** Titre et conseil d'une remarque dans la langue de l'interface */
+export const remarkText = (code: RemarkCode, lang: 'fr' | 'en') => (lang === 'en' ? REMARKS_EN : REMARKS)[code];
+
 /** Suite de mots `needle` présente dans `haystack` (mots déjà normalisés) */
 const containsSequence = (haystack: string[], needle: string[]): boolean =>
   needle.length > 0 && ` ${haystack.join(' ')} `.includes(` ${needle.join(' ')} `);
