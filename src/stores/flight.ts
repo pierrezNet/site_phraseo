@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { buildFlight, FLIGHT_PHASES, scenarioName, stepStations, type FlightStep, type Scenario } from '../utils/flight'
+import { buildFlight, FLIGHT_PHASES, scenarioName, stepStations, type FlightStep, type Localized, type Scenario } from '../utils/flight'
+import { useLangStore } from './lang'
 import { useFormStore } from './form'
 import type { CriticalResult } from '../utils/quizScoring'
 import { REMARKS, type RemarkCode } from '../utils/debrief'
@@ -29,12 +30,12 @@ export const SCENARIOS = scenariosData as Scenario[]
  * les plus fréquentes d'abord.
  */
 function groupByStep<T>(occurrences: { key: string; step?: FlightStep; item: T }[]) {
-  const groups = new Map<string, T & { count: number; steps: string[] }>()
+  const groups = new Map<string, T & { count: number; steps: Localized[] }>()
   for (const { key, step, item } of occurrences) {
     const group = groups.get(key) ?? { ...item, count: 0, steps: [] }
     group.count++
-    const title = step?.title ?? ''
-    if (!group.steps.includes(title)) group.steps.push(title)
+    const title = step?.title ?? { fr: '', en: '' }
+    if (!group.steps.some((s) => s.fr === title.fr)) group.steps.push(title)
     groups.set(key, group)
   }
   return [...groups.values()].sort((a, b) => b.count - a.count)
@@ -68,7 +69,12 @@ export const useFlightStore = defineStore('flight', () => {
   })
 
   /** Nom du vol en cours, avec les paramètres (départ, arrivée) */
-  const title = computed(() => (scenario.value ? scenarioName(scenario.value.name, useFormStore().form) : ''))
+  const title = computed(() => {
+    const sc = scenario.value
+    if (!sc) return ''
+    const name = (useLangStore().ui === 'en' && sc.name_en) || sc.name
+    return scenarioName(name, useFormStore().form)
+  })
   const currentStep = computed(() => steps.value[index.value] ?? null)
   /** Station radio sur laquelle on parle au début de l'étape (déduite des appels et des transferts) */
   const stations = computed(() => stepStations(steps.value))

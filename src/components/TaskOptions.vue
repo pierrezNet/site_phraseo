@@ -16,8 +16,8 @@
       <PilotIcon v-if="initiator(subgraph.fullTask) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
       <AtcIcon v-else-if="initiator(subgraph.fullTask) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
       <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
-      <span class="hidden md:inline flex-1">{{ subgraph._name }}</span>
-      <span class="inline md:hidden whitespace-nowrap">{{ subgraph._short }}</span>
+      <span class="hidden md:inline flex-1">{{ taskName(subgraph, lang.ui) }}</span>
+      <span class="inline md:hidden whitespace-nowrap">{{ taskShort(subgraph, lang.ui) }}</span>
       <span v-if="selectedTaskIds.includes(subgraph.refid)" class="task-btn__check hidden md:block w-4 shrink-0">✓</span>
       <span v-else class="hidden md:block w-4 shrink-0"></span>
     </button>
@@ -27,14 +27,16 @@
 <script setup lang="ts">
 import PilotIcon from './icons/PilotIcon.vue';
 import AtcIcon from './icons/AtcIcon.vue';
-import { useI18n } from '../i18n';
+import { taskName, taskShort, useI18n } from '../i18n';
 
-const { t } = useI18n();
+const { t, lang } = useI18n();
 
 interface Subgraph {
   refid: string;
   _name: string;
+  _name_en?: string;
   _short: string;
+  _short_en?: string;
   fullTask?: { para?: { _lang: string; _class: string }[] };
 }
 

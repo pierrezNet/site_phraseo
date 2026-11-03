@@ -28,6 +28,23 @@ export function criticalLabel(label: string, lang: Language): string {
   return key && key in fr ? translate(lang, key) : label
 }
 
+/** Texte en deux langues (données de phraséologie : noms des tâches, des étapes de vol…) */
+export type Localized = Record<Language, string>
+
+/** Nom d'une tâche dans la langue voulue (`_name_en`), le français à défaut */
+export const taskName = (task: { _name?: string; _name_en?: string } | null | undefined, lang: Language): string =>
+  (lang === 'en' && task?._name_en) || task?._name || ''
+
+/** Nom court d'une tâche (boutons sur mobile) */
+export const taskShort = (task: { _short?: string; _short_en?: string } | null | undefined, lang: Language): string =>
+  (lang === 'en' && task?._short_en) || task?._short || ''
+
+/** Nom d'un groupe de tâches (accordéon) : nom interne français, traduit à l'affichage */
+export function groupLabel(name: string, lang: Language): string {
+  const key = `group.${name}` as MessageKey
+  return key in fr ? translate(lang, key) : name
+}
+
 /** Heure locale « 02:00 » dans la langue de l'interface */
 export const timeIn = (date: Date, lang: Language): string =>
   date.toLocaleTimeString(lang === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit' })

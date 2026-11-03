@@ -63,12 +63,12 @@ describe('buildFlight', () => {
   it('enchaîne tâche puis variante, avec l\'onglet de la séquence', () => {
     const steps = buildFlight(scenario, data, 'débutant', () => 0)
     expect(steps.map((s) => s.taskIds)).toEqual([['A'], ['B', 'V1']])
-    expect(steps[1]).toMatchObject({ tab: 'DE', title: 'Étape B', subtitle: 'Variante 1', incident: false })
+    expect(steps[1]).toMatchObject({ tab: 'DE', title: { fr: 'Étape B', en: 'Étape B' }, subtitle: { fr: 'Variante 1', en: 'Variante 1' }, incident: false })
   })
 
   it('tire la variante parmi celles visibles au niveau', () => {
     const steps = buildFlight(scenario, data, 'intermédiaire', () => 0.99)
-    expect(steps.find((s) => s.title === 'Étape B')?.taskIds).toEqual(['B', 'V2'])
+    expect(steps.find((s) => s.title.fr === 'Étape B')?.taskIds).toEqual(['B', 'V2'])
   })
 
   it('un imprévu n\'a lieu que si le tirage est sous sa chance', () => {
@@ -78,15 +78,43 @@ describe('buildFlight', () => {
 
   it('applique le titre et la phase propres à l\'étape', () => {
     const s: Scenario = { ...scenario, steps: [{ task: 'V2', title: 'Titre scénario', tab: 'SO' }] }
-    expect(buildFlight(s, data, 'avancé')[0]).toMatchObject({ title: 'Titre scénario', tab: 'SO' })
+    expect(buildFlight(s, data, 'avancé')[0]).toMatchObject({ title: { fr: 'Titre scénario', en: 'Titre scénario' }, tab: 'SO' })
   })
 
   it('donne la consigne de l\'étape, ou celle de la variante tirée', () => {
     const fixed: Scenario = { ...scenario, steps: [{ task: 'A', brief: 'Consigne fixe' }] }
-    expect(buildFlight(fixed, data, 'débutant')[0].brief).toBe('Consigne fixe')
+    expect(buildFlight(fixed, data, 'débutant')[0].brief.fr).toBe('Consigne fixe')
     const perVariant: Scenario = { ...scenario, steps: [{ task: 'B', then: ['V1', 'V2'], brief: { V2: 'Consigne V2' } }] }
-    expect(buildFlight(perVariant, data, 'intermédiaire', () => 0.99)[0].brief).toBe('Consigne V2')
-    expect(buildFlight(perVariant, data, 'débutant', () => 0)[0].brief).toBe('')
+    expect(buildFlight(perVariant, data, 'intermédiaire', () => 0.99)[0].brief.fr).toBe('Consigne V2')
+    expect(buildFlight(perVariant, data, 'débutant', () => 0)[0].brief.fr).toBe('')
+  })
+
+  it('noms et consignes en anglais (`…_en`), le français à défaut', () => {
+    const en = {
+      processChain: {
+        tasks: {
+          ...data.processChain.tasks,
+          spawnTask: [
+            { _id: 'A', _name: 'Étape A', _name_en: 'Step A', para: [line('Pilot', 'a')] },
+            { _id: 'B', _name: 'Étape B', para: [] },
+            { _id: 'V1', _name: 'Variante 1', _name_en: 'Variant 1', para: [line('ATC', 'v1')] },
+          ],
+        },
+      },
+    }
+    const s: Scenario = {
+      ...scenario,
+      steps: [
+        { task: 'A', brief: 'Consigne', brief_en: 'Brief' },
+        { task: 'B', then: ['V1'], title: 'Titre', title_en: 'Title', brief: { V1: 'Consigne V1' } },
+      ],
+    }
+    const [a, b] = buildFlight(s, en, 'avancé')
+    expect(a.title).toEqual({ fr: 'Étape A', en: 'Step A' })
+    expect(a.brief).toEqual({ fr: 'Consigne', en: 'Brief' })
+    expect(b.title).toEqual({ fr: 'Titre', en: 'Title' })
+    expect(b.subtitle).toEqual({ fr: 'Variante 1', en: 'Variant 1' })
+    expect(b.brief).toEqual({ fr: 'Consigne V1', en: 'Consigne V1' })
   })
 
   it('saute une étape dont une fréquence requise est fermée', () => {
@@ -127,7 +155,7 @@ describe('scenarios.json', () => {
 
     it(`${sc.id} : chaque étape appartient à une phase du vol`, () => {
       const steps = buildFlight(sc, dataOf[sc.mode], 'avancé', () => 0)
-      expect(steps.filter((s) => !(FLIGHT_PHASES as readonly string[]).includes(s.tab)).map((s) => s.title)).toEqual([])
+      expect(steps.filter((s) => !(FLIGHT_PHASES as readonly string[]).includes(s.tab)).map((s) => s.title.fr)).toEqual([])
     })
 
     it(`${sc.id} : toutes les tâches existent en ${sc.mode}`, () => {
@@ -167,5 +195,28 @@ describe('stepStations', () => {
 
   it('rien de connu avant le premier appel', () => {
     expect(stepStations([step(['ATC', '[CAL], roulez.'])])).toEqual([null])
+  })
+})
+
+describe('traduction anglaise des données', () => {
+  /** Objets qui portent `key` sans sa version anglaise `key_en` */
+  const untranslated = (o: unknown, keys: string[], found: string[] = []): string[] => {
+    if (Array.isArray(o)) o.forEach((v) => untranslated(v, keys, found))
+    else if (o && typeof o === 'object') {
+      const rec = o as Record<string, unknown>
+      for (const k of keys) if (rec[k] && !rec[`${k}_en`]) found.push(`${k}: ${JSON.stringify(rec[k])}`)
+      Object.values(rec).forEach((v) => untranslated(v, keys, found))
+    }
+    return found
+  }
+
+  it('chaque tâche a son nom et son nom court en anglais', () => {
+    expect(untranslated([phraseoVFR, phraseoIFR], ['_name', '_short'])).toEqual([])
+  })
+
+  it('chaque titre et consigne de scénario a son anglais (le nom aussi, sauf s’il n’a que des tags)', () => {
+    const named = (scenarios as Scenario[]).filter((sc) => /[a-zà-ÿ]/i.test(sc.name.replace(/\[[A-Z]+\]/g, '')))
+    expect(untranslated(named, ['name'])).toEqual([])
+    expect(untranslated(scenarios, ['description', 'title', 'brief'])).toEqual([])
   })
 })

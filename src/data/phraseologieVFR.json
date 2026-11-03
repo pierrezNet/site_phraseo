@@ -229,7 +229,9 @@
 				{
 					"_id": "PARAMETRES",
 					"_name": "Demande paramètres",
+					"_name_en": "Departure information request",
 					"_short": "Param départ",
+					"_short_en": "Dep info",
 					"para": [
 						{
 							"_lang": "fr",
@@ -267,7 +269,9 @@
 				{
 					"_id": "DESTINATION",
 					"_name": "Sortie de zone",
+					"_name_en": "Leaving the zone",
 					"_short": "Sortie zone",
+					"_short_en": "Leave zone",
 					"para": [
 						{
 							"_lang": "fr",
@@ -305,7 +309,9 @@
 				{
 					"_id": "TOUR_PISTE",
 					"_name": "Tour de piste",
+					"_name_en": "Circuits",
 					"_short": "Tours piste",
+					"_short_en": "Circuits",
 					"para": [
 						{
 							"_lang": "fr",
@@ -343,7 +349,9 @@
 				{
 					"_id": "AUTRE_POINT_ARRET",
 					"_name": "Autre point d'attente",
+					"_name_en": "Other holding point",
 					"_short": "Autre point",
+					"_short_en": "Other point",
 					"para": [
 						{
 							"_lang": "fr",
@@ -391,7 +399,9 @@
 				{
 					"_id": "RAPPEL_PT_SORTIE",
 					"_name": "Décollage Sortie de zone",
+					"_name_en": "Take-off, leaving the zone",
 					"_short": "Décol sortie",
+					"_short_en": "T/O leave",
 					"para": [
 						{
 							"_lang": "fr",
@@ -419,7 +429,9 @@
 				{
 					"_id": "RAPPEL_VENT_ARRIERE",
 					"_name": "Décollage Tours de piste",
+					"_name_en": "Take-off, circuits",
 					"_short": "Décol tours",
+					"_short_en": "T/O circuits",
 					"para": [
 						{
 							"_lang": "fr",
@@ -447,7 +459,9 @@
 				{
 					"_id": "DEMANDE_COMPLET",
 					"_name": "Complet",
+					"_name_en": "Full stop",
 					"_short": "Complet",
+					"_short_en": "Full stop",
 					"para": [
 						{
 							"_lang": "fr",
@@ -487,7 +501,9 @@
 				{
 					"_id": "DEMANDE_TOUCHER",
 					"_name": "Toucher",
+					"_name_en": "Touch and go",
 					"_short": "Toucher",
+					"_short_en": "Touch & go",
 					"para": [
 						{
 							"_lang": "fr",
@@ -527,7 +543,9 @@
 				{
 					"_id": "EXERCICE",
 					"_name": "Décollage Exercice",
+					"_name_en": "Take-off, training",
 					"_short": "Décol exercice",
+					"_short_en": "T/O training",
 					"para": [
 						{
 							"_lang": "fr",
@@ -555,7 +573,9 @@
 				{
 					"_id": "ALIGNEMENT_APRES_AVION_FINAL",
 					"_name": "Alignement après final",
+					"_name_en": "Line-up after traffic on final",
 					"_short": "Align. final",
+					"_short_en": "After final",
 					"para": [
 						{
 							"_lang": "fr",
@@ -603,7 +623,9 @@
 				{
 					"_id": "ALIGNEMENT",
 					"_name": "Alignement simple",
+					"_name_en": "Line-up",
 					"_short": "Alignement",
+					"_short_en": "Line-up",
 					"para": [
 						{
 							"_lang": "fr",
@@ -631,7 +653,9 @@
 				{
 					"_id": "TRANSFERT_SIMPLE",
 					"_name": "Transfert contrôleur",
+					"_name_en": "Transfer to next controller",
 					"_short": "Tr CTR",
+					"_short_en": "Tr CTR",
 					"para": [
 						{
 							"_lang": "fr",
@@ -660,7 +684,9 @@
 					"_id": "TRANSFERT_SOL",
 					"_requires": ["GND"],
 					"_name": "Transfert sol",
+					"_name_en": "Transfer to Ground",
 					"_short": "Tr GND",
+					"_short_en": "Tr GND",
 					"para": [
 						{
 							"_lang": "fr",
@@ -689,7 +715,9 @@
 					"_id": "CONTACT_TOUR",
 					"_requires": ["GND"],
 					"_name": "Transfert tour",
+					"_name_en": "Transfer to Tower",
 					"_short": "Tr TWR",
+					"_short_en": "Tr TWR",
 					"para": [
 						{
 							"_lang": "fr",
@@ -717,7 +745,9 @@
 				{
 					"_id": "TRANSFERT_UNICOM",
 					"_name": "Fin service",
+					"_name_en": "End of service",
 					"_short": "Fin service",
+					"_short_en": "End service",
 					"para": [
 						{
 							"_lang": "fr",
@@ -745,7 +775,9 @@
 				{
 					"_id": "TRAFIC",
 					"_name": "Trafic",
+					"_name_en": "Traffic",
 					"_short": "Trafic",
+					"_short_en": "Traffic",
 					"para": [
 						{
 							"_lang": "fr",
@@ -783,7 +815,9 @@
 				{
 					"_id": "TOUCHER",
 					"_name": "Autorisé toucher",
+					"_name_en": "Cleared touch and go",
 					"_short": "Toucher",
+					"_short_en": "Touch & go",
 					"para": [
 						{
 							"_lang": "fr",
@@ -811,7 +845,9 @@
 				{
 					"_id": "COMPLET",
 					"_name": "Autorisé complet",
+					"_name_en": "Cleared to land",
 					"_short": "Complet",
+					"_short_en": "Full stop",
 					"para": [
 						{
 							"_lang": "fr",
@@ -839,7 +875,9 @@
 				{
 					"_id": "OPTION",
 					"_name": "Autorisé option",
+					"_name_en": "Cleared option",
 					"_short": "Option",
+					"_short_en": "Option",
 					"para": [
 						{
 							"_lang": "fr",
@@ -867,7 +905,9 @@
 				{
 					"_id": "REMISE_GAZ",
 					"_name": "Remise de gaz (ATC)",
+					"_name_en": "Go-around (ATC)",
 					"_short": "RdG ATC",
+					"_short_en": "GA ATC",
 					"para": [
 						{
 							"_lang": "fr",
@@ -895,7 +935,9 @@
 				{
 					"_id": "REMISE_GAZ_PILOTE",
 					"_name": "Remise de gaz (Pilote)",
+					"_name_en": "Go-around (pilot)",
 					"_short": "RdG Pilote",
+					"_short_en": "GA pilot",
 					"para": [
 						{
 							"_lang": "fr",
@@ -923,7 +965,9 @@
 				{
 					"_id": "INTEGRATION_COMPLET",
 					"_name": "Intégration complet",
+					"_name_en": "Joining for a full stop",
 					"_short": "Intégr complet",
+					"_short_en": "Join full",
 					"para": [
 						{
 							"_lang": "fr",
@@ -961,7 +1005,9 @@
 				{
 					"_id": "INTEGRATION_TOUCHER",
 					"_name": "Intégration toucher",
+					"_name_en": "Joining for a touch and go",
 					"_short": "Intégr toucher",
+					"_short_en": "Join T&G",
 					"para": [
 						{
 							"_lang": "fr",
@@ -999,7 +1045,9 @@
 				{
 					"_id": "DEGAGEMENT_PISTE",
 					"_name": "Dégagement rapide",
+					"_name_en": "Expedite vacating",
 					"_short": "Dégag rapide",
+					"_short_en": "Expedite",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1027,7 +1075,9 @@
 				{
 					"_id": "DEGAGEMENT_STANDARD",
 					"_name": "Dégagement standard",
+					"_name_en": "Vacating",
 					"_short": "Dégagement",
+					"_short_en": "Vacate",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1055,7 +1105,9 @@
 				{
 					"_id": "DEGAGEMENT_REMONTEE",
 					"_name": "Remontée et dégagement",
+					"_name_en": "Backtrack and vacate",
 					"_short": "Avec remontée",
+					"_short_en": "Backtrack",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1083,7 +1135,9 @@
 				{
 					"_id": "PARKING",
 					"_name": "Parking",
+					"_name_en": "Parking",
 					"_short": "Parking",
+					"_short_en": "Parking",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1111,7 +1165,9 @@
 				{
 					"_id": "TRAFIC_SOL",
 					"_name": "Priorité trafic",
+					"_name_en": "Give way to traffic",
 					"_short": "Prio trafic",
+					"_short_en": "Give way",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1139,7 +1195,9 @@
 				{
 					"_id": "TRAVERSER_PISTE",
 					"_name": "Traversée de piste",
+					"_name_en": "Runway crossing",
 					"_short": "Trav. piste",
+					"_short_en": "Cross RWY",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1167,7 +1225,9 @@
 				{
 					"_id": "TOUR_PISTE_TRAFIC",
 					"_name": "Trafic",
+					"_name_en": "Traffic",
 					"_short": "Trafic tours",
+					"_short_en": "Traffic",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1195,7 +1255,9 @@
 				{
 					"_id": "TOUR_PISTE_SIMPLE",
 					"_name": "Reçu",
+					"_name_en": "Acknowledged",
 					"_short": "Reçu",
+					"_short_en": "Roger",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1223,7 +1285,9 @@
 				{
 					"_id": "TRANSIT",
 					"_name": "Transit",
+					"_name_en": "Transit",
 					"_short": "Transit",
+					"_short_en": "Transit",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1261,7 +1325,9 @@
 				{
 					"_id": "TRANSIT_VERTICALE",
 					"_name": "Verticale aérodrome",
+					"_name_en": "Overhead the aerodrome",
 					"_short": "Verticale",
+					"_short_en": "Overhead",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1299,7 +1365,9 @@
 				{
 					"_id": "QUITTER",
 					"_name": "Quitter",
+					"_name_en": "Leaving the frequency",
 					"_short": "Quitter",
+					"_short_en": "Leave",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1327,7 +1395,9 @@
 				{
 					"_id": "ACCUSEZ",
 					"_name": "Accuser réception",
+					"_name_en": "Acknowledge",
 					"_short": "Accusé",
+					"_short_en": "Ack",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1355,7 +1425,9 @@
 				{
 					"_id": "LENTEMENT",
 					"_name": "Parler lentement",
+					"_name_en": "Speak slower",
 					"_short": "Lentement",
+					"_short_en": "Slower",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1373,7 +1445,9 @@
 				{
 					"_id": "REPETEA",
 					"_name": "Collationnez",
+					"_name_en": "Read back",
 					"_short": "Collationnez",
+					"_short_en": "Read back",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1391,7 +1465,9 @@
 				{
 					"_id": "REPETEP",
 					"_name": "Répéter",
+					"_name_en": "Say again",
 					"_short": "Répéter",
+					"_short_en": "Say again",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1409,7 +1485,9 @@
 				{
 					"_id": "DECOL_INTEROMPU",
 					"_name": "Interrompre décollage",
+					"_name_en": "Aborting take-off",
 					"_short": "Interrompre",
+					"_short_en": "Abort",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1427,7 +1505,9 @@
 				{
 					"_id": "DECELERE",
 					"_name": "Ralentir roulage",
+					"_name_en": "Taxi slower",
 					"_short": "Ralentir",
+					"_short_en": "Slower",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1445,7 +1525,9 @@
 				{
 					"_id": "ACCELERE",
 					"_name": "Accélérez roulage",
+					"_name_en": "Expedite taxi",
 					"_short": "Accélérer",
+					"_short_en": "Expedite",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1463,7 +1545,9 @@
 				{
 					"_id": "VISUEL",
 					"_name": "Trafic en vue",
+					"_name_en": "Traffic in sight",
 					"_short": "Visuel",
+					"_short_en": "In sight",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1491,7 +1575,9 @@
 				{
 					"_id": "IDENT",
 					"_name": "Identification transpondeur",
+					"_name_en": "Squawk ident",
 					"_short": "Ident",
+					"_short_en": "Ident",
 					"para": [
 						{
 							"_lang": "fr",
@@ -1541,7 +1627,9 @@
 					],
 					"_id": "CLOTURE_PLAN_VOL",
 					"_name": "Clôture plan de vol",
+					"_name_en": "Closing the flight plan",
 					"_short": "Clôture PLN",
+					"_short_en": "Close FPL",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1569,7 +1657,9 @@
 					],
 					"_id": "ALLONGEZ_VENT_ARRIERE",
 					"_name": "Allonger vent arrière",
+					"_name_en": "Extend downwind",
 					"_short": "Allonger VA",
+					"_short_en": "Extend DW",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1597,7 +1687,9 @@
 					],
 					"_id": "CONTINUEZ_APPROCHE",
 					"_name": "Continuez approche",
+					"_name_en": "Continue approach",
 					"_short": "Continuez",
+					"_short_en": "Continue",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1625,7 +1717,9 @@
 					],
 					"_id": "INTEGRATION_DIRECTE",
 					"_name": "Approche directe",
+					"_name_en": "Straight-in approach",
 					"_short": "Directe",
+					"_short_en": "Straight-in",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1653,7 +1747,9 @@
 					],
 					"_id": "INTEGRATION_BASE",
 					"_name": "Entrée en base",
+					"_name_en": "Joining on base",
 					"_short": "Base",
+					"_short_en": "Base",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1681,7 +1777,9 @@
 					],
 					"_id": "ENTREE_SANS_ATIS",
 					"_name": "Entrée sans ATIS",
+					"_name_en": "Joining without ATIS",
 					"_short": "Sans ATIS",
+					"_short_en": "No ATIS",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1709,7 +1807,9 @@
 					],
 					"_id": "TROIS_SOIXANTE",
 					"_name": "360 par la droite",
+					"_name_en": "360 to the right",
 					"_short": "360",
+					"_short_en": "360",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1737,7 +1837,9 @@
 					],
 					"_id": "CLOTURE_PLAN_VOL_2",
 					"_name": "Clôture plan de vol (vol connu)",
+					"_name_en": "Closing the flight plan (known flight)",
 					"_short": "Clôture PLN",
+					"_short_en": "Close FPL",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1775,7 +1877,9 @@
 					],
 					"_id": "TRANSIT_CLAIRANCE_IFR",
 					"_name": "Clairance transit VFR",
+					"_name_en": "VFR transit clearance",
 					"_short": "Clairance TR",
+					"_short_en": "Transit clr",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1803,7 +1907,9 @@
 					],
 					"_id": "TRANSIT_POURSUITE_SORTIE",
 					"_name": "Poursuite et sortie transit",
+					"_name_en": "Continuing and leaving the transit",
 					"_short": "Poursuite TR",
+					"_short_en": "Continue TR",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1841,7 +1947,9 @@
 					],
 					"_id": "SEQUENCEMENT_CIRCUIT",
 					"_name": "Séquencement circuit",
+					"_name_en": "Circuit sequencing",
 					"_short": "Séquence",
+					"_short_en": "Sequence",
 					"_level": "avancé"
 				},
 				{
@@ -1869,7 +1977,9 @@
 					],
 					"_id": "ATTENTE_A_VUE",
 					"_name": "Attente à vue verticale",
+					"_name_en": "Visual hold overhead",
 					"_short": "Attente vue",
+					"_short_en": "Visual hold",
 					"_level": "avancé"
 				},
 				{
@@ -1897,7 +2007,9 @@
 					],
 					"_id": "CONTINUEZ_APPROCHE_DEPART",
 					"_name": "Continuez approche (départ)",
+					"_name_en": "Continue approach (departing traffic)",
 					"_short": "Cont. départ",
+					"_short_en": "Cont. dep",
 					"_level": "avancé"
 				},
 				{
@@ -1945,7 +2057,9 @@
 					],
 					"_id": "CLOTURE_PLAN_VOL_NON_CONNU",
 					"_name": "Clôture plan de vol (vol non connu)",
+					"_name_en": "Closing the flight plan (unknown flight)",
 					"_short": "Clôture NC",
+					"_short_en": "Close FPL",
 					"_level": "avancé"
 				},
 				{
@@ -1983,7 +2097,9 @@
 					],
 					"_id": "VFR_SPECIAL_DEPART",
 					"_name": "Départ VFR spécial",
+					"_name_en": "Special VFR departure",
 					"_short": "Départ spé",
+					"_short_en": "SVFR dep",
 					"_level": "avancé"
 				},
 				{
@@ -2021,7 +2137,9 @@
 					],
 					"_id": "VFR_SPECIAL_REFUS",
 					"_name": "Refus VFR spécial (visibilité)",
+					"_name_en": "Special VFR refused (visibility)",
 					"_short": "Refus spé",
+					"_short_en": "SVFR refused",
 					"_level": "avancé"
 				},
 				{
@@ -2059,7 +2177,9 @@
 					],
 					"_id": "VFR_SPECIAL_ARRIVEE",
 					"_name": "Arrivée VFR spécial",
+					"_name_en": "Special VFR arrival",
 					"_short": "Arrivée spé",
+					"_short_en": "SVFR arr",
 					"_level": "avancé"
 				},
 				{
@@ -2097,7 +2217,9 @@
 					],
 					"_id": "VFR_SPECIAL_TRANSIT_PUBLIE",
 					"_name": "Transit VFR spécial (itinéraire publié)",
+					"_name_en": "Special VFR transit (published route)",
 					"_short": "TR publié",
+					"_short_en": "Published TR",
 					"_level": "avancé"
 				},
 				{
@@ -2135,7 +2257,9 @@
 					],
 					"_id": "VFR_SPECIAL_TRANSIT_HORS_PUBLIE",
 					"_name": "Transit VFR spécial (hors itinéraire)",
+					"_name_en": "Special VFR transit (off published route)",
 					"_short": "TR direct",
+					"_short_en": "Direct TR",
 					"_level": "avancé"
 				},
 				{
@@ -2177,7 +2301,9 @@
 					],
 					"_id": "TRANSIT_IFR_CONTACT_VISUEL",
 					"_name": "Transit / IFR : contact visuel et 360",
+					"_name_en": "Transit / IFR: visual contact and 360",
 					"_short": "Transit / IFR",
+					"_short_en": "Transit/IFR",
 					"_level": "avancé"
 				},
 				{
@@ -2215,7 +2341,9 @@
 					],
 					"_id": "TRANSIT_IFR_VISUEL_OUI",
 					"_name": "Trafic en vue : poursuite du transit",
+					"_name_en": "Traffic in sight: transit continues",
 					"_short": "En vue",
+					"_short_en": "In sight",
 					"_level": "avancé"
 				},
 				{
@@ -2253,7 +2381,9 @@
 					],
 					"_id": "TRANSIT_IFR_VISUEL_NON",
 					"_name": "Pas de contact visuel : 360 de retardement",
+					"_name_en": "No visual contact: delaying 360",
 					"_short": "360",
+					"_short_en": "360",
 					"_level": "avancé"
 				}
 			],
@@ -2261,7 +2391,9 @@
 				{
 					"_id": "MISE_EN_ROUTE",
 					"_name": "Mise en route",
+					"_name_en": "Start-up",
 					"_short": "Mise en route",
+					"_short_en": "Start-up",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2315,7 +2447,9 @@
 				{
 					"_id": "TAXI",
 					"_name": "Circulation",
+					"_name_en": "Taxi",
 					"_short": "Circulation",
+					"_short_en": "Taxi",
 					"subgraph": [
 						{
 							"call": {
@@ -2347,7 +2481,9 @@
 				{
 					"_id": "TAXI2",
 					"_name": "Circulation",
+					"_name_en": "Taxi",
 					"_short": "Circulation",
+					"_short_en": "Taxi",
 					"subgraph": [
 						{
 							"call": {
@@ -2367,7 +2503,9 @@
 				{
 					"_id": "PRET_DEPART",
 					"_name": "Prêt au départ",
+					"_name_en": "Ready for departure",
 					"_short": "Prêt départ",
+					"_short_en": "Ready dep",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2411,7 +2549,9 @@
 				{
 					"_id": "PRET_DEPART1",
 					"_name": "Contact tour",
+					"_name_en": "Contact Tower",
 					"_short": "Contact tour",
+					"_short_en": "Contact TWR",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2449,7 +2589,9 @@
 				{
 					"_id": "VENT_ARRIERE",
 					"_name": "Vent arrière",
+					"_name_en": "Downwind",
 					"_short": "Vent arrière",
+					"_short_en": "Downwind",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2481,7 +2623,9 @@
 				{
 					"_id": "FIN_VENT_ARRIERE",
 					"_name": "Fin de vent arrière",
+					"_name_en": "End of downwind",
 					"_short": "Fin vent arr",
+					"_short_en": "End DW",
 					"subgraph": [
 						{
 							"call": {
@@ -2501,7 +2645,9 @@
 				{
 					"_id": "SORTIE_ZONE",
 					"_name": "Sortie de zone",
+					"_name_en": "Leaving the zone",
 					"_short": "Sortie zone",
+					"_short_en": "Leave zone",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2527,7 +2673,9 @@
 				{
 					"_id": "SORTIE_ZONE_TRANSIT",
 					"_name": "Sortie de transit",
+					"_name_en": "Leaving the transit",
 					"_short": "Sortie transit",
+					"_short_en": "Leave TR",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2553,7 +2701,9 @@
 				{
 					"_id": "ENTREE_ZONE",
 					"_name": "Entrée de zone",
+					"_name_en": "Entering the zone",
 					"_short": "Entrée zone",
+					"_short_en": "Enter zone",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2595,7 +2745,9 @@
 				{
 					"_id": "ENTREE_TRANSIT",
 					"_name": "Entrée transit",
+					"_name_en": "Entering the transit",
 					"_short": "Entrée transit",
+					"_short_en": "Enter TR",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2637,7 +2789,9 @@
 				{
 					"_id": "CONTACT_APP",
 					"_name": "Contact approche",
+					"_name_en": "Contact Approach",
 					"_short": "Contact APP",
+					"_short_en": "Contact APP",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2669,7 +2823,9 @@
 				{
 					"_id": "ATTERRISSAGE",
 					"_name": "Atterrissage",
+					"_name_en": "Landing",
 					"_short": "Atterrissage",
+					"_short_en": "Landing",
 					"para": [
 						{
 							"_lang": "fr",
@@ -2719,7 +2875,9 @@
 				{
 					"_id": "DEGAGEMENT",
 					"_name": "Dégagement",
+					"_name_en": "Vacating",
 					"_short": "Dégagement",
+					"_short_en": "Vacate",
 					"subgraph": [
 						{
 							"call": {

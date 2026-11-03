@@ -48,7 +48,7 @@
           @click="toggleGroup(grp.name)"
           class="group-header w-full flex items-center justify-between px-2 py-1.5 text-sm font-semibold transition"
         >
-          <span>{{ grp.name }}</span>
+          <span>{{ groupLabel(grp.name, lang.ui) }}</span>
           <span class="text-xs font-normal opacity-70">{{ grp.tasks.length }}&nbsp;{{ openGroup === grp.name ? '▾' : '▸' }}</span>
         </button>
 
@@ -71,8 +71,8 @@
             <PilotIcon v-else-if="getInitiator(task) === 'Pilot'" class="hidden md:block w-5 h-5 shrink-0" />
             <AtcIcon v-else-if="getInitiator(task) === 'ATC'" class="hidden md:block w-5 h-5 shrink-0" />
             <span v-else class="hidden md:block w-5 h-5 shrink-0"></span>
-            <span class="hidden md:inline flex-1">{{ task._name }}</span>
-            <span class="inline md:hidden whitespace-nowrap">{{ task._short }}</span>
+            <span class="hidden md:inline flex-1">{{ taskName(task, lang.ui) }}</span>
+            <span class="inline md:hidden whitespace-nowrap">{{ taskShort(task, lang.ui) }}</span>
             <span
               v-if="selectedTaskIds.includes(task._id)"
               class="task-btn__check hidden md:block w-4 shrink-0"
@@ -111,6 +111,7 @@ import CircuitMap from './CircuitMap.vue';
 import TaskOptions from './TaskOptions.vue';
 import { groupOf, groupOrder } from '../utils/taskGroups';
 import { isTaskVisibleAtLevel, requirementsMet } from '../utils/flight';
+import { groupLabel, taskName, taskShort, useI18n } from '../i18n';
 
 const props = defineProps<{
   phraseoData: any
@@ -119,6 +120,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['task-selected', 'update:context']);
 
+const { lang } = useI18n();
 const formStore = useFormStore();
 const weatherStore = useWeatherStore();
 const simulatorStore = useSimulatorStore();
@@ -130,11 +132,12 @@ const selectedTaskIds = ref<string[]>([]);
 const isReady = ref(false);
 const tabChangedFromMap = ref(false);
 
-// Contexte affiché (fil d'Ariane) : étape principale + option choisie
-const currentStep = ref('');
-const currentOption = ref('');
+// Contexte affiché (fil d'Ariane) : étape principale + option choisie, nommées dans la langue de l'interface
+type Named = { _name?: string; _name_en?: string } | null;
+const currentStep = ref<Named>(null);
+const currentOption = ref<Named>(null);
 const emitContext = () =>
-  emit('update:context', { step: currentStep.value, option: currentOption.value });
+  emit('update:context', { step: taskName(currentStep.value, lang.ui), option: taskName(currentOption.value, lang.ui) });
 
 
 const tasks = ref<any[]>([]);
@@ -292,8 +295,8 @@ const onMapSelect = (taskId: string, tab?: string) => {
   const task = tasks.value.find((t: any) => t._id === taskId);
   if (!task) return;
 
-  currentStep.value = task._name;
-  currentOption.value = '';
+  currentStep.value = task;
+  currentOption.value = null;
 
   // Gestion des subgraphs
   if (task.subgraph) {
@@ -303,7 +306,9 @@ const onMapSelect = (taskId: string, tab?: string) => {
         return {
           refid: sub.call._refid,
           _name: t?._name || sub.call._refid,
+          _name_en: t?._name_en,
           _short: t?._short || t?._name?.slice(0, 3) || sub.call._refid,
+          _short_en: t?._short_en,
           fullTask: t
         };
       })
@@ -314,7 +319,7 @@ const onMapSelect = (taskId: string, tab?: string) => {
       const single = visibleSubgraphs[0];
       if (single.fullTask) {
         selectedTaskIds.value.push(single.refid);
-        currentOption.value = single._name;
+        currentOption.value = single;
         const combined = [...(task.para || []), ...(single.fullTask.para || [])];
         emit('task-selected', combined);
       } else {
@@ -346,8 +351,8 @@ const logTask = (task: any) => {
 
   // 2. Mise à jour de l'état global
   simulatorStore.currentTaskId = task._id;
-  currentStep.value = task._name;
-  currentOption.value = '';
+  currentStep.value = task;
+  currentOption.value = null;
 
   // 3. Gestion des options (Subgraphs) — filtrage par niveau
   if (task.subgraph) {
@@ -357,7 +362,9 @@ const logTask = (task: any) => {
         return {
           refid: sub.call._refid,
           _name: t?._name || sub.call._refid,
+          _name_en: t?._name_en,
           _short: t?._short || t?._name?.slice(0, 3) || sub.call._refid,
+          _short_en: t?._short_en,
           fullTask: t
         };
       })
@@ -371,7 +378,7 @@ const logTask = (task: any) => {
         if (!selectedTaskIds.value.includes(single.refid)) {
           selectedTaskIds.value.push(single.refid);
         }
-        currentOption.value = single._name;
+        currentOption.value = single;
         const combined = [...(task.para || []), ...(single.fullTask.para || [])];
         emit('task-selected', combined);
       } else {
@@ -393,7 +400,7 @@ const logSubgraphTask = (subgraph: any) => {
     selectedTaskIds.value.push(subgraph.refid);
   }
   if (subgraph.fullTask) {
-    currentOption.value = subgraph._name;
+    currentOption.value = subgraph;
     emit('task-selected', subgraph.fullTask.para || []);
     emitContext();
   }
@@ -404,8 +411,8 @@ const resetDisplay = () => {
   selectedSubgraphs.value = [];
   emit('task-selected', []);
   simulatorStore.currentTaskId = null;
-  currentStep.value = '';
-  currentOption.value = '';
+  currentStep.value = null;
+  currentOption.value = null;
   emitContext();
 };
 
@@ -417,6 +424,9 @@ onMounted(() => {
 });
 
 // --- Watchers ---
+
+// Fil d'Ariane renommé au changement de langue de l'interface
+watch(() => lang.ui, emitContext);
 
 watch(selectedTab, () => {
   resetOpenGroups();

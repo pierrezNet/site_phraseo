@@ -626,7 +626,9 @@
 					],
 					"_id": "PARAMETRES",
 					"_name": "Demande paramètres",
+					"_name_en": "Departure information request",
 					"_short": "Paramètres",
+					"_short_en": "Dep info",
 					"_level": "intermédiaire"
 				},
 				{
@@ -664,7 +666,9 @@
 					],
 					"_id": "EST_IL_RNAV",
 					"_name": "Capacité RNAV ?",
+					"_name_en": "RNAV capable?",
 					"_short": "RNAV ?",
+					"_short_en": "RNAV?",
 					"_level": "intermédiaire"
 				},
 				{
@@ -702,7 +706,9 @@
 					],
 					"_id": "NON_RNAV",
 					"_name": "MER RNAV capacité conv.",
+					"_name_en": "Start-up, conventional departure (non-RNAV)",
 					"_short": "Non RNAV",
+					"_short_en": "Non-RNAV",
 					"_level": "intermédiaire"
 				},
 				{
@@ -754,7 +760,9 @@
 					],
 					"_id": "MER_OMNI",
 					"_name": "MER omnidirectionnel",
+					"_name_en": "Start-up, omnidirectional departure",
 					"_short": "Omni",
+					"_short_en": "Omni",
 					"_level": "intermédiaire"
 				},
 				{
@@ -810,7 +818,9 @@
 					],
 					"_id": "MER_APPROUVEE",
 					"_name": "MER approuvée",
+					"_name_en": "Start-up approved",
 					"_short": "Approuvée",
+					"_short_en": "Approved",
 					"_level": "intermédiaire"
 				},
 				{
@@ -828,7 +838,9 @@
 					],
 					"_id": "MER_DIFFEREE",
 					"_name": "MER différée",
+					"_name_en": "Start-up delayed",
 					"_short": "Différée",
+					"_short_en": "Delayed",
 					"_level": "débutant"
 				},
 				{
@@ -856,7 +868,9 @@
 					],
 					"_id": "REPOUSSAGE_STANDARD",
 					"_name": "Repoussage standard",
+					"_name_en": "Pushback",
 					"_short": "Standard",
+					"_short_en": "Standard",
 					"_level": "débutant"
 				},
 				{
@@ -884,7 +898,9 @@
 					],
 					"_id": "REPOUSSAGE_CONDITIONNEL",
 					"_name": "Repoussage conditionnel",
+					"_name_en": "Conditional pushback",
 					"_short": "Conditionnel",
+					"_short_en": "Conditional",
 					"_level": "débutant"
 				},
 				{
@@ -912,7 +928,9 @@
 					],
 					"_id": "ROULAGE_AUTORISE",
 					"_name": "Roulage standard",
+					"_name_en": "Taxi",
 					"_short": "Standard",
+					"_short_en": "Standard",
 					"_level": "débutant"
 				},
 				{
@@ -941,7 +959,9 @@
 					"_id": "TRANSFERT_TOUR1",
 					"_requires": ["GND"],
 					"_name": "Transfert tour",
+					"_name_en": "Transfer to Tower",
 					"_short": "Tr TWR",
+					"_short_en": "Tr TWR",
 					"_level": "débutant"
 				},
 				{
@@ -969,7 +989,9 @@
 					],
 					"_id": "ROULAGE_TRAFIC",
 					"_name": "Roulage avec trafic",
+					"_name_en": "Taxi with traffic",
 					"_short": "Trafic",
+					"_short_en": "Traffic",
 					"_level": "débutant"
 				},
 				{
@@ -997,7 +1019,9 @@
 					],
 					"_id": "REMONTEE_PISTE",
 					"_name": "Remontée de piste",
+					"_name_en": "Backtrack",
 					"_short": "Remontée",
+					"_short_en": "Backtrack",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1045,7 +1069,9 @@
 					],
 					"_id": "ALIGNEMENT_APRES_AVION_FINAL",
 					"_name": "Alignement après final",
+					"_name_en": "Line-up after traffic on final",
 					"_short": "Après final",
+					"_short_en": "After final",
 					"_level": "débutant"
 				},
 				{
@@ -1073,7 +1099,9 @@
 					],
 					"_id": "ALIGNEMENT",
 					"_name": "Alignement simple",
+					"_name_en": "Line-up",
 					"_short": "Simple",
+					"_short_en": "Line-up",
 					"_level": "débutant"
 				},
 				{
@@ -1101,7 +1129,9 @@
 					],
 					"_id": "ALIGNEMENT_POS2",
 					"_name": "Alignement position 2",
+					"_name_en": "Line-up, number 2",
 					"_short": "Numéro 2",
+					"_short_en": "Number 2",
 					"_level": "débutant"
 				},
 				{
@@ -1129,7 +1159,9 @@
 					],
 					"_id": "MAINTIEN_ARRET",
 					"_name": "Maintien point d'attente",
+					"_name_en": "Hold short of holding point",
 					"_short": "Maintien",
+					"_short_en": "Hold short",
 					"_level": "débutant"
 				},
 				{
@@ -1177,7 +1209,9 @@
 					],
 					"_id": "DECOLLAGE_IMMEDIAT",
 					"_name": "Décollage immédiat",
+					"_name_en": "Immediate departure",
 					"_short": "Immédiat",
+					"_short_en": "Immediate",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1205,7 +1239,9 @@
 					],
 					"_id": "TRANSFERT_SIMPLE",
 					"_name": "Transfert contrôleur",
+					"_name_en": "Transfer to next controller",
 					"_short": "Tr APP",
+					"_short_en": "Tr APP",
 					"_level": "débutant"
 				},
 				{
@@ -1233,7 +1269,9 @@
 					],
 					"_id": "TRANSFERT_SIMPLE_ARR",
 					"_name": "Transfert contrôleur",
+					"_name_en": "Transfer to next controller",
 					"_short": "Tr APP",
+					"_short_en": "Tr APP",
 					"_level": "débutant"
 				},
 				{
@@ -1261,7 +1299,9 @@
 					],
 					"_id": "TRANSFERT_SIMPLE_CTR",
 					"_name": "Transfert contrôleur",
+					"_name_en": "Transfer to next controller",
 					"_short": "Tr CTR",
+					"_short_en": "Tr CTR",
 					"_level": "débutant"
 				},
 				{
@@ -1290,7 +1330,9 @@
 					"_id": "TRANSFERT_SOL",
 					"_requires": ["GND"],
 					"_name": "Transfert contrôleur",
+					"_name_en": "Transfer to next controller",
 					"_short": "Tr GND",
+					"_short_en": "Tr GND",
 					"_level": "débutant"
 				},
 				{
@@ -1318,7 +1360,9 @@
 					],
 					"_id": "TRANSFERT_TOUR",
 					"_name": "Transfert tour",
+					"_name_en": "Transfer to Tower",
 					"_short": "Tr TWR",
+					"_short_en": "Tr TWR",
 					"_level": "débutant"
 				},
 				{
@@ -1346,7 +1390,9 @@
 					],
 					"_id": "TRANSFERT_UNICOM",
 					"_name": "Fin service",
+					"_name_en": "End of service",
 					"_short": "Fin",
+					"_short_en": "End",
 					"_level": "débutant"
 				},
 				{
@@ -1374,7 +1420,9 @@
 					],
 					"_id": "CONFIRMATION_SID",
 					"_name": "Confirmation SID",
+					"_name_en": "SID confirmation",
 					"_short": "Conf SID",
+					"_short_en": "Confirm SID",
 					"_level": "débutant"
 				},
 				{
@@ -1402,7 +1450,9 @@
 					],
 					"_id": "DIRECT_WPT",
 					"_name": "Direct waypoint",
+					"_name_en": "Direct to waypoint",
 					"_short": "Direct",
+					"_short_en": "Direct",
 					"_level": "débutant"
 				},
 				{
@@ -1430,7 +1480,9 @@
 					],
 					"_id": "MONTEE_DIFFEREE",
 					"_name": "Montée stoppée",
+					"_name_en": "Stop climb",
 					"_short": "Stop",
+					"_short_en": "Stop",
 					"_level": "débutant"
 				},
 				{
@@ -1458,7 +1510,9 @@
 					],
 					"_id": "MONTEE_INITIALE",
 					"_name": "Montée intermédiaire",
+					"_name_en": "Intermediate climb",
 					"_short": "Interm.",
+					"_short_en": "Interm.",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1486,7 +1540,9 @@
 					],
 					"_id": "NIVEAU",
 					"_name": "Changement de niveau",
+					"_name_en": "Level change",
 					"_short": "Niveau",
+					"_short_en": "Level",
 					"_level": "débutant"
 				},
 				{
@@ -1514,7 +1570,9 @@
 					],
 					"_id": "DIRECT",
 					"_name": "Direct",
+					"_name_en": "Direct",
 					"_short": "Direct",
+					"_short_en": "Direct",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1542,7 +1600,9 @@
 					],
 					"_id": "ROUTE_CONTROLEUR",
 					"_name": "Nouvelle route",
+					"_name_en": "New route",
 					"_short": "Route",
+					"_short_en": "Route",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1570,7 +1630,9 @@
 					],
 					"_id": "ROUTE_POSITIVE",
 					"_name": "Route acceptée",
+					"_name_en": "Route approved",
 					"_short": "Acceptée",
+					"_short_en": "Approved",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1598,7 +1660,9 @@
 					],
 					"_id": "ROUTE_NEGATIVE",
 					"_name": "Route refusée",
+					"_name_en": "Route refused",
 					"_short": "Refusée",
+					"_short_en": "Refused",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1638,7 +1702,9 @@
 					],
 					"_id": "TRAFIC",
 					"_name": "Trafic",
+					"_name_en": "Traffic",
 					"_short": "Trafic",
+					"_short_en": "Traffic",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1666,7 +1732,9 @@
 					],
 					"_id": "DESCENTE_IMMEDIATE",
 					"_name": "Descente immédiate",
+					"_name_en": "Immediate descent",
 					"_short": "Descente",
+					"_short_en": "Descent",
 					"_level": "débutant"
 				},
 				{
@@ -1714,7 +1782,9 @@
 					],
 					"_id": "DESCENTE_DELAI",
 					"_name": "Descente avec délai",
+					"_name_en": "Descent when ready",
 					"_short": "Délai",
+					"_short_en": "When ready",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1742,7 +1812,9 @@
 					],
 					"_id": "APPROCHE_STAR",
 					"_name": "Approche STAR",
+					"_name_en": "STAR approach",
 					"_short": "STAR",
+					"_short_en": "STAR",
 					"_level": "débutant"
 				},
 				{
@@ -1770,7 +1842,9 @@
 					],
 					"_id": "APPROCHE_DIRECT",
 					"_name": "Direct dans STAR",
+					"_name_en": "Direct within the STAR",
 					"_short": "Direct STAR",
+					"_short_en": "Direct STAR",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1818,7 +1892,9 @@
 					],
 					"_id": "VITESSE",
 					"_name": "Vitesse",
+					"_name_en": "Speed",
 					"_short": "Vitesse",
+					"_short_en": "Speed",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1846,7 +1922,9 @@
 					],
 					"_id": "REDUCTION_VITESSE",
 					"_name": "Réduction vitesse",
+					"_name_en": "Speed reduction",
 					"_short": "Réduire",
+					"_short_en": "Reduce",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1874,7 +1952,9 @@
 					],
 					"_id": "CHANGEMENT_CAP",
 					"_name": "Nouveau cap",
+					"_name_en": "New heading",
 					"_short": "Cap",
+					"_short_en": "Heading",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1902,7 +1982,9 @@
 					],
 					"_id": "CHANGEMENT_NIVEAU_CAP",
 					"_name": "Changements cap et niveau",
+					"_name_en": "Heading and level changes",
 					"_short": "Cap et niveau",
+					"_short_en": "HDG & level",
 					"_level": "intermédiaire"
 				},
 				{
@@ -1930,7 +2012,9 @@
 					],
 					"_id": "INTERCEPTION_ILS",
 					"_name": "Cap d'interception ILS",
+					"_name_en": "ILS intercept heading",
 					"_short": "CAP ILS",
+					"_short_en": "ILS HDG",
 					"_level": "débutant"
 				},
 				{
@@ -1978,7 +2062,9 @@
 					],
 					"_id": "ATTENTE_PUBLIEE",
 					"_name": "Attente publiée",
+					"_name_en": "Published hold",
 					"_short": "Publiée",
+					"_short_en": "Published",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2006,7 +2092,9 @@
 					],
 					"_id": "ATTENTE_PARAMETRES",
 					"_name": "Attente non publiée",
+					"_name_en": "Non-published hold",
 					"_short": "Non publiée",
+					"_short_en": "Not published",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2034,7 +2122,9 @@
 					],
 					"_id": "APPROCHE_AUTORISE",
 					"_name": "Approche autorisée",
+					"_name_en": "Approach clearance",
 					"_short": "Autorisée",
+					"_short_en": "Cleared",
 					"_level": "débutant"
 				},
 				{
@@ -2092,7 +2182,9 @@
 					],
 					"_id": "TRAFIC_MVL",
 					"_name": "Accepte avec info trafic",
+					"_name_en": "Accepts, with traffic information",
 					"_short": "Trafic",
+					"_short_en": "Traffic",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2120,7 +2212,9 @@
 					],
 					"_id": "ACCEPTE_MVL_PILOT",
 					"_name": "Accepte MVL",
+					"_name_en": "Accepts circling",
 					"_short": "Acceptée",
+					"_short_en": "Approved",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2158,7 +2252,9 @@
 					],
 					"_id": "ACCEPTE_MVL_TRAFIC",
 					"_name": "Accepte MVL",
+					"_name_en": "Accepts circling",
 					"_short": "Trafic",
+					"_short_en": "Traffic",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2196,7 +2292,9 @@
 					],
 					"_id": "ACCEPTE_MVL",
 					"_name": "Accepte MVL",
+					"_name_en": "Accepts circling",
 					"_short": "Autorisée",
+					"_short_en": "Cleared",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2234,7 +2332,9 @@
 					],
 					"_id": "REFUSE_MVL",
 					"_name": "Refuse MVL",
+					"_name_en": "Refuses circling",
 					"_short": "Refusée",
+					"_short_en": "Refused",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2262,7 +2362,9 @@
 					],
 					"_id": "OUVERTURE_VPT",
 					"_name": "Ouverture VPT",
+					"_name_en": "VPT break",
 					"_short": "Ouv VPT",
+					"_short_en": "VPT break",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2290,7 +2392,9 @@
 					],
 					"_id": "ATTERRISSAGE_AUTORISE",
 					"_name": "Autorisé",
+					"_name_en": "Cleared to land",
 					"_short": "Autorisée",
+					"_short_en": "Cleared",
 					"_level": "débutant"
 				},
 				{
@@ -2318,7 +2422,9 @@
 					],
 					"_id": "ATTERRISSAGE_VITESSE_CONTROLEE",
 					"_name": "Autorisé, dégagement rapide",
+					"_name_en": "Cleared to land, expedite vacating",
 					"_short": "Dégagement",
+					"_short_en": "Vacate",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2346,7 +2452,9 @@
 					],
 					"_id": "REMISE_GAZ",
 					"_name": "Remise de gaz (ATC)",
+					"_name_en": "Go-around (ATC)",
 					"_short": "RdG ATC",
+					"_short_en": "GA ATC",
 					"_level": "débutant"
 				},
 				{
@@ -2374,7 +2482,9 @@
 					],
 					"_id": "REMISE_GAZ_PILOTE",
 					"_name": "Remise de gaz (Pilote)",
+					"_name_en": "Go-around (pilot)",
 					"_short": "RdG Pilote",
+					"_short_en": "GA pilot",
 					"_level": "débutant"
 				},
 				{
@@ -2412,7 +2522,9 @@
 					],
 					"_id": "DEGAGEMENT_STANDARD",
 					"_name": "Dégagement standard",
+					"_name_en": "Vacating",
 					"_short": "Dégagement",
+					"_short_en": "Vacate",
 					"_level": "débutant"
 				},
 				{
@@ -2440,7 +2552,9 @@
 					],
 					"_id": "DEGAGEMENT_SORTIE",
 					"_name": "Dégagement particulier",
+					"_name_en": "Specific exit",
 					"_short": "Dégagement",
+					"_short_en": "Vacate",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2468,7 +2582,9 @@
 					],
 					"_id": "DEGAGEMENT_REMONTEE",
 					"_name": "Remontée et dégagement",
+					"_name_en": "Backtrack and vacate",
 					"_short": "Remontée dégag",
+					"_short_en": "Backtrack",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2496,7 +2612,9 @@
 					],
 					"_id": "PARKING",
 					"_name": "Parking",
+					"_name_en": "Parking",
 					"_short": "Parking",
+					"_short_en": "Parking",
 					"_level": "débutant"
 				},
 				{
@@ -2524,7 +2642,9 @@
 					],
 					"_id": "QUITTER",
 					"_name": "Quitter",
+					"_name_en": "Leaving the frequency",
 					"_short": "Quitter",
+					"_short_en": "Leave",
 					"_level": "débutant"
 				},
 				{
@@ -2552,7 +2672,9 @@
 					],
 					"_id": "TRAFIC_SOL",
 					"_name": "Priorité trafic",
+					"_name_en": "Give way to traffic",
 					"_short": "Trafic",
+					"_short_en": "Traffic",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2580,7 +2702,9 @@
 					],
 					"_id": "TRAVERSER_PISTE",
 					"_name": "Traversée de piste",
+					"_name_en": "Runway crossing",
 					"_short": "Trav ATC",
+					"_short_en": "Cross (ATC)",
 					"_level": "débutant"
 				},
 				{
@@ -2618,7 +2742,9 @@
 					],
 					"_id": "DEMANDE_TRAVERSEE_PISTE",
 					"_name": "Demande de traversée",
+					"_name_en": "Crossing request",
 					"_short": "Trav Pil",
+					"_short_en": "Cross (pilot)",
 					"_level": "débutant"
 				},
 				{
@@ -2646,7 +2772,9 @@
 					],
 					"_id": "ACCELERER_TRAVERSEE_PISTE",
 					"_name": "Accélérer la traversée",
+					"_name_en": "Expedite crossing",
 					"_short": "Accélérer",
+					"_short_en": "Expedite",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2664,7 +2792,9 @@
 					],
 					"_id": "ACCUSEZ",
 					"_name": "Accuser réception",
+					"_name_en": "Acknowledge",
 					"_short": "Accuser",
+					"_short_en": "Ack",
 					"_level": "débutant"
 				},
 				{
@@ -2682,7 +2812,9 @@
 					],
 					"_id": "LENTEMENT",
 					"_name": "Parler lentement",
+					"_name_en": "Speak slower",
 					"_short": "Lentement",
+					"_short_en": "Slower",
 					"_level": "débutant"
 				},
 				{
@@ -2700,7 +2832,9 @@
 					],
 					"_id": "REPETEA",
 					"_name": "Collationner",
+					"_name_en": "Read back",
 					"_short": "Collationner",
+					"_short_en": "Read back",
 					"_level": "débutant"
 				},
 				{
@@ -2718,7 +2852,9 @@
 					],
 					"_id": "REPETEP",
 					"_name": "Répéter",
+					"_name_en": "Say again",
 					"_short": "Répéter",
+					"_short_en": "Say again",
 					"_level": "débutant"
 				},
 				{
@@ -2746,7 +2882,9 @@
 					],
 					"_id": "ALIGNEMENT_DECO",
 					"_name": "Alignement et décollage",
+					"_name_en": "Line-up and take-off",
 					"_short": "Alig + décol",
+					"_short_en": "Line-up+T/O",
 					"_level": "débutant"
 				},
 				{
@@ -2774,7 +2912,9 @@
 					],
 					"_id": "DECOL_AUTO",
 					"_name": "Décollage déjà aligné",
+					"_name_en": "Take-off, already lined up",
 					"_short": "Autorisé",
+					"_short_en": "Cleared",
 					"_level": "débutant"
 				},
 				{
@@ -2802,7 +2942,9 @@
 					],
 					"_id": "DECOL_STOPPE",
 					"_name": "Décollage stoppé",
+					"_name_en": "Take-off stopped",
 					"_short": "Stop",
+					"_short_en": "Stop",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2830,7 +2972,9 @@
 					],
 					"_id": "DECOL_ANNULE",
 					"_name": "Décollage annulé",
+					"_name_en": "Take-off cancelled",
 					"_short": "Annulé",
+					"_short_en": "Cancelled",
 					"_level": "débutant"
 				},
 				{
@@ -2848,7 +2992,9 @@
 					],
 					"_id": "DECOL_INTEROMPU",
 					"_name": "Décollage interrompu",
+					"_name_en": "Take-off aborted",
 					"_short": "Interrompu",
+					"_short_en": "Aborted",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2866,7 +3012,9 @@
 					],
 					"_id": "DECELERE",
 					"_name": "Décélération roulage",
+					"_name_en": "Taxi with caution",
 					"_short": "Décélération",
+					"_short_en": "Caution",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2884,7 +3032,9 @@
 					],
 					"_id": "ACCELERE",
 					"_name": "Accélération roulage",
+					"_name_en": "Expedite taxi",
 					"_short": "Accélération",
+					"_short_en": "Expedite",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2912,7 +3062,9 @@
 					],
 					"_id": "VISUEL",
 					"_name": "Trafic en vue",
+					"_name_en": "Traffic in sight",
 					"_short": "Trafic",
+					"_short_en": "Traffic",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2940,7 +3092,9 @@
 					],
 					"_id": "SILLAGE",
 					"_name": "Turbulence de sillage",
+					"_name_en": "Wake turbulence",
 					"_short": "Turbulence",
+					"_short_en": "Wake",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2968,7 +3122,9 @@
 					],
 					"_id": "TAUX_MONTEE",
 					"_name": "Taux de montée",
+					"_name_en": "Rate of climb",
 					"_short": "Taux mont",
+					"_short_en": "Climb rate",
 					"_level": "intermédiaire"
 				},
 				{
@@ -2996,13 +3152,17 @@
 					],
 					"_id": "IDENT",
 					"_name": "Identification transpondeur",
+					"_name_en": "Squawk ident",
 					"_short": "Identification",
+					"_short_en": "Ident",
 					"_level": "débutant"
 				},
 				{
 					"_id": "MER_SIMPLE",
 					"_name": "MER approuvée",
+					"_name_en": "Start-up approved",
 					"_short": "Approuvée",
+					"_short_en": "Approved",
 					"_level": "débutant",
 					"para": [
 						{
@@ -3077,7 +3237,9 @@
 					],
 					"_id": "DEMANDE_HEURE",
 					"_name": "Heure exacte",
+					"_name_en": "Time check",
 					"_short": "Heure",
+					"_short_en": "Time",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3105,7 +3267,9 @@
 					],
 					"_id": "VERIF_PLAN_VOL",
 					"_name": "Plan de vol",
+					"_name_en": "Flight plan",
 					"_short": "Plan vol",
+					"_short_en": "Flight plan",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3133,7 +3297,9 @@
 					],
 					"_id": "PREVOYEZ_DEPART",
 					"_name": "Prévoyez départ",
+					"_name_en": "Expect departure",
 					"_short": "Départ différé",
+					"_short_en": "Expect dep",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3161,7 +3327,9 @@
 					],
 					"_id": "ROULAGE_SUIVEZ",
 					"_name": "Suivez le trafic",
+					"_name_en": "Follow the traffic",
 					"_short": "Suivez",
+					"_short_en": "Follow",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3189,7 +3357,9 @@
 					],
 					"_id": "MAINTIEN_POSITION_SIMPLE",
 					"_name": "Maintien de position",
+					"_name_en": "Hold position",
 					"_short": "Maintenez",
+					"_short_en": "Hold",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3227,7 +3397,9 @@
 					],
 					"_id": "TRACTAGE_STANDARD",
 					"_name": "Tractage",
+					"_name_en": "Towing",
 					"_short": "Tractage",
+					"_short_en": "Tow",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3285,7 +3457,9 @@
 					],
 					"_id": "TRAVERSEE_VEHICULE_FLYCO",
 					"_name": "Traversée véhicule (FLYCO)",
+					"_name_en": "Vehicle crossing (FLYCO)",
 					"_short": "Véhicule piste",
+					"_short_en": "Vehicle",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3313,7 +3487,9 @@
 					],
 					"_id": "PRET_DEPART_2MIN",
 					"_name": "Prêt sous 2 minutes ?",
+					"_name_en": "Ready within 2 minutes?",
 					"_short": "Prêt 2 min",
+					"_short_en": "Ready 2 min",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3351,7 +3527,9 @@
 					],
 					"_id": "DEMANDE_TORA_INTERSECTION",
 					"_name": "Demande TORA intersection",
+					"_name_en": "TORA from intersection",
 					"_short": "Demande TORA",
+					"_short_en": "TORA",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3379,7 +3557,9 @@
 					],
 					"_id": "AXE_PISTE",
 					"_name": "Restez dans l'axe de piste",
+					"_name_en": "Continue runway track",
 					"_short": "Axe de piste",
+					"_short_en": "RWY track",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3417,7 +3597,9 @@
 					],
 					"_id": "DEMANDE_VIRAGE",
 					"_name": "Demande de virage",
+					"_name_en": "Turn request",
 					"_short": "Virage",
+					"_short_en": "Turn",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3445,7 +3627,9 @@
 					],
 					"_id": "DECOL_IMMEDIAT_OU_DEGAGE",
 					"_name": "Décollage immédiat ou dégagez",
+					"_name_en": "Immediate take-off or vacate",
 					"_short": "Décol. imm.",
+					"_short_en": "Imm. T/O",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3483,7 +3667,9 @@
 					],
 					"_id": "ALIGNEMENT_MAUVAISE_POS",
 					"_name": "Alignement mauvaise position",
+					"_name_en": "Line-up at the wrong position",
 					"_short": "Pas au point",
+					"_short_en": "Wrong point",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3511,7 +3697,9 @@
 					],
 					"_id": "MONTEE_CONTRAINTE_NIVEAU",
 					"_name": "Montée avec contrainte de niveau",
+					"_name_en": "Climb with level restriction",
 					"_short": "Plus haut que",
+					"_short_en": "Above",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3539,7 +3727,9 @@
 					],
 					"_id": "MONTEE_STABLE_AVANT",
 					"_name": "Montée, stable avant un point",
+					"_name_en": "Climb, level by a point",
 					"_short": "Stable avant",
+					"_short_en": "Level by",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3567,7 +3757,9 @@
 					],
 					"_id": "MONTEE_EXPEDIEZ",
 					"_name": "Expédiez la montée",
+					"_name_en": "Expedite climb",
 					"_short": "Expédiez",
+					"_short_en": "Expedite",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3605,7 +3797,9 @@
 					],
 					"_id": "MONTEE_INITIALEMENT",
 					"_name": "Montée niveau intermédiaire",
+					"_name_en": "Climb, intermediate level",
 					"_short": "Initialement",
+					"_short_en": "Initially",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3633,7 +3827,9 @@
 					],
 					"_id": "RAPPEL_LIBERANT_NIVEAU",
 					"_name": "Rappelez libérant niveau",
+					"_name_en": "Report leaving level",
 					"_short": "Libérant",
+					"_short_en": "Leaving",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3671,7 +3867,9 @@
 					],
 					"_id": "COMPTE_RENDU_POSITION",
 					"_name": "Compte rendu de position",
+					"_name_en": "Position report",
 					"_short": "Position",
+					"_short_en": "Position",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3719,7 +3917,9 @@
 					],
 					"_id": "SEPARATION_VUE",
 					"_name": "Séparation à vue",
+					"_name_en": "Visual separation",
 					"_short": "Sépar. vue",
+					"_short_en": "Visual sep",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3757,7 +3957,9 @@
 					],
 					"_id": "NIVEAU_REFUSE",
 					"_name": "Niveau refusé",
+					"_name_en": "Level refused",
 					"_short": "Niv. refusé",
+					"_short_en": "Level refused",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3795,7 +3997,9 @@
 					],
 					"_id": "EVITEMENT_METEO",
 					"_name": "Évitement météo",
+					"_name_en": "Weather avoidance",
 					"_short": "Évit. météo",
+					"_short_en": "Weather",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3833,7 +4037,9 @@
 					],
 					"_id": "ANNULATION_IFR",
 					"_name": "Annulation IFR en vol",
+					"_name_en": "Cancelling IFR in flight",
 					"_short": "Annule IFR",
+					"_short_en": "Cancel IFR",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3861,7 +4067,9 @@
 					],
 					"_id": "PROCEDEZ_ROUTE",
 					"_name": "Assignation de route ATS",
+					"_name_en": "ATS route assignment",
 					"_short": "Procédez",
+					"_short_en": "Proceed",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3899,7 +4107,9 @@
 					],
 					"_id": "ARRIVEE_STAR_AUTORISE",
 					"_name": "Autorisé arrivée STAR",
+					"_name_en": "STAR arrival clearance",
 					"_short": "Arrivée STAR",
+					"_short_en": "STAR arrival",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3927,7 +4137,9 @@
 					],
 					"_id": "DESCENTE_EXPEDIEE",
 					"_name": "Descente expédiée",
+					"_name_en": "Expedite descent",
 					"_short": "Expédiez",
+					"_short_en": "Expedite",
 					"_level": "intermédiaire"
 				},
 				{
@@ -3975,7 +4187,9 @@
 					],
 					"_id": "VITESSE_LIBRE",
 					"_name": "Vitesse libre",
+					"_name_en": "Speed restriction",
 					"_short": "Vit. libre",
+					"_short_en": "Speed",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4023,7 +4237,9 @@
 					],
 					"_id": "ATTENTE_QUITTER",
 					"_name": "Sortie d'attente",
+					"_name_en": "Leaving the hold",
 					"_short": "Quittez",
+					"_short_en": "Leave hold",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4081,7 +4297,9 @@
 					],
 					"_id": "DESCENTE_EANC_AFIS",
 					"_name": "Descente espace non contrôlé",
+					"_name_en": "Descent into uncontrolled airspace",
 					"_short": "EANC/AFIS",
+					"_short_en": "Uncontrolled",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4109,7 +4327,9 @@
 					],
 					"_id": "REJOINTE_STAR_ALT",
 					"_name": "Rejointe STAR altitude QNH",
+					"_name_en": "Rejoin the STAR, QNH altitude",
 					"_short": "Rejointe STAR",
+					"_short_en": "Rejoin STAR",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4147,7 +4367,9 @@
 					],
 					"_id": "DEMANDE_APPROCHE_DIRECTE",
 					"_name": "Approche directe",
+					"_name_en": "Straight-in approach",
 					"_short": "Directe",
+					"_short_en": "Straight-in",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4175,7 +4397,9 @@
 					],
 					"_id": "APPROCHE_IMPOSSIBLE_SUBSTITUTION",
 					"_name": "Approche impossible",
+					"_name_en": "Approach not available",
 					"_short": "ILS HS",
+					"_short_en": "ILS U/S",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4223,7 +4447,9 @@
 					],
 					"_id": "APPROCHE_MVL",
 					"_name": "Approche indirecte MVL",
+					"_name_en": "Circling approach",
 					"_short": "MVL",
+					"_short_en": "Circling",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4261,7 +4487,9 @@
 					],
 					"_id": "APPROCHE_RNP",
 					"_name": "Approche RNP",
+					"_name_en": "RNP approach",
 					"_short": "RNP",
+					"_short_en": "RNP",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4309,7 +4537,9 @@
 					],
 					"_id": "APPROCHE_FAMILIER_PROCEDURE",
 					"_name": "Familiarité procédure",
+					"_name_en": "Familiar with the procedure?",
 					"_short": "Familier ?",
+					"_short_en": "Familiar?",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4337,7 +4567,9 @@
 					],
 					"_id": "ATTERRISSAGE_ANTICIPE_TRAFIC",
 					"_name": "Autorisé n°2 derrière trafic",
+					"_name_en": "Cleared to land, number 2 behind traffic",
 					"_short": "Autorisé n°2",
+					"_short_en": "Cleared n°2",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4365,7 +4597,9 @@
 					],
 					"_id": "TRAVERSEE_PISTE_CONTACT_SOL",
 					"_name": "Traversée puis contact Sol",
+					"_name_en": "Crossing, then contact Ground",
 					"_short": "Traversée Sol",
+					"_short_en": "Cross + GND",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4393,7 +4627,9 @@
 					],
 					"_id": "DEGAGEMENT_GRANDE_VITESSE",
 					"_name": "Dégagement grande vitesse",
+					"_name_en": "High-speed turn-off",
 					"_short": "Grande vitesse",
+					"_short_en": "High-speed",
 					"_level": "intermédiaire"
 				},
 				{
@@ -4431,7 +4667,9 @@
 					],
 					"_id": "MER_DMAN",
 					"_name": "MER avec DMAN (T_SAT)",
+					"_name_en": "Start-up with DMAN (T_SAT)",
 					"_short": "DMAN",
+					"_short_en": "DMAN",
 					"_level": "avancé"
 				},
 				{
@@ -4459,7 +4697,9 @@
 					],
 					"_id": "MAJ_TOBT",
 					"_name": "Mise à jour T_O_B_T",
+					"_name_en": "T_O_B_T update",
 					"_short": "T_O_B_T",
+					"_short_en": "T_O_B_T",
 					"_level": "avancé"
 				},
 				{
@@ -4497,7 +4737,9 @@
 					],
 					"_id": "ROULAGE_PRIORITE_CHEMINEMENT",
 					"_name": "Roulage priorité et cheminement",
+					"_name_en": "Taxi, priority and routing",
 					"_short": "Roulage prio",
+					"_short_en": "Taxi prio",
 					"_level": "avancé"
 				},
 				{
@@ -4555,7 +4797,9 @@
 					],
 					"_id": "TRACTAGE_ZONE_FRET",
 					"_name": "Tractage zone de fret",
+					"_name_en": "Towing to the cargo area",
 					"_short": "Tractage fret",
+					"_short_en": "Tow cargo",
 					"_level": "avancé"
 				},
 				{
@@ -4653,7 +4897,9 @@
 					],
 					"_id": "INSPECTION_PISTE_FLYCO",
 					"_name": "Inspection de piste (FLYCO)",
+					"_name_en": "Runway inspection (FLYCO)",
 					"_short": "Inspection",
+					"_short_en": "Inspection",
 					"_level": "avancé"
 				},
 				{
@@ -4681,7 +4927,9 @@
 					],
 					"_id": "MULTI_ALIGN_NUM2",
 					"_name": "Multi-alignement numéro 2",
+					"_name_en": "Multiple line-up, number 2",
 					"_short": "Multi n°2",
+					"_short_en": "Multi n°2",
 					"_level": "avancé"
 				},
 				{
@@ -4729,7 +4977,9 @@
 					],
 					"_id": "MULTI_ALIGN_NUM1_DEVANT",
 					"_name": "Multi-alignement numéro 1 devant",
+					"_name_en": "Multiple line-up, number 1 ahead",
 					"_short": "Multi n°1",
+					"_short_en": "Multi n°1",
 					"_level": "avancé"
 				},
 				{
@@ -4777,7 +5027,9 @@
 					],
 					"_id": "DECOL_ANNULE_PUIS_IMMEDIAT",
 					"_name": "Décollage annulé puis immédiat",
+					"_name_en": "Take-off cancelled, then immediate",
 					"_short": "Annulé/imm.",
+					"_short_en": "Cancel/imm.",
 					"_level": "avancé"
 				},
 				{
@@ -4815,7 +5067,9 @@
 					],
 					"_id": "AXE_PISTE_DIRECT",
 					"_name": "Axe de piste puis direct",
+					"_name_en": "Runway track, then direct",
 					"_short": "Direct point",
+					"_short_en": "Direct",
 					"_level": "avancé"
 				},
 				{
@@ -4863,7 +5117,9 @@
 					],
 					"_id": "DEPART_A_VUE",
 					"_name": "Départ à vue",
+					"_name_en": "Visual departure",
 					"_short": "Départ à vue",
+					"_short_en": "Visual dep",
 					"_level": "avancé"
 				},
 				{
@@ -4911,7 +5167,9 @@
 					],
 					"_id": "GUIDAGE_REJOINTE_SID",
 					"_name": "Guidage puis rejointe du SID",
+					"_name_en": "Vectoring, then rejoin the SID",
 					"_short": "Rejoindre SID",
+					"_short_en": "Rejoin SID",
 					"_level": "avancé"
 				},
 				{
@@ -4949,7 +5207,9 @@
 					],
 					"_id": "ANNULATION_RESTRICTIONS_SID",
 					"_name": "Annulation restrictions SID",
+					"_name_en": "SID restrictions cancelled",
 					"_short": "Annulez restr.",
+					"_short_en": "Cancel restr.",
 					"_level": "avancé"
 				},
 				{
@@ -4997,7 +5257,9 @@
 					],
 					"_id": "REFUS_CONTRAINTE_NIVEAU",
 					"_name": "Refus de contrainte de niveau",
+					"_name_en": "Level restriction refused",
 					"_short": "Négatif niveau",
+					"_short_en": "Unable level",
 					"_level": "avancé"
 				},
 				{
@@ -5045,7 +5307,9 @@
 					],
 					"_id": "CONTRAINTE_TAUX",
 					"_name": "Contrainte de taux (montée/descente)",
+					"_name_en": "Rate restriction (climb/descent)",
 					"_short": "Taux imposé",
+					"_short_en": "Rate",
 					"_level": "avancé"
 				},
 				{
@@ -5123,7 +5387,9 @@
 					],
 					"_id": "RVSM",
 					"_name": "RVSM (homologation et reprise)",
+					"_name_en": "RVSM (approval and resumption)",
 					"_short": "RVSM",
+					"_short_en": "RVSM",
 					"_level": "avancé"
 				},
 				{
@@ -5171,7 +5437,9 @@
 					],
 					"_id": "ROUTE_COMPLEXE",
 					"_name": "Route mixte / survol obligatoire",
+					"_name_en": "Mixed route / compulsory overflight",
 					"_short": "Route mixte",
+					"_short_en": "Mixed route",
 					"_level": "avancé"
 				},
 				{
@@ -5219,7 +5487,9 @@
 					],
 					"_id": "MODIFICATION_CLAIRANCE",
 					"_name": "Modification de clairance",
+					"_name_en": "Amended clearance",
 					"_short": "Réautorisé",
+					"_short_en": "Amended",
 					"_level": "avancé"
 				},
 				{
@@ -5267,7 +5537,9 @@
 					],
 					"_id": "CHANGEMENT_DESTINATION",
 					"_name": "Changement de destination",
+					"_name_en": "Change of destination",
 					"_short": "Nouv. dest.",
+					"_short_en": "New dest.",
 					"_level": "avancé"
 				},
 				{
@@ -5295,7 +5567,9 @@
 					],
 					"_id": "ROUTE_OFFSET",
 					"_name": "Route parallèle offset",
+					"_name_en": "Parallel offset",
 					"_short": "Offset",
+					"_short_en": "Offset",
 					"_level": "avancé"
 				},
 				{
@@ -5333,7 +5607,9 @@
 					],
 					"_id": "TRAFIC_DETAILLE",
 					"_name": "Trafic détaillé",
+					"_name_en": "Detailed traffic information",
 					"_short": "Trafic détail",
+					"_short_en": "Traffic detail",
 					"_level": "avancé"
 				},
 				{
@@ -5401,7 +5677,9 @@
 					],
 					"_id": "SEPARATION_VUE_COMPLETE",
 					"_name": "Séparation à vue complète",
+					"_name_en": "Full visual separation",
 					"_short": "Sépar. compl.",
+					"_short_en": "Full sep",
 					"_level": "avancé"
 				},
 				{
@@ -5429,7 +5707,9 @@
 					],
 					"_id": "DEBUT_SERVICE_CONTROLE",
 					"_name": "Début du service du contrôle",
+					"_name_en": "Control service begins",
 					"_short": "Début contrôle",
+					"_short_en": "Control starts",
 					"_level": "avancé"
 				},
 				{
@@ -5457,7 +5737,9 @@
 					],
 					"_id": "INFO_CLASSE_E",
 					"_name": "Passage classe E",
+					"_name_en": "Entering class E",
 					"_short": "Classe E",
+					"_short_en": "Class E",
 					"_level": "avancé"
 				},
 				{
@@ -5485,7 +5767,9 @@
 					],
 					"_id": "CPDLC_TRANSFERT",
 					"_name": "Clarification CPDLC",
+					"_name_en": "CPDLC clarification",
 					"_short": "CPDLC",
+					"_short_en": "CPDLC",
 					"_level": "avancé"
 				},
 				{
@@ -5543,7 +5827,9 @@
 					],
 					"_id": "ANNULATION_IFR_CD",
 					"_name": "Annulation IFR classe C/D",
+					"_name_en": "Cancelling IFR, class C/D",
 					"_short": "Annule IFR C/D",
+					"_short_en": "Cancel IFR C/D",
 					"_level": "avancé"
 				},
 				{
@@ -5567,7 +5853,9 @@
 					],
 					"_id": "SELCAL_CHECK",
 					"_name": "Contrôle SELCAL (HF océanique)",
+					"_name_en": "SELCAL check (oceanic HF)",
 					"_short": "SELCAL",
+					"_short_en": "SELCAL",
 					"_level": "avancé"
 				},
 				{
@@ -5615,7 +5903,9 @@
 					],
 					"_id": "VITESSE_MACH_VARIATION",
 					"_name": "Mach et variation de vitesse",
+					"_name_en": "Mach and speed changes",
 					"_short": "Mach",
+					"_short_en": "Mach",
 					"_level": "avancé"
 				},
 				{
@@ -5663,7 +5953,9 @@
 					],
 					"_id": "VITESSE_BORNE_LIMITE",
 					"_name": "Vitesse bornée et maintenue",
+					"_name_en": "Speed limit",
 					"_short": "Vit. bornée",
+					"_short_en": "Speed limit",
 					"_level": "avancé"
 				},
 				{
@@ -5711,7 +6003,9 @@
 					],
 					"_id": "STAR_ANNULE_RESTRICTIONS",
 					"_name": "Annulation restrictions STAR",
+					"_name_en": "STAR restrictions cancelled",
 					"_short": "Annulez restr.",
+					"_short_en": "Cancel restr.",
 					"_level": "avancé"
 				},
 				{
@@ -5739,7 +6033,9 @@
 					],
 					"_id": "ECART_REJOINTE_STAR",
 					"_name": "Écart puis rejointe STAR",
+					"_name_en": "Deviation, then rejoin the STAR",
 					"_short": "Écart STAR",
+					"_short_en": "Off STAR",
 					"_level": "avancé"
 				},
 				{
@@ -5807,7 +6103,9 @@
 					],
 					"_id": "RETARDEMENT_ROUTE",
 					"_name": "Retardement en route",
+					"_name_en": "En-route delay",
 					"_short": "Retardement",
+					"_short_en": "Delay",
 					"_level": "avancé"
 				},
 				{
@@ -5845,7 +6143,9 @@
 					],
 					"_id": "ATTENTE_INSTRUCTIONS_COMPLETES",
 					"_name": "Demande instructions d'attente",
+					"_name_en": "Holding instructions request",
 					"_short": "Instr. attente",
+					"_short_en": "Hold instr.",
 					"_level": "avancé"
 				},
 				{
@@ -5913,7 +6213,9 @@
 					],
 					"_id": "APPROCHE_RNP_GUIDAGE",
 					"_name": "Guidage vers approche RNP",
+					"_name_en": "Vectoring to an RNP approach",
 					"_short": "Guidage RNP",
+					"_short_en": "RNP vectors",
 					"_level": "avancé"
 				},
 				{
@@ -5981,7 +6283,9 @@
 					],
 					"_id": "APPROCHE_RNP_TRANSITION",
 					"_name": "Arrivée RNAV puis RNP",
+					"_name_en": "RNAV arrival, then RNP",
 					"_short": "Transition RNP",
+					"_short_en": "RNP transition",
 					"_level": "avancé"
 				},
 				{
@@ -6079,7 +6383,9 @@
 					],
 					"_id": "APPROCHE_RNP_VPT",
 					"_name": "Approche RNP VPT",
+					"_name_en": "RNP VPT approach",
 					"_short": "RNP VPT",
+					"_short_en": "RNP VPT",
 					"_level": "avancé"
 				},
 				{
@@ -6137,7 +6443,9 @@
 					],
 					"_id": "APPROCHE_VUE_SUCCESSIVE",
 					"_name": "Approches à vue successives",
+					"_name_en": "Successive visual approaches",
 					"_short": "Vue successive",
+					"_short_en": "Successive vis.",
 					"_level": "avancé"
 				},
 				{
@@ -6165,7 +6473,9 @@
 					],
 					"_id": "APPROCHE_ANNULEE_STOP_DESCENTE",
 					"_name": "Approche annulée, stoppez la descente",
+					"_name_en": "Approach cancelled, stop descent",
 					"_short": "App. annulée",
+					"_short_en": "App. cancelled",
 					"_level": "avancé"
 				},
 				{
@@ -6193,7 +6503,9 @@
 					],
 					"_id": "INSTRUCTION_ANTICIPEE_REMISE_GAZ",
 					"_name": "Instruction anticipée remise de gaz",
+					"_name_en": "Advance missed approach instruction",
 					"_short": "RG anticipée",
+					"_short_en": "Missed app.",
 					"_level": "avancé"
 				}
 			],
@@ -6251,7 +6563,9 @@
 					],
 					"_id": "DEMANDE_MISE_EN_ROUTE",
 					"_name": "Mise en route",
+					"_name_en": "Start-up",
 					"_short": "MER",
+					"_short_en": "Start-up",
 					"_level": "débutant"
 				},
 				{
@@ -6284,7 +6598,9 @@
 					"_repeat": "FALSE",
 					"_id": "DEMANDE_REPOUSSAGE",
 					"_name": "Repoussage",
+					"_name_en": "Pushback",
 					"_short": "Repoussage",
+					"_short_en": "Pushback",
 					"_level": "débutant"
 				},
 				{
@@ -6316,7 +6632,9 @@
 					],
 					"_id": "DEMANDE_ROULAGE",
 					"_name": "Roulage",
+					"_name_en": "Taxi",
 					"_short": "Roulage",
+					"_short_en": "Taxi",
 					"_level": "débutant"
 				},
 				{
@@ -6342,7 +6660,9 @@
 					],
 					"_id": "TAXI",
 					"_name": "Circulation",
+					"_name_en": "Taxi",
 					"_short": "Circulation",
+					"_short_en": "Taxi",
 					"_level": "débutant"
 				},
 				{
@@ -6362,7 +6682,9 @@
 					],
 					"_id": "TAXI2",
 					"_name": "Circulation",
+					"_name_en": "Taxi",
 					"_short": "Circulation",
+					"_short_en": "Taxi",
 					"_level": "débutant"
 				},
 				{
@@ -6412,7 +6734,9 @@
 					],
 					"_id": "CONTACT_TOUR1",
 					"_name": "Point d'attente",
+					"_name_en": "Holding point",
 					"_short": "Attente",
+					"_short_en": "Holding",
 					"_level": "débutant"
 				},
 				{
@@ -6445,7 +6769,9 @@
 					"_repeat": "FALSE",
 					"_id": "TYPE_ALIGNEMENT",
 					"_name": "Alignement",
+					"_name_en": "Line-up",
 					"_short": "Alignement",
+					"_short_en": "Line-up",
 					"_level": "débutant"
 				},
 				{
@@ -6483,7 +6809,9 @@
 					],
 					"_id": "DECOLLAGE",
 					"_name": "Décollage",
+					"_name_en": "Take-off",
 					"_short": "Décollage",
+					"_short_en": "Take-off",
 					"_level": "débutant"
 				},
 				{
@@ -6511,7 +6839,9 @@
 					],
 					"_id": "CONTACT_CTR",
 					"_name": "Contact en route",
+					"_name_en": "Contact en-route control",
 					"_short": "Contact CTR",
+					"_short_en": "Contact CTR",
 					"_level": "débutant"
 				},
 				{
@@ -6555,7 +6885,9 @@
 					],
 					"_id": "CONTACT_APP",
 					"_name": "Contact approche",
+					"_name_en": "Contact Approach",
 					"_short": "Contact APP",
+					"_short_en": "Contact APP",
 					"_level": "débutant"
 				},
 				{
@@ -6583,7 +6915,9 @@
 					],
 					"_id": "CONTACT_TWR",
 					"_name": "Contact tour",
+					"_name_en": "Contact Tower",
 					"_short": "Contact TWR",
+					"_short_en": "Contact TWR",
 					"_level": "débutant"
 				},
 				{
@@ -6603,7 +6937,9 @@
 					],
 					"_id": "ROUTE",
 					"_name": "Nouvelle route",
+					"_name_en": "New route",
 					"_short": "Route",
+					"_short_en": "Route",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6645,7 +6981,9 @@
 					],
 					"_id": "ROUTE_PILOTE",
 					"_name": "Changement route",
+					"_name_en": "Route change",
 					"_short": "Route",
+					"_short_en": "Route",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6665,7 +7003,9 @@
 					],
 					"_id": "TRANSFERT_CTR",
 					"_name": "Transfert en route",
+					"_name_en": "Transfer to en-route control",
 					"_short": "Tr CTR",
+					"_short_en": "Tr CTR",
 					"_level": "débutant"
 				},
 				{
@@ -6685,7 +7025,9 @@
 					],
 					"_id": "TRANSFERT_APP2",
 					"_name": "Transfert approche",
+					"_name_en": "Transfer to Approach",
 					"_short": "Tr APP",
+					"_short_en": "Tr APP",
 					"_level": "débutant"
 				},
 				{
@@ -6705,7 +7047,9 @@
 					],
 					"_id": "TRANSFERT_APP",
 					"_name": "Transfert approche",
+					"_name_en": "Transfer to Approach",
 					"_short": "Tr APP",
+					"_short_en": "Tr APP",
 					"_level": "débutant"
 				},
 				{
@@ -6725,7 +7069,9 @@
 					],
 					"_id": "REGULATION",
 					"_name": "Régulation et trafic",
+					"_name_en": "Flow control and traffic",
 					"_short": "Régulation",
+					"_short_en": "Flow control",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6745,7 +7091,9 @@
 					],
 					"_id": "REGULATIONBIS",
 					"_name": "Régulation et trafic",
+					"_name_en": "Flow control and traffic",
 					"_short": "Régulation",
+					"_short_en": "Flow control",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6789,7 +7137,9 @@
 					],
 					"_id": "DESCENTE",
 					"_name": "Descente",
+					"_name_en": "Descent",
 					"_short": "Descente",
+					"_short_en": "Descent",
 					"_level": "débutant"
 				},
 				{
@@ -6849,7 +7199,9 @@
 					],
 					"_id": "GUIDAGE_RADAR",
 					"_name": "Guidage",
+					"_name_en": "Vectoring",
 					"_short": "Radar",
+					"_short_en": "Vectors",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6869,7 +7221,9 @@
 					],
 					"_id": "ATTENTE",
 					"_name": "Circuit d'attente",
+					"_name_en": "Holding pattern",
 					"_short": "Attente",
+					"_short_en": "Holding",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6897,7 +7251,9 @@
 					],
 					"_id": "APPROCHE_VPT",
 					"_name": "Approche VPT",
+					"_name_en": "VPT approach",
 					"_short": "VPT",
+					"_short_en": "VPT",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6935,7 +7291,9 @@
 					],
 					"_id": "APPROCHE_VUE",
 					"_name": "Approche à vue",
+					"_name_en": "Visual approach",
 					"_short": "A vue",
+					"_short_en": "Visual",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6967,7 +7325,9 @@
 					],
 					"_id": "APPROCHE_VUE_PILOT",
 					"_name": "Approche à vue",
+					"_name_en": "Visual approach",
 					"_short": "A vue",
+					"_short_en": "Visual",
 					"_level": "intermédiaire"
 				},
 				{
@@ -6987,7 +7347,9 @@
 					],
 					"_id": "APPROCHE",
 					"_name": "Approche standard",
+					"_name_en": "Standard approach",
 					"_short": "Approche",
+					"_short_en": "Approach",
 					"_level": "débutant"
 				},
 				{
@@ -7025,7 +7387,9 @@
 					],
 					"_id": "ATTERRISSAGE",
 					"_name": "Atterrissage",
+					"_name_en": "Landing",
 					"_short": "Atterrissage",
+					"_short_en": "Landing",
 					"_level": "débutant"
 				},
 				{
@@ -7063,7 +7427,9 @@
 					],
 					"_id": "DEGAGEMENT",
 					"_name": "Vitesse contrôlée",
+					"_name_en": "Speed under control",
 					"_short": "Vit contrôlée",
+					"_short_en": "Speed ctrl",
 					"_level": "débutant"
 				}
 			]

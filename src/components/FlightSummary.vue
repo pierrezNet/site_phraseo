@@ -25,7 +25,7 @@
       <h3 class="font-semibold mb-2">{{ t('summary.debrief') }}</h3>
       <ul class="space-y-3 text-sm">
         <li v-for="r in summary.remarks" :key="r.code">
-          <p class="font-medium">💬 {{ remarkText(r.code, lang.ui).title }} <span class="opacity-70 font-normal">— {{ t('summary.times', { n: r.count }) }} ({{ r.steps.join(', ') }})</span></p>
+          <p class="font-medium">💬 {{ remarkText(r.code, lang.ui).title }} <span class="opacity-70 font-normal">— {{ t('summary.times', { n: r.count }) }} ({{ stepNames(r.steps) }})</span></p>
           <p class="opacity-80 mt-0.5">{{ remarkText(r.code, lang.ui).advice }}</p>
         </li>
       </ul>
@@ -37,7 +37,7 @@
       <ul v-else class="text-sm space-y-1">
         <li v-for="m in summary.missed" :key="m.label + m.value">
           <span class="ko-text">✗</span> {{ criticalLabel(m.label, lang.ui) }} : <strong>{{ m.value }}</strong>
-          <span class="opacity-70"> — {{ t('summary.times', { n: m.count }) }} ({{ m.steps.join(', ') }})</span>
+          <span class="opacity-70"> — {{ t('summary.times', { n: m.count }) }} ({{ stepNames(m.steps) }})</span>
         </li>
       </ul>
     </div>
@@ -53,11 +53,13 @@
 import { computed } from 'vue';
 import { useFlightStore } from '../stores/flight';
 import { remarkText } from '../utils/debrief';
+import type { Localized } from '../utils/flight';
 import { criticalLabel, useI18n, type MessageKey } from '../i18n';
 import { phaseLabel } from '../stores/taxonomy';
 
 const { t, lang } = useI18n();
 const flight = useFlightStore();
 const summary = computed(() => flight.summary);
+const stepNames = (steps: Localized[]) => steps.map((s) => s[lang.ui]).join(', ');
 const levelLabel = computed(() => (flight.level ? t(`level.${flight.level}` as MessageKey) : ''));
 </script>

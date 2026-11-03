@@ -2,7 +2,12 @@
  * Vol complet : construction d'un vol à partir d'un scénario (src/data/scenarios.json)
  * et des tâches de phraséologie du mode. Logique pure, sans Vue ni store.
  */
-import type { UserLevel } from '../stores/form';
+import type { Language, UserLevel } from '../stores/form';
+
+/** Texte en deux langues : l'anglais (`…_en` dans les données) reprend le français s'il manque */
+export type Localized = Record<Language, string>;
+
+const localized = (fr: string, en?: string): Localized => ({ fr, en: en || fr });
 
 export interface PhraseoLine {
   _class: string;
@@ -23,6 +28,7 @@ export function requirementsMet(item: { _requires?: string[] } | undefined | nul
 interface Task {
   _id: string;
   _name?: string;
+  _name_en?: string;
   _level?: string;
   _levelExact?: boolean;
   /** Stations nécessaires : la tâche n'a pas de sens si l'une est fermée */
@@ -39,6 +45,7 @@ export interface ScenarioStep {
   chance?: number;
   /** Titre affiché à la place du nom de la tâche (ex. « Premier contact ») */
   title?: string;
+  title_en?: string;
   /** Phase (onglet) si la tâche n'est pas dans la séquence principale (ex. une option jouée seule) */
   tab?: string;
   /**
@@ -46,6 +53,7 @@ export interface ScenarioStep {
    * Un objet donne une consigne par variante tirée (clé = id de la variante).
    */
   brief?: string | Record<string, string>;
+  brief_en?: string | Record<string, string>;
   /**
    * Fréquences nécessaires (DEL, GND, TWR, APP, CTR) : l'étape saute si l'une n'est pas renseignée.
    * Ex. un transfert Sol → Tour n'a pas lieu si le Sol est fermé (on est déjà avec la Tour).
@@ -58,8 +66,11 @@ export interface ScenarioStep {
 export interface Scenario {
   id: string;
   mode: 'VFR' | 'IFR';
+  /** Nom (accepte [DEP] / [ARR]) et présentation, en français puis en anglais */
   name: string;
+  name_en?: string;
   description?: string;
+  description_en?: string;
   /** Vol local (tours de piste) : on revient au départ, l'arrivée vaut le départ */
   local?: boolean;
   steps: ScenarioStep[];
@@ -69,11 +80,11 @@ export interface FlightStep {
   /** Tâche principale, puis variante retenue éventuelle */
   taskIds: string[];
   tab: string;
-  title: string;
-  subtitle: string;
+  title: Localized;
+  subtitle: Localized;
   incident: boolean;
   /** Consigne affichée avant l'échange (vide si aucune) */
-  brief: string;
+  brief: Localized;
   /** Évaluation souple (seul l'indicatif est exigé) */
   lenient: boolean;
   lines: PhraseoLine[];
@@ -149,15 +160,23 @@ export function buildFlight(
     steps.push({
       taskIds: variant ? [task._id, variant._id] : [task._id],
       tab: step.tab || tabOf.get(task._id) || '??',
-      title: step.title || task._name || task._id,
-      subtitle: variant?._name || '',
+      // Titre propre à l'étape, sinon nom de la tâche
+      title: step.title
+        ? localized(step.title, step.title_en)
+        : localized(task._name || task._id, task._name_en),
+      subtitle: localized(variant?._name || '', variant?._name_en),
       incident,
       lenient: !!step.lenient,
-      brief: typeof step.brief === 'string' ? step.brief : (variant && step.brief?.[variant._id]) || '',
+      brief: localized(briefOf(step.brief, variant), briefOf(step.brief_en, variant)),
       lines,
     });
   }
   return steps;
+}
+
+/** Consigne de l'étape : texte fixe, ou celle de la variante tirée */
+function briefOf(brief: ScenarioStep['brief'], variant: Task | undefined): string {
+  return typeof brief === 'string' ? brief : (variant && brief?.[variant._id]) || '';
 }
 
 /** Station radio sur laquelle on parle : lieu (tag [DEP], [ARR], [FIR]…) et organisme ([NTWR]…, ou [NSTA]) */

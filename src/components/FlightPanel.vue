@@ -45,7 +45,7 @@
         <span class="flex-1 min-w-0 truncate">
           <template v-if="step.incident && status(i) === 'todo'">{{ t('flight.incident') }}</template>
           <template v-else>
-            {{ step.title }}<span v-if="step.subtitle && status(i) === 'done'" class="opacity-75"> › {{ step.subtitle }}</span>
+            {{ step.title[lang.ui] }}<span v-if="step.subtitle.fr && status(i) === 'done'" class="opacity-75"> › {{ step.subtitle[lang.ui] }}</span>
           </template>
         </span>
         <span v-if="step.incident" class="shrink-0 text-xs" :title="t('flight.incident')">⚡</span>
@@ -60,7 +60,7 @@ import { useFlightStore } from '../stores/flight';
 import { phaseLabel } from '../stores/taxonomy';
 import { useI18n, type MessageKey } from '../i18n';
 
-const { t } = useI18n();
+const { t, lang } = useI18n();
 const flight = useFlightStore();
 const levelLabel = computed(() => (flight.level ? t(`level.${flight.level}` as MessageKey) : ''));
 

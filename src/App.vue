@@ -122,7 +122,7 @@ const currentPhraseoData = computed(() => {
 
 provide('phraseoData', currentPhraseoData);
 
-const { t } = useI18n();
+const { t, lang } = useI18n();
 const quizStore = useQuizStore();
 const flight = useFlightStore();
 // Le bandeau de vol n'apparaît qu'en mode quiz ou en vol complet (rappel des paramètres)
@@ -167,7 +167,7 @@ watch(
 const displayedTexts = computed(() => (flight.active ? flight.currentStep?.lines ?? [] : selectedTaskTexts.value));
 // En vol, la variante de l'étape en cours n'est pas annoncée : c'est la surprise de l'échange
 const displayedContext = computed(() =>
-  flight.active ? { step: flight.currentStep?.title ?? '', option: '' } : taskContext.value
+  flight.active ? { step: flight.currentStep?.title[lang.ui] ?? '', option: '' } : taskContext.value
 );
 
 const openModal = (modalName: string) => {

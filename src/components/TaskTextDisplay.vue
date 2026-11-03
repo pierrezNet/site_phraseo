@@ -12,8 +12,8 @@
     </p>
 
     <!-- Vol complet : consigne d'instructeur (la décision du pilote, pas la phrase à dire) -->
-    <div v-if="flight.active && flight.currentStep?.brief" class="strip strip--highlight text-sm mb-3 px-3 py-2 rounded border">
-      📋 <strong>{{ t('dialog.brief') }}</strong> {{ flight.currentStep.brief }}
+    <div v-if="flight.active && flight.currentStep?.brief.fr" class="strip strip--highlight text-sm mb-3 px-3 py-2 rounded border">
+      📋 <strong>{{ t('dialog.brief') }}</strong> {{ flight.currentStep.brief[lang.ui] }}
     </div>
 
     <!-- Rappel du mode quiz (seulement quand une étape/option est sélectionnée) -->
