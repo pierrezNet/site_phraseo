@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Plan du site de la Phraséologie (application d'une seule page). Mettre à jour <lastmod> à chaque mise en ligne notable. -->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<!-- Plan du site de la Phraséologie (application d'une seule page, interface en français ou en anglais selon ?lang=).
+     Mettre à jour <lastmod> à chaque mise en ligne notable. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
-        <loc>https://phraseo.aeronautique.xyz/</loc>
-        <lastmod>2026-10-17</lastmod>
+        <loc>https://phraseo.aeronautique.xyz/?lang=fr</loc>
+        <lastmod>2026-11-03</lastmod>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://phraseo.aeronautique.xyz/?lang=fr"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://phraseo.aeronautique.xyz/?lang=en"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://phraseo.aeronautique.xyz/"/>
+    </url>
+    <url>
+        <loc>https://phraseo.aeronautique.xyz/?lang=en</loc>
+        <lastmod>2026-11-03</lastmod>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://phraseo.aeronautique.xyz/?lang=fr"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://phraseo.aeronautique.xyz/?lang=en"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://phraseo.aeronautique.xyz/"/>
     </url>
 </urlset>

@@ -15,7 +15,7 @@
         <div v-if="status === 'success'" class="mt-6 text-center space-y-3">
           <p class="text-3xl">✅</p>
           <p class="font-medium">{{ t('feedback.thanks') }}</p>
-          <p class="text-sm text-gray-500">{{ before('feedback.published') }}<a href="https://avrobb.org/forum/4-phraseologie-aeronautique" target="_blank" rel="noopener noreferrer" class="underline">{{ t('feedback.forumLink') }}</a>{{ after('feedback.published') }}</p>
+          <p class="text-sm text-gray-500">{{ before('feedback.published') }}<a :href="forumUrl(lang.ui)" target="_blank" rel="noopener noreferrer" class="underline">{{ t('feedback.forumLink') }}</a>{{ after('feedback.published') }}</p>
           <button @click="close" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
             {{ t('common.close') }}
           </button>
@@ -76,7 +76,7 @@
           </div>
 
           <p v-if="status === 'error'" class="text-red-600 text-sm">
-            {{ before('feedback.error') }}<a href="https://avrobb.org/forum/4-phraseologie-aeronautique" target="_blank" rel="noopener noreferrer" class="underline">{{ t('feedback.errorForum') }}</a>{{ after('feedback.error') }}
+            {{ before('feedback.error') }}<a :href="forumUrl(lang.ui)" target="_blank" rel="noopener noreferrer" class="underline">{{ t('feedback.errorForum') }}</a>{{ after('feedback.error') }}
           </p>
 
           <div class="flex justify-end gap-2 pt-2">
@@ -101,7 +101,7 @@
 import { ref } from 'vue';
 import { useFormStore } from '../stores/form';
 import { useLangStore } from '../stores/lang';
-import { useI18n, type MessageKey } from '../i18n';
+import { forumUrl, useI18n, type MessageKey } from '../i18n';
 import { fr } from '../i18n/fr';
 import { postJson } from '../utils/api';
 import { API_BASE } from '../utils/relay';
@@ -110,7 +110,7 @@ type Status = 'idle' | 'sending' | 'success' | 'error';
 
 const formStore = useFormStore();
 const langStore = useLangStore();
-const { t } = useI18n();
+const { t, lang } = useI18n();
 
 const TYPES: MessageKey[] = ['feedback.type.phraseology', 'feedback.type.idea', 'feedback.type.bug', 'feedback.type.other'];
 

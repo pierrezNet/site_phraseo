@@ -2,6 +2,10 @@ import type { MessageKey } from './fr'
 
 /** Textes de l'interface en anglais : toutes les clés du français sont exigées */
 export const en: Record<MessageKey, string> = {
+  // Page (titre, description, aperçus)
+  'meta.title': 'Aviation phraseology for virtual pilots',
+  'meta.description': 'VFR and IFR radiotelephony phraseology trainer, in English and French: quiz, full flights, ATC voice and spoken answers. Texts based on the French DGAC phraseology manual.',
+
   // Barre de navigation
   'app.title': 'Aviation phraseology',
   'app.titleShort': 'Phraseology',
@@ -243,6 +247,18 @@ export const en: Record<MessageKey, string> = {
   'critical.INF': 'ATIS information',
   'critical.CAL': 'Callsign',
   'critical.INTENT': 'Intention',
+
+  // Aide
+  'help.close': 'Close help',
+  'help.toc': 'Help contents',
+  'help.start': 'Getting started',
+  'help.levels': 'Levels',
+  'help.icons': 'Icons',
+  'help.quiz': 'Quiz mode',
+  'help.voice': 'Listening and speaking',
+  'help.map': 'Map',
+  'help.weather': 'Weather',
+  'help.saving': 'Saving',
 
   // Retours
   'feedback.title': 'Send feedback',

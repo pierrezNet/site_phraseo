@@ -4,6 +4,10 @@
  * ils suivent la langue des échanges (src/data/*.json).
  */
 export const fr = {
+  // Page (titre, description, aperçus)
+  'meta.title': 'Phraséologie aéronautique pour les pilotes virtuels',
+  'meta.description': "Simulateur de phraséologie aéronautique VFR et IFR, en français et en anglais : quiz, vol complet, voix de l'ATC et réponse à la voix. Textes conformes au manuel DGAC.",
+
   // Barre de navigation
   'app.title': 'Phraséologie aéronautique',
   'app.titleShort': 'Phraséologie',
@@ -245,6 +249,18 @@ export const fr = {
   'critical.INF': 'Information ATIS',
   'critical.CAL': 'Indicatif',
   'critical.INTENT': 'Intention',
+
+  // Aide
+  'help.close': "Fermer l'aide",
+  'help.toc': "Sommaire de l'aide",
+  'help.start': 'Prise en main',
+  'help.levels': 'Niveaux',
+  'help.icons': 'Icônes',
+  'help.quiz': 'Mode quiz',
+  'help.voice': 'Écouter et parler',
+  'help.map': 'Carte',
+  'help.weather': 'Météo',
+  'help.saving': 'Sauvegarde',
 
   // Retours
   'feedback.title': "J'ai un retour",

@@ -1,0 +1,34 @@
+<template>
+  <div>
+    <p>
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer"><img alt="Licence Creative Commons" src="https://i.creativecommons.org/l/by/4.0/80x15.png"></a>
+      <span xmlns:dct="https://purl.org/dc/terms/" property="dct:title">Phraséologie aéronautique pour les pilotes virtuels</span> est l'une des applications proposées par
+      <a xmlns:cc="https://creativecommons.org/ns#" href="https://pierrez.net" property="cc:attributionName" target="_blank" rel="cc:attributionURL noopener noreferrer">Emmanuel Pierrez</a>
+      publiées sur <a href="https://aeronautique.xyz/phraseologie/" target="_blank" rel="noopener noreferrer">aeronautique.xyz</a>.
+      Cette dernière est mise à disposition selon les termes de la <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer">licence Creative Commons Attribution 4.0 International</a>.
+      Phraséologie réalisée d’après le Manuel de phraséologie à l’usage de la circulation aérienne générale.
+    </p>
+    <a href="https://www.ecologie.gouv.fr/sites/default/files/documents/Manuel_Phras%C3%A9ologie.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 mt-3 p-3 border rounded-lg hover:bg-gray-100 transition-colors">
+      <svg class="w-10 h-10 shrink-0 text-red-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6zm7 1.5L18.5 9H14a1 1 0 0 1-1-1V3.5zM9.5 13.5c0-.28.22-.5.5-.5h1c.83 0 1.5.67 1.5 1.5S11.83 16 11 16h-.5v1a.5.5 0 0 1-1 0v-3.5zm1 1.5h.5a.5.5 0 0 0 0-1h-.5v1zm3.5-1.5c0-.28.22-.5.5-.5h.5a1.5 1.5 0 0 1 0 3h-.5a.5.5 0 0 1-.5-.5v-2zm1 .5v1h.5a.5.5 0 0 0 0-1H15zM6.5 13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-1H5.5a.5.5 0 0 1 0-1H6v-.5H5.5a.5.5 0 0 1 0-1h1z"/>
+      </svg>
+      <div class="flex flex-col">
+        <span class="text-sm font-medium">Télécharger le Manuel de phraséologie</span>
+        <span class="text-xs text-gray-500">PDF — 2,6 Mo — À jour au 15 avril 2023</span>
+      </div>
+    </a>
+    <p>Ces textes sont regroupés sur deux <a href="https://github.com/pierrezNet/site_phraseo/tree/main/src/data" target="_blank" rel="noopener noreferrer">fichiers en langage JSON</a>. Ils constituent le référentiel de phraséologie aéronautique.</p>
+    <p class="mt-2">Questions, remarques de phraséologie, idées&nbsp;: rendez-vous sur le <a href="https://avrobb.org/forum/4-phraseologie-aeronautique" target="_blank" rel="noopener noreferrer">forum de la phraséologie</a> (lecture libre, inscription pour écrire).</p>
+
+    <h3 class="text-lg font-semibold mt-3">Vos données</h3>
+    <p>Les paramètres de vol, le niveau et les réglages restent sur votre appareil (stockage local du navigateur). <strong>Sans utiliser la voix, seul le code OACI de la météo est envoyé.</strong> Les fonctions suivantes passent par le relais du site (hébergé chez Cloudflare), uniquement quand vous les utilisez&nbsp;:</p>
+    <ul class="list-disc ml-5 space-y-1 mt-1">
+      <li><strong>Météo</strong>&nbsp;: seul le code OACI de l'aérodrome est envoyé, pour obtenir le METAR (NOAA).</li>
+      <li><strong>Écoute des répliques</strong> (clic sur une icône, touche R, et lecture automatique en vol complet si la voix de l'ATC est activée dans Réglages)&nbsp;: le texte à prononcer (indicatif, aérodromes, fréquences…) est envoyé au service de synthèse vocale Cloudflare Workers AI. L'audio produit est gardé en cache 30 jours, sous une clé chiffrée, pour ne pas refaire la même synthèse.</li>
+      <li><strong>Réponse à la voix (quiz)</strong>&nbsp;: le micro ne s'ouvre que lorsque vous maintenez Espace ou le bouton pour parler&nbsp;; l'enregistrement de votre réponse est envoyé au service de reconnaissance vocale Cloudflare Workers AI (Whisper), uniquement le temps de la transcription. Il n'est pas conservé par le site.</li>
+      <li><strong>Quota voix</strong>&nbsp;: lors de ces deux usages, un identifiant anonyme tiré au hasard dans votre navigateur et votre adresse IP servent à compter l'usage du jour. Ces compteurs sont effacés chaque nuit à minuit UTC.</li>
+      <li><strong>Retours</strong>&nbsp;: les messages envoyés volontairement via «&nbsp;J'ai un retour&nbsp;» deviennent un sujet privé de notre forum. Le pseudo éventuel est affiché avec le retour&nbsp;; le contact, lui, n'est jamais publié&nbsp;: il est envoyé par e-mail aux seuls administrateurs. Un retour utile à tous peut ensuite être publié sur le forum de la phraséologie, sans ce contact.</li>
+    </ul>
+    <p class="mt-2">Une mesure d'audience anonyme et sans cookie (Cloudflare Web Analytics) aide à comprendre l'usage du service, sans exploitation de vos adresses IP. Le service de phraséologie peut être utilisé librement mais il convient de le réserver à la simulation de vol.</p>
+  </div>
+</template>

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 import type { Language } from './form'
+import { applyDocumentMeta } from '../utils/documentMeta'
 
 /** Langue des échanges (phraséologie) : clé historique, du temps où elle réglait aussi l'interface */
 const EXCHANGE_KEY = 'lang'
@@ -60,10 +61,8 @@ export const useLangStore = defineStore('lang', () => {
     write(UI_KEY, lang)
   }
 
-  // Lecteurs d'écran et traduction automatique : langue du document = langue de l'interface
-  watch(ui, (lang) => {
-    if (typeof document !== 'undefined') document.documentElement.lang = lang
-  }, { immediate: true })
+  // Langue du document (lecteurs d'écran, traduction automatique), titre et description de la page
+  watch(ui, applyDocumentMeta, { immediate: true })
 
   return { ui, current, changeLanguage, changeUiLanguage }
 })

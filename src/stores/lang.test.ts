@@ -43,9 +43,14 @@ describe('langues de l’interface et des échanges', () => {
     expect(localStorage.getItem('uiLang')).toBe('en')
   })
 
-  it('la langue du document suit l’interface', () => {
+  it('langue, titre et adresse canonique de la page suivent l’interface', async () => {
+    document.head.innerHTML = '<link rel="canonical" href="https://phraseo.aeronautique.xyz/"><meta name="description" content="">'
     const lang = useLangStore()
     lang.changeUiLanguage('en')
-    return Promise.resolve().then(() => expect(document.documentElement.lang).toBe('en'))
+    await Promise.resolve()
+    expect(document.documentElement.lang).toBe('en')
+    expect(document.title).toBe('Aviation phraseology for virtual pilots')
+    expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toMatch(/^VFR and IFR/)
+    expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe('https://phraseo.aeronautique.xyz/?lang=en')
   })
 })

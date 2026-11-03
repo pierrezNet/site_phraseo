@@ -28,6 +28,9 @@ CLAUDE.md
 *.sln
 *.sw?
 Manuel_Phraseologie.pdf
+# Références espagnoles (idée : phraséologie en espagnol)
+5.904_RD1180_2018_Consolidado_Anexo V Fraseología.pdf
+guia_bp_fraseologia_y_comunicaciones.pdf
 
 # Generated build artifacts
 src/**/*.js

@@ -45,6 +45,10 @@ export function groupLabel(name: string, lang: Language): string {
   return key in fr ? translate(lang, key) : name
 }
 
+/** Forum de la phraséologie (AvroBB), dans sa version anglaise (/en/) pour l'interface anglaise */
+export const forumUrl = (lang: Language): string =>
+  `https://avrobb.org${lang === 'en' ? '/en' : ''}/forum/4-phraseologie-aeronautique`
+
 /** Heure locale « 02:00 » dans la langue de l'interface */
 export const timeIn = (date: Date, lang: Language): string =>
   date.toLocaleTimeString(lang === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit' })
