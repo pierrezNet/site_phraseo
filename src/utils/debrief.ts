@@ -54,7 +54,7 @@ export const REMARKS_EN: Record<RemarkCode, { title: string; advice: string }> =
   ATC_RESERVED: {
     title: 'Expression reserved for ATC',
     advice:
-      'In French phraseology, « autorisé atterrissage / décollage » is reserved for the controller: the pilot reads back with the action verb (« j’atterris », « je décolle ») (DGAC manual p. 59-61).',
+      '“Cleared to land / for take-off” is reserved for the controller: the pilot reads back with the action verb (“landing”, “taking-off”) (DGAC manual p. 59-61).',
   },
   ROGER_INSTEAD_OF_READBACK: {
     title: '“Roger” instead of a readback',
