@@ -6,7 +6,7 @@ Le site est statique (GitHub Pages) : tout ce qui est injecté au build via `VIT
 |---|---|
 | `GET /metar/:icao` | METAR depuis aviationweather.gov (NOAA, sans clé), converti au format du front, cache 10 min |
 | `POST /feedback` | Valide le retour et le transmet au forum AvroBB (liaison de service `FORUM`, point d'entrée `PhraseoFeedback`) : sujet du forum privé « Retours Phraséo (à trier) », contact envoyé par e-mail aux administrateurs seulement. Origine autorisée uniquement, 5 envois/min/IP |
-| `POST /tts` | Voix : `{ text, lang }` (texte préparé par `src/utils/speech.ts`, 600 caractères max) → WAV MeloTTS (Workers AI). Origine autorisée uniquement, 60 synthèses/min/IP, cache 30 jours (une réplique déjà dite ne coûte rien), quotas quotidiens (ci-dessous) |
+| `POST /tts` | Voix : `{ text, lang, speaker }` (`speaker` : `atc` ou `pilot` ; texte préparé par `src/utils/speech.ts`, 600 caractères max) → WAV 24 kHz Deepgram Aura 1 (Workers AI). Anglais seulement : MeloTTS, seule voix française, a été retiré le 2026-11-20 (`501` pour le français). Origine autorisée uniquement, 60 synthèses/min/IP, cache 30 jours (une réplique déjà dite ne coûte rien), quotas quotidiens (ci-dessous) |
 | `POST /stt?lang=fr` | Réponse du pilote : WAV 16 kHz mono (15 s max), vocabulaire sans nombres dans `X-Stt-Hint` → `{ text }` (Whisper large-v3-turbo). Origine autorisée uniquement, 30 réponses/min/IP, mêmes quotas que la voix |
 
 ## Premier déploiement
@@ -38,13 +38,13 @@ Les origines autorisées sont dans `wrangler.toml` (`ALLOWED_ORIGINS`). La logiq
 
 ## Quotas voix
 
-Le plan gratuit de Workers AI donne 10 000 neurones par jour (remise à zéro à 0 h UTC). MeloTTS coûte environ 18,6 neurones par minute d'audio, Whisper turbo environ 45,5.
+Le plan gratuit de Workers AI donne 10 000 neurones par jour (remise à zéro à 0 h UTC). Aura 1 est facturé au caractère : 0,015 $ les 1 000, soit environ 1,36 neurone par caractère (≈ 140 pour une réplique de 100 caractères ; MeloTTS coûtait environ 2 neurones par réplique). Whisper turbo coûte environ 45,5 neurones par minute d'audio.
 
-Le Durable Object `VoiceQuota` (SQLite, une instance unique) compte l'usage du jour en neurones estimés d'après la durée de l'audio :
+Le Durable Object `VoiceQuota` (SQLite, une instance unique) compte l'usage du jour en neurones estimés (synthèse : nombre de caractères ; reconnaissance : durée de l'audio) :
 
 | Variable (`wrangler.toml`) | Défaut | Rôle |
 |---|---|---|
-| `QUOTA_USER` | 800 | Par navigateur (identifiant anonyme `X-Phraseo-User`), soit environ 5 vols complets en voix |
+| `QUOTA_USER` | 800 | Par navigateur (identifiant anonyme `X-Phraseo-User`), soit environ 6 répliques synthétisées (les répliques déjà en cache sont gratuites) |
 | `QUOTA_IP` | 2400 | Par IP : garde-fou si l'identifiant est effacé, tout en laissant passer un club derrière une seule connexion |
 | `QUOTA_GLOBAL` | 8000 | Total de l'application (réserve de 20 % sur les 10 000) : au-delà, la voix est coupée pour tout le monde |
 

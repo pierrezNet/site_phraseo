@@ -37,6 +37,7 @@
       <span class="pref-label">
         {{ t('pref.voice') }}
         <span class="pref-hint">{{ t('pref.voiceHint') }}</span>
+        <span v-if="!voice.speaks(lang.current)" class="pref-hint pref-hint--warn">{{ t('pref.voiceNoFr') }}</span>
         <span v-if="voice.quotaLeft !== null" class="pref-hint">{{ t('pref.voiceQuota', { n: Math.round(voice.quotaLeft * 100) }) }}</span>
       </span>
       <button
@@ -120,6 +121,9 @@ const voice = useVoiceStore()
   font-weight: 400;
   font-size: 0.75rem;
   color: #bfdbfe;
+}
+.pref-hint--warn {
+  color: #fcd34d;
 }
 .pref-segments {
   display: inline-flex;

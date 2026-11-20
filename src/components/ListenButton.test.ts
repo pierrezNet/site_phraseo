@@ -24,15 +24,19 @@ describe('ListenButton', () => {
   it('est un bouton cliquable sans prop listenable (défaut : écoutable)', async () => {
     const voice = useVoiceStore()
     const play = vi.spyOn(voice, 'play').mockResolvedValue()
-    const wrapper = mountButton({})
+    const wrapper = mountButton({ lang: 'en' })
     const button = wrapper.find('button.listen-btn')
     expect(button.exists()).toBe(true)
     await button.trigger('click')
-    expect(play).toHaveBeenCalledWith({ key: '0', text: 'Fox trotte Sierra Tango', pilot: false }, 'fr')
+    expect(play).toHaveBeenCalledWith({ key: '0', text: 'Fox trotte Sierra Tango', pilot: false }, 'en')
   })
 
   it("reste une simple icône quand l'écoute est désactivée (pilote en quiz avant correction)", () => {
-    const wrapper = mountButton({ isPilot: true, listenable: false })
+    const wrapper = mountButton({ isPilot: true, listenable: false, lang: 'en' })
     expect(wrapper.find('button').exists()).toBe(false)
+  })
+
+  it('reste une simple icône pour une réplique française (plus de voix française)', () => {
+    expect(mountButton({ lang: 'fr' }).find('button').exists()).toBe(false)
   })
 })

@@ -1,9 +1,15 @@
 /**
- * Voix des répliques : audio MeloTTS obtenu via le relais (POST /tts), joué avec un effet radio.
+ * Voix des répliques : audio obtenu via le relais (POST /tts, Deepgram Aura sur Workers AI), joué avec un effet radio.
  * Le relais décompte un quota voix quotidien par navigateur (identifiant anonyme).
  */
 import { API_BASE } from './relay';
 import { fetchWithTimeout } from './api';
+
+/**
+ * Langues ayant une voix (comme TTS_VOICES du relais) : MeloTTS, seule voix française de Workers AI,
+ * a été retiré le 2026-11-20. Le français revient quand Cloudflare en propose une.
+ */
+export const VOICE_LANGS: ReadonlyArray<'fr' | 'en'> = ['en'];
 
 /** WAV d'environ 500 Ko par réplique : cache de session limité */
 const MAX_CACHED = 30;
@@ -41,14 +47,19 @@ const cache = new Map<string, Promise<ArrayBuffer>>();
  * Audio d'une réplique. `onQuota` reçoit la part de quota restante (0–1) après une synthèse facturée
  * (pas pour une réplique déjà en cache).
  */
-export function fetchAtcAudio(text: string, lang: 'fr' | 'en', onQuota?: (left: number) => void): Promise<ArrayBuffer> {
-  const key = `${lang}\n${text}`;
+export function fetchAtcAudio(
+  text: string,
+  lang: 'fr' | 'en',
+  speaker: Speaker = 'atc',
+  onQuota?: (left: number) => void
+): Promise<ArrayBuffer> {
+  const key = `${lang}\n${speaker}\n${text}`;
   let audio = cache.get(key);
   if (!audio) {
     audio = fetchWithTimeout(`${API_BASE}/tts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Phraseo-User': voiceUserId() },
-      body: JSON.stringify({ text, lang }),
+      body: JSON.stringify({ text, lang, speaker }),
       timeout: 15000,
     }).then(async (res) => {
       if (res.status === 429) {
@@ -71,14 +82,17 @@ export function fetchAtcAudio(text: string, lang: 'fr' | 'en', onQuota?: (left: 
 export type Speaker = 'atc' | 'pilot';
 
 /**
- * Rendu de chaque interlocuteur (MeloTTS n'a qu'une voix par langue, sans réglage de vitesse ni de style) :
- * - ATC : radio de la tour, débit retouché sans changer la hauteur (FR un peu plate → accélérée, EN trop rapide → ralentie)
- * - pilote : hauteur non conservée, donc ralentir rend la voix aussi plus grave ;
- *   radio de bord un peu moins bonne (bande plus étroite, légère saturation)
+ * Rendu de chaque interlocuteur. Le relais donne une voix différente à l'ATC et au pilote (Aura) :
+ * - ATC : radio de la tour, débit naturel ;
+ * - pilote : radio de bord un peu moins bonne (bande plus étroite, légère saturation).
+ * Réglages du français gardés de MeloTTS (une seule voix : le pilote ralenti, donc plus grave), pour son retour.
  */
-const VOICES: Record<Speaker, { rate: Record<'fr' | 'en', number>; preservesPitch: boolean; band: [number, number]; drive: number }> = {
-  atc: { rate: { fr: 1.1, en: 0.88 }, preservesPitch: true, band: [300, 3400], drive: 0 },
-  pilot: { rate: { fr: 0.92, en: 0.86 }, preservesPitch: false, band: [450, 2800], drive: 3 },
+const VOICES: Record<
+  Speaker,
+  { rate: Record<'fr' | 'en', number>; preservesPitch: Record<'fr' | 'en', boolean>; band: [number, number]; drive: number }
+> = {
+  atc: { rate: { fr: 1.1, en: 1 }, preservesPitch: { fr: true, en: true }, band: [300, 3400], drive: 0 },
+  pilot: { rate: { fr: 0.92, en: 1 }, preservesPitch: { fr: false, en: true }, band: [450, 2800], drive: 3 },
 };
 
 /** Courbe de saturation douce (tanh) : 0 = aucune */
@@ -115,7 +129,7 @@ export async function playRadio(wav: ArrayBuffer, lang: 'fr' | 'en', speaker: Sp
   const url = URL.createObjectURL(new Blob([wav], { type: 'audio/wav' }));
   const audio = new Audio(url);
   audio.playbackRate = voice.rate[lang];
-  audio.preservesPitch = voice.preservesPitch;
+  audio.preservesPitch = voice.preservesPitch[lang];
 
   let chain: AudioNode = context.createMediaElementSource(audio);
   chain = chain.connect(new BiquadFilterNode(context, { type: 'highpass', frequency: voice.band[0] }));

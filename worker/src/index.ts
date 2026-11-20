@@ -3,7 +3,8 @@
  *
  *   GET  /metar/:icao  → METAR NOAA (sans clé), mis en cache 10 min
  *   POST /feedback     → retour « J'ai un retour » : sujet du forum privé d'AvroBB (liaison de service FORUM)
- *   POST /tts          → voix de l'ATC (MeloTTS, Workers AI), WAV mis en cache 30 jours,
+ *   POST /tts          → voix de l'ATC et du pilote (Deepgram Aura, Workers AI ; anglais seulement depuis
+ *                        le retrait de MeloTTS), WAV mis en cache 30 jours,
  *                        quotas du jour par utilisateur anonyme, par IP et au total (Durable Object VoiceQuota)
  *   POST /stt?lang=fr  → réponse du pilote (WAV 16 kHz, 15 s max) transcrite par Whisper, mêmes quotas
  *
@@ -19,6 +20,7 @@ import {
   sttNeurons,
   sttPrompt,
   toMetar,
+  TTS_VOICES,
   ttsAudioBytes,
   ttsCacheKey,
   ttsNeurons,
@@ -156,10 +158,13 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
   }
   const tts = parseTts(body);
   if (!tts) return json({ error: 'Champs invalides' }, 400, cors);
+  // Langue sans voix (français depuis le retrait de MeloTTS) : refus net, sans quota
+  const voice = TTS_VOICES[tts.lang];
+  if (!voice) return json({ error: 'Pas de voix dans cette langue', unavailable: tts.lang }, 501, cors);
 
   // Même réplique avec les mêmes paramètres : servie depuis le cache, sans compter dans la limite ni le quota
   const cache = caches.default;
-  const key = new Request(await ttsCacheKey(tts));
+  const key = new Request(await ttsCacheKey(tts, voice));
   const cached = await cache.match(key);
   if (cached) return new Response(cached.body, { headers: { ...Object.fromEntries(cached.headers), ...cors } });
 
@@ -172,15 +177,22 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
 
   let audio: Uint8Array;
   try {
-    audio = ttsAudioBytes(await env.AI.run('@cf/myshell-ai/melotts', { prompt: tts.text, lang: tts.lang }));
+    const output = await (env.AI.run as (model: string, input: Record<string, unknown>) => Promise<unknown>)(voice.model, {
+      text: tts.text,
+      speaker: voice.speakers[tts.speaker],
+      encoding: 'linear16',
+      container: 'wav',
+      sample_rate: 24000,
+    });
+    audio = await ttsAudioBytes(output);
   } catch (err) {
-    console.error('MeloTTS a échoué', err);
+    console.error(`${voice.model} a échoué`, err);
     return json({ error: 'Synthèse indisponible' }, 502, cors);
   }
 
-  const { left } = await quota.charge(user, ip, ttsNeurons(audio, tts.text), limits);
+  const { left } = await quota.charge(user, ip, ttsNeurons(tts.text, voice), limits);
 
-  // MeloTTS renvoie du WAV (PCM 44,1 kHz mono)
+  // WAV PCM 24 kHz mono
   const headers = { 'Content-Type': 'audio/wav', 'Cache-Control': `public, max-age=${TTS_TTL_S}` };
   ctx.waitUntil(cache.put(key, new Response(audio, { headers })));
   return new Response(audio, { headers: { ...headers, ...cors, 'X-Voice-Quota-Left': left.toFixed(3) } });

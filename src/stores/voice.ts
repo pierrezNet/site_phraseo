@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { API_BASE } from '../utils/relay'
-import { fetchAtcAudio, playRadio, stopRadio, VoiceQuotaError, type QuotaScope } from '../utils/atcAudio'
+import { fetchAtcAudio, playRadio, stopRadio, VOICE_LANGS, VoiceQuotaError, type QuotaScope } from '../utils/atcAudio'
 import { playSelcal, stopSelcal } from '../utils/selcal'
 import { timeIn, translate } from '../i18n'
 import { useLangStore } from './lang'
@@ -42,6 +42,8 @@ export interface SpokenLine {
  */
 export const useVoiceStore = defineStore('voice', () => {
   const available = !!API_BASE
+  /** Une voix existe dans cette langue (plus de voix française depuis le retrait de MeloTTS) */
+  const speaks = (lang: Language) => available && VOICE_LANGS.includes(lang)
   const langStore = useLangStore()
   /** Lecture automatique en vol complet */
   const enabled = ref(readEnabled())
@@ -65,12 +67,12 @@ export const useVoiceStore = defineStore('voice', () => {
   let generation = 0
 
   async function playAll(lines: SpokenLine[], lang: 'fr' | 'en') {
-    if (!available || !lines.length) return
+    if (!speaks(lang) || !lines.length) return
     const mine = ++generation
     stopRadio()
     error.value = ''
     // Toutes les répliques sont demandées d'emblée : la suivante est prête à la fin de la précédente
-    const audios = lines.map((l) => fetchAtcAudio(l.text, lang, (left) => (quotaLeft.value = left)))
+    const audios = lines.map((l) => fetchAtcAudio(l.text, lang, l.pilot ? 'pilot' : 'atc', (left) => (quotaLeft.value = left)))
     audios.forEach((a) => a.catch(() => {}))
     try {
       for (const [i, line] of lines.entries()) {
@@ -123,5 +125,5 @@ export const useVoiceStore = defineStore('voice', () => {
     if (!enabled.value) stop()
   }
 
-  return { available, enabled, loading, playing, error, quotaLeft, quotaBlocked, quotaReached, play, playAll, stop, toggle }
+  return { available, speaks, enabled, loading, playing, error, quotaLeft, quotaBlocked, quotaReached, play, playAll, stop, toggle }
 })

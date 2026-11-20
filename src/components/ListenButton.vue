@@ -48,7 +48,9 @@ const voice = useVoiceStore();
 const langStore = useLangStore();
 const { t } = useI18n();
 
-const enabled = computed(() => voice.available && props.listenable && !!props.speech);
+const enabled = computed(
+  () => voice.speaks(props.lang ?? (langStore.current as 'fr' | 'en')) && props.listenable && !!props.speech
+);
 const loading = computed(() => voice.loading === props.lineKey);
 const playing = computed(() => voice.playing === props.lineKey);
 const label = computed(() =>

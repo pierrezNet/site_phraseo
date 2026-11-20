@@ -99,10 +99,32 @@ export function parseFeedback(body: unknown): Feedback | null {
 
 export const TTS_MAX_CHARS = 600;
 
+export type TtsLang = 'fr' | 'en';
+export type TtsSpeaker = 'atc' | 'pilot';
+
 export interface TtsRequest {
   text: string;
-  lang: 'fr' | 'en';
+  lang: TtsLang;
+  /** Interlocuteur : une voix différente pour l'ATC et le pilote */
+  speaker: TtsSpeaker;
 }
+
+/** Voix de synthèse d'une langue (Workers AI) */
+export interface TtsVoice {
+  model: string;
+  speakers: Record<TtsSpeaker, string>;
+  /** Coût en neurones par caractère (tarif au caractère : 0,015 $ / 1 000 ; 1 000 neurones = 0,011 $) */
+  neuronsPerChar: number;
+}
+
+/**
+ * Langues ayant une voix. MeloTTS (seule voix française de Workers AI) a été retiré le 2026-11-20 :
+ * plus de voix française jusqu'à ce que Cloudflare en propose une. Deepgram Aura 1 en anglais
+ * (Aura 2 refuse le WAV) : WAV 24 kHz, comme attendu par le front.
+ */
+export const TTS_VOICES: Partial<Record<TtsLang, TtsVoice>> = {
+  en: { model: '@cf/deepgram/aura-1', speakers: { atc: 'helios', pilot: 'orion' }, neuronsPerChar: 0.015 / 0.011 },
+};
 
 /** Valide la demande de synthèse ; le texte arrive déjà préparé par le front (src/utils/speech.ts) */
 export function parseTts(body: unknown): TtsRequest | null {
@@ -110,28 +132,36 @@ export function parseTts(body: unknown): TtsRequest | null {
   const b = body as Record<string, unknown>;
   const text = str(b.text).replace(/\s+/g, ' ');
   const lang = str(b.lang);
+  const speaker = str(b.speaker) || 'atc';
   if (!text || text.length > TTS_MAX_CHARS) return null;
   if (lang !== 'fr' && lang !== 'en') return null;
-  return { text, lang };
+  if (speaker !== 'atc' && speaker !== 'pilot') return null;
+  return { text, lang, speaker };
 }
 
 /** Clé de cache stable pour un texte et une langue (SHA-256 hexadécimal) */
-export async function ttsCacheKey({ text, lang }: TtsRequest): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${lang}\n${text}`));
+export async function ttsCacheKey({ text, lang, speaker }: TtsRequest, voice: TtsVoice): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${lang}\n${voice.speakers[speaker]}\n${text}`));
   const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
-  return `https://tts.phraseo.cache/melotts/${hex}`;
+  // Le modèle fait partie de la clé : changer de voix n'en ressert pas une ancienne
+  return `https://tts.phraseo.cache/${voice.model.replace(/[^\w-]/g, '_')}/${hex}`;
 }
 
-/** Sortie MeloTTS : octets MP3, ou objet { audio } en base64 selon la version de l'API */
-export function ttsAudioBytes(output: Uint8Array | { audio: string }): Uint8Array {
+/** Sortie d'un modèle de synthèse : flux ou octets audio, ou objet { audio } en base64 */
+export async function ttsAudioBytes(output: unknown): Promise<Uint8Array> {
   if (output instanceof Uint8Array) return output;
-  return Uint8Array.from(atob(output.audio), (c) => c.charCodeAt(0));
+  if (output instanceof ArrayBuffer) return new Uint8Array(output);
+  if (output instanceof ReadableStream) return new Uint8Array(await new Response(output).arrayBuffer());
+  if (output && typeof (output as { audio?: unknown }).audio === 'string') {
+    return Uint8Array.from(atob((output as { audio: string }).audio), (c) => c.charCodeAt(0));
+  }
+  throw new Error('Sortie de synthèse inattendue');
 }
 
 // ── Quotas voix (plan gratuit Workers AI : 10 000 neurones/jour) ─────────────
 
-/** Coût Workers AI par minute d'audio (MeloTTS mesuré ; Whisper turbo d'après le tarif) */
-export const NEURONS_PER_MINUTE = { tts: 18.6, stt: 45.5 } as const;
+/** Coût Workers AI par minute d'audio (Whisper turbo, d'après le tarif) */
+export const NEURONS_PER_MINUTE = { stt: 45.5 } as const;
 
 export type QuotaScope = 'user' | 'ip' | 'global';
 export type QuotaUsage = Record<QuotaScope, number>;
@@ -174,11 +204,8 @@ export function wavSeconds(bytes: Uint8Array): number | null {
   return byteRate > 0 ? (bytes.length - 44) / byteRate : null;
 }
 
-/** Neurones consommés par une synthèse : durée réelle, sinon estimée (≈ 12 caractères par seconde) */
-export function ttsNeurons(audio: Uint8Array, text: string): number {
-  const seconds = wavSeconds(audio) ?? text.length / 12;
-  return (seconds / 60) * NEURONS_PER_MINUTE.tts;
-}
+/** Neurones consommés par une synthèse : tarif au caractère du texte envoyé */
+export const ttsNeurons = (text: string, voice: TtsVoice): number => text.length * voice.neuronsPerChar;
 
 // ── Reconnaissance vocale (réponse du pilote, phase 2) ───────────────────────
 

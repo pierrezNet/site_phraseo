@@ -52,6 +52,7 @@
       <li>On mobile, quiz answers are spoken: hold “🎙 Hold to talk”, wait for “● TRANSMITTING”, speak, release. If the microphone is refused or the quota is used up, typing comes back.</li>
       <li>Once marked, the aircraft icon plays the expected answer.</li>
       <li><strong>ATC voice</strong> in Settings: during a full flight, ATC speaks automatically. Today's remaining voice quota is shown there.</li>
+      <li><strong>Voices in English only for now</strong>: Cloudflare withdrew its French voice; it will come back as soon as a new one is available. Recognition of your answers works in both languages.</li>
       <li>Synthetic voices with a radio effect; voice and speech recognition have a daily quota, the texts always remain available.</li>
     </ul>
 

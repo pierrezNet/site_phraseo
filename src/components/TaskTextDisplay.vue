@@ -516,7 +516,10 @@ const spokenKeys = new Set<string>();
 // En vol complet, l'ATC parle dès que ses répliques apparaissent (réponse, relance…).
 // Déclaré après les watchers de réinitialisation : un changement de tâche remet d'abord à zéro.
 watch(
-  () => (flight.active && voice.enabled && !voice.quotaBlocked() ? displayedLines.value.filter((l) => !l.isPilot) : []),
+  () =>
+    flight.active && voice.enabled && voice.speaks(exchangeLang.value) && !voice.quotaBlocked()
+      ? displayedLines.value.filter((l) => !l.isPilot)
+      : [],
   (atcLines) => {
     const fresh = atcLines.filter((l) => !spokenKeys.has(l.key));
     if (!fresh.length) return;
@@ -607,7 +610,7 @@ const onKeyDown = (e: KeyboardEvent) => {
     // Pas de défilement, ni de clic sur un bouton qui aurait gardé le focus
     e.preventDefault();
     if (!e.repeat && !radio.recording) startTalk(key);
-  } else if (e.code === 'KeyR' && !e.repeat && voice.available) {
+  } else if (e.code === 'KeyR' && !e.repeat && voice.speaks(exchangeLang.value)) {
     const atc = displayedLines.value.filter((l) => !l.isPilot).at(-1);
     if (!atc) return;
     e.preventDefault();

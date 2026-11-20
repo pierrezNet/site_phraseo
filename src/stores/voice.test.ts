@@ -20,12 +20,13 @@ describe('quota voix', () => {
   })
 
   it('retient la part restante annoncée par le relais', async () => {
-    vi.mocked(fetchAtcAudio).mockImplementation(async (_t, _l, onQuota) => {
+    vi.mocked(fetchAtcAudio).mockImplementation(async (_t, _l, _speaker, onQuota) => {
       onQuota?.(0.72)
       return new ArrayBuffer(8)
     })
     const voice = useVoiceStore()
-    await voice.play({ key: '0', text: 'roger' }, 'fr')
+    await voice.play({ key: '0', text: 'roger', pilot: true }, 'en')
+    expect(fetchAtcAudio).toHaveBeenCalledWith('roger', 'en', 'pilot', expect.any(Function))
     expect(voice.quotaLeft).toBe(0.72)
     expect(voice.quotaBlocked()).toBe(false)
   })
@@ -33,10 +34,18 @@ describe('quota voix', () => {
   it('quota atteint : message et lecture automatique suspendue jusqu’au lendemain', async () => {
     vi.mocked(fetchAtcAudio).mockRejectedValue(new VoiceQuotaError('user'))
     const voice = useVoiceStore()
-    await voice.play({ key: '0', text: 'roger' }, 'fr')
+    await voice.play({ key: '0', text: 'roger' }, 'en')
     expect(voice.quotaBlocked()).toBe(true)
     expect(voice.quotaLeft).toBe(0)
     expect(voice.error).toMatch(/^Quota voix du jour atteint/)
+  })
+
+  it('pas de voix française (MeloTTS retiré) : rien n’est demandé au relais', async () => {
+    const voice = useVoiceStore()
+    expect(voice.speaks('fr')).toBe(false)
+    expect(voice.speaks('en')).toBe(true)
+    await voice.play({ key: '0', text: 'roger' }, 'fr')
+    expect(fetchAtcAudio).not.toHaveBeenCalled()
   })
 
   it('plafond global : message pour tous', () => {

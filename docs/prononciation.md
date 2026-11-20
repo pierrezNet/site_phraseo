@@ -3,7 +3,7 @@
 Référence des règles appliquées par la synthèse vocale, avec leur source et des exemples.
 
 - **Où c'est codé** : [`src/utils/speech.ts`](../src/utils/speech.ts) (texte → parole), testé dans [`speech.test.ts`](../src/utils/speech.test.ts). Chaque règle ci-dessous y a un test.
-- **Moteur** : MeloTTS (Cloudflare Workers AI) via le relais `POST /tts`. Une seule voix par langue, sans réglage de style : on ne contrôle que le texte envoyé et la façon de le jouer.
+- **Moteur** : MeloTTS (Cloudflare Workers AI) via le relais `POST /tts`, **retiré le 2026-11-20** ; l'anglais passe désormais par Deepgram Aura 1 (une voix pour l'ATC, une pour le pilote), le français n'a plus de voix. Les règles ci-dessous restent celles du texte envoyé ; celles propres à MeloTTS sont à revérifier à l'oreille avec Aura. Une seule voix par langue, sans réglage de style : on ne contrôle que le texte envoyé et la façon de le jouer.
 - **Sources** : manuel DGAC de phraséologie, 10ᵉ édition (`Manuel_Phraseologie.pdf`, abrégé « DGAC ») ; wiki IVAO France (« IVAO ») ; écoute par Emmanuel (« oreille ») ; aller-retour MeloTTS → Whisper (« aller-retour », voir en fin de page).
 
 ## Nombres

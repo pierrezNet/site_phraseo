@@ -10,6 +10,7 @@ import {
   quotaLimits,
   quotaVerdict,
   toMetar,
+  TTS_VOICES,
   ttsAudioBytes,
   ttsCacheKey,
   ttsNeurons,
@@ -113,30 +114,37 @@ describe('parseFeedback', () => {
 
 describe('parseTts', () => {
   it('accepte un texte et une langue valides, espaces réduits', () => {
-    expect(parseTts({ text: ' Foxtrot  Sierra Tango ', lang: 'fr' })).toEqual({ text: 'Foxtrot Sierra Tango', lang: 'fr' })
+    expect(parseTts({ text: ' Foxtrot  Sierra Tango ', lang: 'fr' })).toEqual({ text: 'Foxtrot Sierra Tango', lang: 'fr', speaker: 'atc' })
+    expect(parseTts({ text: 'roger', lang: 'en', speaker: 'pilot' })).toMatchObject({ speaker: 'pilot' })
   })
 
   it('refuse texte vide, trop long ou langue inconnue', () => {
     expect(parseTts({ text: '', lang: 'fr' })).toBeNull()
     expect(parseTts({ text: 'a'.repeat(TTS_MAX_CHARS + 1), lang: 'fr' })).toBeNull()
     expect(parseTts({ text: 'hello', lang: 'de' })).toBeNull()
+    expect(parseTts({ text: 'hello', lang: 'en', speaker: 'tour' })).toBeNull()
     expect(parseTts(null)).toBeNull()
   })
 })
 
 describe('ttsCacheKey', () => {
   it('dépend du texte et de la langue', async () => {
-    const a = await ttsCacheKey({ text: 'roger', lang: 'fr' })
-    expect(a).toBe(await ttsCacheKey({ text: 'roger', lang: 'fr' }))
-    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en' }))
+    const voice = TTS_VOICES.en!
+    const a = await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc' }, voice)
+    expect(a).toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc' }, voice))
+    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'pilot' }, voice))
+    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'fr', speaker: 'atc' }, voice))
+    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc' }, { ...voice, model: '@cf/autre' }))
   })
 })
 
 describe('ttsAudioBytes', () => {
-  it('accepte les octets bruts ou le base64', () => {
+  it('accepte les octets, un flux ou le base64', async () => {
     const bytes = new Uint8Array([0x49, 0x44, 0x33])
-    expect(ttsAudioBytes(bytes)).toBe(bytes)
-    expect([...ttsAudioBytes({ audio: 'SUQz' })]).toEqual([0x49, 0x44, 0x33])
+    expect(await ttsAudioBytes(bytes)).toBe(bytes)
+    expect([...(await ttsAudioBytes(new Response(bytes).body))]).toEqual([0x49, 0x44, 0x33])
+    expect([...(await ttsAudioBytes({ audio: 'SUQz' }))]).toEqual([0x49, 0x44, 0x33])
+    await expect(ttsAudioBytes({})).rejects.toThrow()
   })
 })
 
@@ -162,7 +170,7 @@ describe('quotaLimits', () => {
   })
 })
 
-describe('wavSeconds / ttsNeurons', () => {
+describe('wavSeconds', () => {
   // En-tête WAV minimal : 44,1 kHz mono 16 bits → 88 200 octets par seconde
   const wav = (seconds: number) => {
     const bytes = new Uint8Array(44 + 88200 * seconds)
@@ -175,10 +183,15 @@ describe('wavSeconds / ttsNeurons', () => {
     expect(wavSeconds(wav(6))).toBe(6)
     expect(wavSeconds(new Uint8Array(100))).toBeNull()
   })
+})
 
-  it('compte 18,6 neurones par minute d’audio, estimation par le texte à défaut', () => {
-    expect(ttsNeurons(wav(60), '')).toBeCloseTo(18.6)
-    expect(ttsNeurons(new Uint8Array(10), 'x'.repeat(720))).toBeCloseTo(18.6)
+describe('ttsNeurons', () => {
+  it('compte au caractère : 0,015 $ les 1 000 caractères, soit ≈ 1,36 neurone par caractère', () => {
+    expect(ttsNeurons('x'.repeat(1000), TTS_VOICES.en!)).toBeCloseTo(1363.6, 0)
+  })
+
+  it('pas de voix française depuis le retrait de MeloTTS', () => {
+    expect(TTS_VOICES.fr).toBeUndefined()
   })
 })
 

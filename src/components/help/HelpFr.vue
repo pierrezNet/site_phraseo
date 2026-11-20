@@ -52,6 +52,7 @@
       <li>Sur mobile, en mode quiz, on répond à la voix&nbsp;: maintenez le bouton «&nbsp;🎙 Maintenir pour parler&nbsp;», attendez «&nbsp;● ÉMISSION&nbsp;», parlez, relâchez. Si le micro est refusé ou le quota atteint, la saisie au clavier revient.</li>
       <li>Après correction, l'icône avion fait écouter la réponse attendue.</li>
       <li><strong>Voix de l'ATC</strong> dans Réglages&nbsp;: en vol complet, l'ATC parle automatiquement. La part du quota voix restante aujourd'hui s'y affiche.</li>
+      <li><strong>Voix en anglais seulement pour l'instant</strong>&nbsp;: Cloudflare a retiré sa voix française&nbsp;; elle reviendra dès qu'une nouvelle sera proposée. La reconnaissance de vos réponses fonctionne dans les deux langues.</li>
       <li>Voix de synthèse avec effet radio&nbsp;; la voix et la reconnaissance ont un quota quotidien, les textes restent toujours disponibles.</li>
     </ul>
 
