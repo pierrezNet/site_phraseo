@@ -66,6 +66,9 @@
               <MenuItem v-slot="{ active }">
                 <a :href="forumUrl(lang.ui)" target="_blank" rel="noopener noreferrer" :class="['block px-4 py-2 font-medium', active ? 'bg-blue-600 text-white' : '']">{{ t('nav.forum') }}</a>
               </MenuItem>
+              <MenuItem v-if="SUPPORT_URL" v-slot="{ active }">
+                <a :href="SUPPORT_URL" target="_blank" rel="noopener noreferrer" :class="['block px-4 py-2 font-medium text-rose-600', active ? 'bg-blue-600 text-white' : '']">{{ t('support.menu') }}</a>
+              </MenuItem>
             </MenuItems>
           </Menu>
         </div>
@@ -87,6 +90,7 @@
         <button type="button" class="block w-full text-left py-1 text-blue-100" @click="$emit('open-modal','parametres')">{{ t('nav.flightParams') }}</button>
         <button v-for="item in MODAL_LINKS" :key="item.modal" type="button" class="block w-full text-left py-1 text-blue-100" @click="$emit('open-modal', item.modal)">{{ t(item.label) }}</button>
         <a :href="forumUrl(lang.ui)" target="_blank" rel="noopener noreferrer" class="block py-1 text-blue-100 font-medium">{{ t('nav.forum') }}</a>
+        <a v-if="SUPPORT_URL" :href="SUPPORT_URL" target="_blank" rel="noopener noreferrer" class="block py-1 text-rose-200 font-medium">{{ t('support.menu') }}</a>
       </div>
     </DisclosurePanel>
   </Disclosure>
@@ -99,6 +103,7 @@ import { useQuizStore } from '../stores/quiz'
 import { useFlightStore } from '../stores/flight'
 import { forumUrl, useI18n, type MessageKey } from '../i18n'
 import SettingsPanel from './SettingsPanel.vue'
+import { SUPPORT_URL } from '../utils/support'
 import { computed, onMounted } from 'vue'
 
 const MODAL_LINKS: { modal: string; label: MessageKey }[] = [

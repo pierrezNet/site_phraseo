@@ -38,7 +38,10 @@
         {{ t('pref.voice') }}
         <span class="pref-hint">{{ t('pref.voiceHint') }}</span>
         <span v-if="!voice.speaks(lang.current)" class="pref-hint pref-hint--warn">{{ t('pref.voiceNoFr') }}</span>
-        <span v-if="voice.quotaLeft !== null" class="pref-hint">{{ t('pref.voiceQuota', { n: Math.round(voice.quotaLeft * 100) }) }}</span>
+        <span v-if="voice.quotaLeft !== null" class="pref-hint">
+          {{ t('pref.voiceQuota', { n: Math.round(voice.quotaLeft * 100) }) }}
+          <a v-if="SUPPORT_URL" :href="SUPPORT_URL" target="_blank" rel="noopener noreferrer" class="underline">· {{ t('support.menu') }}</a>
+        </span>
       </span>
       <button
         type="button"
@@ -96,6 +99,7 @@ import { useFormStore, LEVEL_OPTIONS, type Language } from '../stores/form'
 import { useQuizStore } from '../stores/quiz'
 import { useVoiceStore } from '../stores/voice'
 import { useI18n } from '../i18n'
+import { SUPPORT_URL } from '../utils/support'
 
 const LANGS: Language[] = ['fr', 'en']
 

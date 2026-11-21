@@ -265,6 +265,10 @@ export const en: Record<MessageKey, string> = {
   'help.weather': 'Weather',
   'help.saving': 'Saving',
 
+  // Soutien (masqué tant que SUPPORT_URL est vide, src/utils/support.ts)
+  'support.menu': '♥ Support',
+  'support.voice': '♥ Support the voice',
+
   // Retours
   'feedback.title': 'Send feedback',
   'feedback.thanks': 'Thank you! Your feedback has been sent.',

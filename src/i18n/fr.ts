@@ -267,6 +267,10 @@ export const fr = {
   'help.weather': 'Météo',
   'help.saving': 'Sauvegarde',
 
+  // Soutien (masqué tant que SUPPORT_URL est vide, src/utils/support.ts)
+  'support.menu': '♥ Soutenir',
+  'support.voice': '♥ Soutenir la voix',
+
   // Retours
   'feedback.title': "J'ai un retour",
   'feedback.thanks': 'Merci ! Ton retour a bien été envoyé.',

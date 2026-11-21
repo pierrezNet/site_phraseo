@@ -155,7 +155,11 @@
       </div>
     </template>
 
-    <p v-if="voice.error" class="ko-text text-sm mb-2">{{ voice.error }}</p>
+    <p v-if="voice.error" class="ko-text text-sm mb-2">
+      {{ voice.error }}
+      <!-- Quota du jour atteint : moment où le soutien a le plus de sens -->
+      <a v-if="SUPPORT_URL && voice.quotaBlocked()" :href="SUPPORT_URL" target="_blank" rel="noopener noreferrer" class="underline font-medium ml-1">{{ t('support.voice') }}</a>
+    </p>
     <p v-if="radio.error" class="ko-text text-sm mb-2">{{ radio.error }}</p>
 
     <!-- Vol complet : passage à l'étape suivante une fois toutes les répliques pilote terminées -->
@@ -206,6 +210,7 @@ import { detectRemarks, isRogerInsteadOfReadback, remarkText, type RemarkCode } 
 import { criticalLabel, useI18n } from '../i18n';
 import { scoreAnswer, requiredText, CRITICAL_TAGS, type Critical, type QuizResult } from '../utils/quizScoring';
 import ListenButton from './ListenButton.vue';
+import { SUPPORT_URL } from '../utils/support';
 
 const props = defineProps<{
   selectedTaskTexts: any[]

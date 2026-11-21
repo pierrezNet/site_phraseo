@@ -9,6 +9,14 @@
       son code sous <a href="https://github.com/pierrezNet/site_phraseo/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">licence MIT</a>.
       Phraséologie réalisée d’après le Manuel de phraséologie à l’usage de la circulation aérienne générale.
     </p>
+    <!-- Soutien : masqué tant que le collectif n'est pas accepté (src/utils/support.ts) -->
+    <template v-if="SUPPORT_URL">
+      <h3 class="text-lg font-semibold mt-3">♥ Soutenir le projet</h3>
+      <p>L'application est gratuite, sans publicité ni compte. Les dons, reçus par un collectif Open Collective (hôte fiscal&nbsp;: Open Source Europe), couvrent uniquement ses frais de fonctionnement, sur factures publiques&nbsp;: voix de synthèse (Microsoft Azure, Cloudflare) et hébergement.</p>
+      <p class="mt-2">
+        <a :href="SUPPORT_URL" target="_blank" rel="noopener noreferrer" class="inline-block px-4 py-2 rounded bg-rose-600 text-white font-medium hover:bg-rose-700 hover:no-underline">♥ Soutenir sur Open Collective</a>
+      </p>
+    </template>
     <a href="https://www.ecologie.gouv.fr/sites/default/files/documents/Manuel_Phras%C3%A9ologie.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 mt-3 p-3 border rounded-lg hover:bg-gray-100 transition-colors">
       <svg class="w-10 h-10 shrink-0 text-red-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6zm7 1.5L18.5 9H14a1 1 0 0 1-1-1V3.5zM9.5 13.5c0-.28.22-.5.5-.5h1c.83 0 1.5.67 1.5 1.5S11.83 16 11 16h-.5v1a.5.5 0 0 1-1 0v-3.5zm1 1.5h.5a.5.5 0 0 0 0-1h-.5v1zm3.5-1.5c0-.28.22-.5.5-.5h.5a1.5 1.5 0 0 1 0 3h-.5a.5.5 0 0 1-.5-.5v-2zm1 .5v1h.5a.5.5 0 0 0 0-1H15zM6.5 13a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-1H5.5a.5.5 0 0 1 0-1H6v-.5H5.5a.5.5 0 0 1 0-1h1z"/>
@@ -33,3 +41,7 @@
     <p class="mt-2">Une mesure d'audience anonyme et sans cookie (Cloudflare Web Analytics) aide à comprendre l'usage du service, sans exploitation de vos adresses IP. Le service de phraséologie peut être utilisé librement mais il convient de le réserver à la simulation de vol.</p>
   </div>
 </template>
+
+<script setup lang="ts">
+import { SUPPORT_URL } from '../../utils/support'
+</script>
