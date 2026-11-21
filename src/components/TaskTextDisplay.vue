@@ -16,18 +16,13 @@
       📋 <strong>{{ t('dialog.brief') }}</strong> {{ flight.currentStep.brief[lang.ui] }}
     </div>
 
-    <!-- Rappel du mode quiz (seulement quand une étape/option est sélectionnée) -->
-    <div v-if="quizActive && renderedLines.length > 0" class="notice text-sm mb-3 px-3 py-2 rounded">
-      <template v-if="flight.active">{{ t('dialog.flightHint', { n: MAX_ATTEMPTS }) }}</template>
-      <template v-else>{{ t('dialog.quizHint') }}</template>
-    </div>
 
     <template v-for="line in displayedLines" :key="line.key">
       <!-- Ligne pilote en mode quiz : saisie + correction -->
       <div
         v-if="line.isPilot && quizActive"
         :class="[
-          'w-full p-4 rounded-md mb-4 shadow border-l-4 bg-blue-100 border-blue-500',
+          'w-full p-3 md:p-4 rounded-md mb-2 md:mb-4 shadow border-l-4 bg-blue-100 border-blue-500',
           { 'ring-2 ring-red-500': radio.recording === line.key }
         ]"
       >
@@ -71,14 +66,14 @@
             class="w-full mt-2 border rounded px-3 py-2 text-sm resize-y"
             @keydown.ctrl.enter="verify(line)"
           ></textarea>
-          <div class="flex justify-end items-center gap-2 mt-2">
+          <!-- Mobile (réponse à la voix) : l'alternat est la barre fixe en bas de l'écran -->
+          <div v-if="!voiceOnly" class="flex justify-end items-center gap-2 mt-2">
             <!-- Alternat : maintenir pour parler (souris, tactile) ; Espace au clavier -->
             <button
               v-if="radio.available"
               type="button"
               :class="[
-                'rounded border select-none touch-none transition-colors talk-btn',
-                voiceOnly ? 'w-full py-4 text-base font-medium' : 'mr-auto px-3 py-1.5 text-sm',
+                'mr-auto px-3 py-1.5 text-sm rounded border select-none touch-none transition-colors talk-btn',
                 radio.recording === line.key ? 'bg-red-600 text-white border-red-600' : 'border-blue-500 hover:bg-blue-500/10'
               ]"
               :disabled="!!radio.transcribing"
@@ -90,7 +85,6 @@
               {{ talkLabel(line.key) }}
             </button>
             <button
-              v-if="!voiceOnly"
               @click="verify(line)"
               :disabled="!(answers[line.key] && answers[line.key].trim())"
               class="px-4 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -152,7 +146,8 @@
         v-else
         :class="[
           'w-full p-4 rounded-md py-2 mb-4 shadow transition border-l-4',
-          line.isPilot ? 'bg-blue-100 border-blue-500' : 'bg-orange-100 border-orange-500'
+          line.isPilot ? 'bg-blue-100 border-blue-500' : 'bg-orange-100 border-orange-500',
+          'max-md:p-3 max-md:mb-2'
         ]"
       >
         <ListenButton :line-key="line.key" :speech="line.speech" :is-pilot="line.isPilot" :lang="exchangeLang" :selcal="line.selcal" class="mr-2" />
@@ -169,6 +164,27 @@
         {{ t(flight.isLastStep ? 'flight.finish' : 'flight.next') }}
       </button>
     </div>
+
+    <!-- Mobile : alternat en barre fixe sous le pouce, pour la réplique pilote attendue -->
+    <template v-if="talkBarKey !== null">
+      <div class="h-20" aria-hidden="true"></div>
+      <div class="talk-bar fixed inset-x-0 bottom-0 z-30 px-3 pt-2">
+          <button
+            type="button"
+            :class="[
+              'w-full py-3 rounded-lg border text-base font-medium select-none touch-none transition-colors talk-btn',
+              radio.recording === talkBarKey ? 'bg-red-600 text-white border-red-600' : 'border-blue-500 bg-blue-600 text-white'
+            ]"
+            :disabled="!!radio.transcribing"
+            @pointerdown.prevent="holdTalk($event, talkBarKey)"
+            @pointerup="endTalk()"
+            @pointercancel="endTalk()"
+            @contextmenu.prevent
+          >
+            {{ talkLabel(talkBarKey) }}
+          </button>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -559,6 +575,12 @@ const isTouch = (() => {
 /** Mobile : la réponse se donne à la voix, sauf micro refusé ou quota atteint (retour au clavier) */
 const voiceOnly = computed(() => isTouch && radio.available && !radio.micDenied && !voice.quotaBlocked());
 
+/** Barre d'alternat (mobile) : première réplique pilote qui attend encore sa réponse */
+const talkBarKey = computed((): string | null => {
+  if (!quizActive.value || !voiceOnly.value) return null;
+  return displayedLines.value.find((l) => l.isPilot && !resultOf(l.key))?.key ?? null;
+});
+
 const talkLabel = (key: string): string => {
   if (radio.transcribing === key) return t('radio.transcribing');
   if (radio.recording === key) return t(radio.live ? 'radio.release' : 'radio.opening');
@@ -646,6 +668,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 /* iOS : pas de loupe ni de menu de sélection pendant l'appui long sur le bouton d'alternat */
+/* Barre d'alternat : fond opaque, marge pour la barre de gestes du téléphone */
+.talk-bar {
+  background-color: var(--group-bg);
+  border-top: 1px solid var(--task-border);
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
 .talk-btn {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

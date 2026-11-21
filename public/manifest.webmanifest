@@ -1,0 +1,17 @@
+{
+  "name": "Phraséologie aéronautique pour les pilotes virtuels",
+  "short_name": "Phraséologie",
+  "description": "Entraînement à la phraséologie aéronautique VFR et IFR, en français et en anglais.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -9,6 +9,7 @@
       <li><strong>Interface language</strong>: the language of menus and explanations. You can, for instance, keep the interface in English and practise the exchanges in French.</li>
     </ul>
     <p>Fill in your flight (<strong>Flight parameters</strong>), pick a flight phase, then the matching task: the phraseology is shown with your own flight data.</p>
+    <p>On a phone, add the app to your home screen (browser menu: <strong>Install app</strong> or <strong>Add to Home screen</strong>): it then opens full screen, without the address bar. The ‹ › arrows above the tasks move from one flight phase to the next.</p>
 
     <h3 id="aide-niveaux" class="font-semibold text-base mt-4">Levels</h3>
     <p>Choose your level in <strong>Settings</strong>:</p>
@@ -36,7 +37,7 @@
 
     <h3 id="aide-vol" class="font-semibold text-base mt-4">Full flight</h3>
     <ul class="list-disc ml-5 space-y-1">
-      <li>In quiz mode, the <strong>Full flight</strong> button chains every step of a flight, from start-up to the stand, at the chosen level. Pick the flight (the first one is preselected), then <strong>Start the flight</strong>.</li>
+      <li>In quiz mode, the <strong>Full flight</strong> button chains every step of a flight, from start-up to the stand, at the chosen level (on a phone: in the ☰ menu). Pick the flight (the first one is preselected), then <strong>Start the flight</strong>.</li>
       <li>A <strong>brief</strong> gives the pilot's decision at each step; <strong>unexpected events</strong> (⚡) may occur.</li>
       <li><strong>Two attempts</strong> per line; if your intention is missing, ATC asks for it.</li>
       <li>The flight strip recalls your parameters: one click inserts the value into your answer.</li>
@@ -49,7 +50,7 @@
       <li><strong>R</strong> key: replays (or stops) the last ATC line.</li>
       <li>In quiz mode, <strong>hold Space</strong> (or the “🎙 Hold to talk” button, or the aircraft icon) while you speak and release to send: your answer appears (“Heard: …”) and is marked at once. 15 seconds at most; the browser asks for microphone access the first time.</li>
       <li>In the answer box, Space talks while the box is empty; once you type, Space (and R) type normally.</li>
-      <li>On mobile, quiz answers are spoken: hold “🎙 Hold to talk”, wait for “● TRANSMITTING”, speak, release. If the microphone is refused or the quota is used up, typing comes back.</li>
+      <li>On mobile, quiz answers are spoken: hold the “🎙 Hold to talk” bar at the bottom of the screen, wait for “● TRANSMITTING”, speak, release. If the microphone is refused or the quota is used up, typing comes back.</li>
       <li>Once marked, the aircraft icon plays the expected answer.</li>
       <li><strong>ATC voice</strong> in Settings: during a full flight, ATC speaks automatically. Today's remaining voice quota is shown there.</li>
       <li><strong>Voices in English only for now</strong>: Cloudflare withdrew its French voice; it will come back as soon as a new one is available. Recognition of your answers works in both languages.</li>

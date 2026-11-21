@@ -1,7 +1,7 @@
 <template>
   <div class="p-1 md:p-4" v-if="isReady">
-    <!-- Onglets des phases de vol -->
-    <div class="flex justify-between md:justify-start gap-1 md:gap-4 mb-1 md:mb-5">
+    <!-- Onglets des phases de vol (bureau ; sur mobile : menu en tête des tâches) -->
+    <div class="hidden md:flex justify-start gap-4 mb-5">
       <button
         v-for="(tab, i) in phaseTabs"
         :key="i"
@@ -34,6 +34,17 @@
         :currentTaskId="simulatorStore.currentTaskId"
         @select="logSubgraphTask"
       />
+    </div>
+
+    <!-- Mobile : phase précédente / suivante, dans l'ordre du vol -->
+    <div class="md:hidden flex items-center gap-1 mb-1">
+      <button type="button" class="phase-tab phase-arrow" :disabled="phaseIndex <= 0" :aria-label="t('tasks.prevPhase')" @click="stepPhase(-1)">‹</button>
+      <p class="phase-tab phase-tab--active flex-1 flex items-center justify-center gap-2 rounded-md py-1.5 text-sm font-medium" aria-live="polite">
+        <span v-html="currentPhase?.icon" class="inline-block w-5 h-5" aria-hidden="true"></span>
+        {{ currentPhase?.label }}
+        <span class="text-xs opacity-70">{{ phaseIndex + 1 }}/{{ phaseTabs.length }}</span>
+      </p>
+      <button type="button" class="phase-tab phase-arrow" :disabled="phaseIndex >= phaseTabs.length - 1" :aria-label="t('tasks.nextPhase')" @click="stepPhase(1)">›</button>
     </div>
 
     <!-- Contenu des tâches par phase — accordéon par sous-thème -->
@@ -120,7 +131,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['task-selected', 'update:context']);
 
-const { lang } = useI18n();
+const { t, lang } = useI18n();
 const formStore = useFormStore();
 const weatherStore = useWeatherStore();
 const simulatorStore = useSimulatorStore();
@@ -203,6 +214,14 @@ const phaseTabs = computed(() => {
     label: phaseLabel(id)
   }));
 });
+
+const phaseIndex = computed(() => phaseTabs.value.findIndex((tab) => tab.id === selectedTab.value));
+const currentPhase = computed(() => phaseTabs.value[phaseIndex.value]);
+/** Mobile : phase précédente (-1) ou suivante (+1) */
+const stepPhase = (delta: number) => {
+  const next = phaseTabs.value[phaseIndex.value + delta];
+  if (next) selectedTab.value = next.id;
+};
 
 const showCircuitMap = computed(() =>
   props.currentMode === 'VFR' && formStore.form.LEVEL === 'débutant' && selectedTab.value !== 'EX'

@@ -14,7 +14,8 @@
       <div v-scroll-fade class="col-span-12 md:col-span-4 max-h-[40%] md:max-h-none overflow-y-auto md:overflow-visible scroll-fade">
         <!-- Vol complet (proposé en mode quiz) : la frise remplace les onglets (Tabs reste monté pour garder son état) -->
         <FlightPanel v-if="flight.active" />
-        <div v-else-if="quizStore.enabled" class="px-1 md:px-4 pt-1 md:pt-4">
+        <!-- Mobile : dans le menu burger -->
+        <div v-else-if="quizStore.enabled" class="hidden md:block md:px-4 md:pt-4">
           <button type="button" class="task-btn w-full rounded-md px-3 py-1.5 text-sm font-medium" @click="flightPickerModal?.open()">
             ✈ {{ t('flight.full') }}
           </button>
@@ -40,6 +41,7 @@
     <AboutModal ref="aboutModal" />
     <FeedbackModal ref="feedbackModal" />
     <FlightPickerModal ref="flightPickerModal" />
+    <AppToast />
   </div>
 </template>
 
@@ -56,7 +58,9 @@ import FlightStrip from '@/components/FlightStrip.vue';
 import FlightPanel from '@/components/FlightPanel.vue';
 import FlightSummary from '@/components/FlightSummary.vue';
 import FlightPickerModal from '@/components/FlightPickerModal.vue';
-import { useFlightStore } from '@/stores/flight';
+import AppToast from '@/components/AppToast.vue';
+import { useToastStore } from '@/stores/toast';
+import { useFlightStore, MAX_ATTEMPTS } from '@/stores/flight';
 import { useQuizStore } from '@/stores/quiz';
 import { useFormStore } from '@/stores/form';
 import { useI18n } from '@/i18n';
@@ -155,6 +159,11 @@ const updateContext = (ctx: { step: string; option: string }) => {
   taskContext.value = ctx;
 };
 
+// Explications du quiz et du vol complet : affichées au moment où on les lance, puis effacées
+const toast = useToastStore();
+watch(() => quizStore.enabled, (on) => on && !flight.active && toast.show(t('dialog.quizHint')));
+watch(() => flight.active, (on) => on && toast.show(t('dialog.flightHint', { n: MAX_ATTEMPTS })));
+
 // Changer de niveau pendant un vol le relance à ce niveau (les étapes diffèrent)
 watch(
   () => formStore.form.LEVEL,
@@ -175,6 +184,7 @@ const openModal = (modalName: string) => {
   if (modalName === 'parametres') parametresModal.value?.open();
   if (modalName === 'about') aboutModal.value?.open();
   if (modalName === 'feedback') feedbackModal.value?.open();
+  if (modalName === 'flight') flightPickerModal.value?.open();
 };
 
 const selectTask = (tabCode: string, taskId: string) => {

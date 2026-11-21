@@ -98,6 +98,8 @@ export const en: Record<MessageKey, string> = {
 
   // Dialogues et quiz
   'tasks.options': 'Options',
+  'tasks.prevPhase': 'Previous phase',
+  'tasks.nextPhase': 'Next phase',
   'dialog.title': 'Exchanges',
   'dialog.step': 'Step: ',
   'dialog.englishOnly': '🇬🇧 English-only exchange (oceanic HF): shown, spoken and marked in English.',
@@ -169,6 +171,8 @@ export const en: Record<MessageKey, string> = {
   'strip.invite': '👉 Customise your flight — ',
   'strip.insert': 'Insert “{text}” into your answer',
   'strip.edit': '✎ Edit',
+  'strip.expand': 'Show all flight parameters',
+  'strip.collapse': 'Collapse the flight parameters',
   'strip.parking': 'Stand ',
   'strip.runway': 'Runway ',
   'strip.info': 'Info ',

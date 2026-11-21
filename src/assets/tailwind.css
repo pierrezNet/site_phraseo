@@ -115,6 +115,20 @@
     .strip__edit {
         color: var(--accent-line);
     }
+    /* Boutons ronds du bandeau (mobile) : modifier, déplier */
+    .strip__round {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9999px;
+        border: 1.5px solid var(--accent-line);
+        color: var(--accent-line);
+    }
+    .strip__round:active {
+        background-color: var(--task-hover);
+    }
     .notice {
         background-color: var(--notice-bg);
         border: 1px solid var(--notice-border);
@@ -140,6 +154,17 @@
 
     .phase-tab svg {
         fill: currentColor;
+    }
+    /* Flèches de phase (mobile) */
+    .phase-arrow {
+        width: 2.5rem;
+        align-self: stretch;
+        border-radius: 0.375rem;
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+    .phase-arrow:disabled {
+        opacity: 0.3;
     }
     .phase-tab:hover {
         background-color: var(--task-hover);

@@ -1,17 +1,18 @@
 <template>
   <div
     :class="[
-      'strip w-full rounded-lg px-3 py-2 mb-3 border transition flex items-center gap-2 flex-wrap',
+      'strip w-full rounded-lg px-3 py-1 md:py-2 mb-1 md:mb-3 border transition flex items-center gap-2 md:flex-wrap',
       highlight && 'strip--highlight'
     ]"
   >
-    <span class="text-lg shrink-0">✈</span>
+    <span class="hidden md:inline text-lg shrink-0">✈</span>
     <span class="flex-1 text-sm min-w-0">
       <button v-if="highlight" type="button" class="strip__invite font-semibold" @click="onEdit">{{ t('strip.invite') }}</button>
       <!-- Chaque élément s'insère dans la réponse en cours (évite de tout retaper) -->
       <template v-for="(item, i) in items" :key="item.key">
-        <span v-if="i > 0" class="opacity-70">{{ item.sep }}</span>
-        <span :class="i === 0 ? 'font-medium' : 'opacity-70'">
+        <!-- Mobile replié : indicatif et trajet seulement -->
+        <span v-if="i > 0" :class="['opacity-70', hiddenOnMobile(item) && 'max-md:hidden']">{{ item.sep }}</span>
+        <span :class="[i === 0 ? 'font-medium' : 'opacity-70', hiddenOnMobile(item) && 'max-md:hidden']">
           {{ item.label }}<button
             type="button"
             class="strip__chip"
@@ -23,7 +24,26 @@
         </span>
       </template>
     </span>
-    <button type="button" class="strip__edit shrink-0 text-sm font-medium whitespace-nowrap" @click="onEdit">{{ t('strip.edit') }}</button>
+    <!-- Mobile : deux boutons ronds calés à droite, modifier et déplier / replier -->
+    <div class="md:hidden flex items-center gap-1.5 shrink-0 self-center">
+      <button type="button" class="strip__round" :title="t('nav.flightParams')" :aria-label="t('nav.flightParams')" @click="onEdit">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="strip__round"
+        :aria-expanded="expanded"
+        :aria-label="t(expanded ? 'strip.collapse' : 'strip.expand')"
+        @click="expanded = !expanded"
+      >
+        <svg :class="['w-4 h-4 transition-transform', expanded && 'rotate-180']" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+    </div>
+    <button type="button" class="hidden md:inline strip__edit shrink-0 text-sm font-medium whitespace-nowrap" @click="onEdit">{{ t('strip.edit') }}</button>
   </div>
 </template>
 
@@ -92,6 +112,11 @@ const items = computed(() => {
         ]),
   ];
 });
+
+/** Mobile : bandeau replié sur une ligne (indicatif, départ → arrivée), déplié au toucher */
+const expanded = ref(false);
+const BRIEF = ['CAL', 'DEP', 'ARR'];
+const hiddenOnMobile = (item: { key: string }) => !expanded.value && !BRIEF.includes(item.key);
 
 // Surligné tant que l'utilisateur n'a pas ouvert les paramètres depuis le bandeau
 const highlight = ref(false);

@@ -73,7 +73,14 @@
     </div>
 
     <!-- Mobile : mêmes réglages, puis les pages -->
-    <DisclosurePanel class="md:hidden bg-blue-800 px-4 py-4">
+    <DisclosurePanel v-slot="{ close }" class="md:hidden bg-blue-800 px-4 py-4">
+      <!-- Vol complet (quiz) : ici sur mobile plutôt qu'au-dessus des tâches -->
+      <button
+        v-if="quizStore.enabled && !flight.active"
+        type="button"
+        class="w-full mb-3 rounded-md bg-white text-blue-900 font-medium py-2"
+        @click="close(); $emit('open-modal', 'flight')"
+      >✈ {{ t('flight.full') }}</button>
       <SettingsPanel />
       <hr class="border-blue-700 my-3">
       <div class="space-y-1">
@@ -89,6 +96,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, MenuItem, Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { useFormStore } from '../stores/form'
 import { useQuizStore } from '../stores/quiz'
+import { useFlightStore } from '../stores/flight'
 import { forumUrl, useI18n, type MessageKey } from '../i18n'
 import SettingsPanel from './SettingsPanel.vue'
 import { computed, onMounted } from 'vue'
@@ -104,6 +112,7 @@ const emit = defineEmits(['update:mode', 'open-modal', 'select-task'])
 const { t, lang } = useI18n()
 const formStore = useFormStore()
 const quizStore = useQuizStore()
+const flight = useFlightStore()
 
 // Gestion du mode de vol (IFR/VFR), porté par le store du formulaire
 const flightMode = computed(() => formStore.mode)

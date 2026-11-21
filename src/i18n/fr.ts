@@ -100,6 +100,8 @@ export const fr = {
 
   // Dialogues et quiz
   'tasks.options': 'Options',
+  'tasks.prevPhase': 'Phase précédente',
+  'tasks.nextPhase': 'Phase suivante',
   'dialog.title': 'Dialogues',
   'dialog.step': 'Étape : ',
   'dialog.englishOnly': "🇬🇧 Échange en anglais uniquement (HF océanique) : il s'affiche, se dit et se note en anglais.",
@@ -171,6 +173,8 @@ export const fr = {
   'strip.invite': '👉 Personnalisez votre vol — ',
   'strip.insert': 'Insérer « {text} » dans la réponse',
   'strip.edit': '✎ Modifier',
+  'strip.expand': 'Afficher tous les paramètres du vol',
+  'strip.collapse': 'Replier les paramètres du vol',
   'strip.parking': 'Parking ',
   'strip.runway': 'Piste ',
   'strip.info': 'Info ',

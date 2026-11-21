@@ -9,6 +9,7 @@
       <li><strong>Langue de l'interface</strong>&nbsp;: celle des menus et des explications. Vous pouvez par exemple garder l'interface en français et vous entraîner aux échanges en anglais.</li>
     </ul>
     <p>Renseignez votre vol (<strong>Paramètres du vol</strong>), cliquez sur une phase de vol puis sur la tâche correspondante&nbsp;: les textes de phraséologie s'affichent avec les données de votre vol.</p>
+    <p>Sur téléphone, ajoutez l'application à l'écran d'accueil (menu du navigateur&nbsp;: <strong>Installer l'application</strong> ou <strong>Ajouter à l'écran d'accueil</strong>)&nbsp;: elle s'ouvre alors en plein écran, sans barre d'adresse. Les flèches ‹ › au-dessus des tâches passent d'une phase de vol à l'autre.</p>
 
     <h3 id="aide-niveaux" class="font-semibold text-base mt-4">Niveaux</h3>
     <p>Choisissez votre niveau dans <strong>Réglages</strong>&nbsp;:</p>
@@ -36,7 +37,7 @@
 
     <h3 id="aide-vol" class="font-semibold text-base mt-4">Vol complet</h3>
     <ul class="list-disc ml-5 space-y-1">
-      <li>En mode quiz, le bouton <strong>Vol complet</strong> enchaîne toutes les étapes d'un vol, de la mise en route au parking, au niveau choisi. Choisissez le vol (le premier est proposé), puis <strong>Valider</strong>.</li>
+      <li>En mode quiz, le bouton <strong>Vol complet</strong> enchaîne toutes les étapes d'un vol, de la mise en route au parking, au niveau choisi (sur téléphone&nbsp;: dans le menu ☰). Choisissez le vol (le premier est proposé), puis <strong>Valider</strong>.</li>
       <li>Une <strong>consigne</strong> indique la décision du pilote à chaque étape&nbsp;; des <strong>imprévus</strong> (⚡) peuvent survenir.</li>
       <li><strong>Deux essais</strong> par réplique&nbsp;; si l'intention manque, l'ATC vous relance.</li>
       <li>Le bandeau du vol rappelle vos paramètres&nbsp;: un clic insère la valeur dans votre réponse.</li>
@@ -49,7 +50,7 @@
       <li>Touche <strong>R</strong>&nbsp;: réécoute (ou arrête) la dernière réplique de l'ATC.</li>
       <li>En mode quiz, <strong>maintenez Espace</strong> (ou le bouton «&nbsp;🎙 Maintenir pour parler&nbsp;», ou l'icône avion) pendant que vous parlez, relâchez pour envoyer&nbsp;: votre réponse s'affiche («&nbsp;Entendu&nbsp;: …&nbsp;») et est notée aussitôt. 15 secondes maximum&nbsp;; le navigateur demande l'accès au micro la première fois.</li>
       <li>Dans la zone de réponse, Espace sert à parler tant qu'elle est vide&nbsp;; dès que vous tapez, Espace écrit normalement (et R aussi).</li>
-      <li>Sur mobile, en mode quiz, on répond à la voix&nbsp;: maintenez le bouton «&nbsp;🎙 Maintenir pour parler&nbsp;», attendez «&nbsp;● ÉMISSION&nbsp;», parlez, relâchez. Si le micro est refusé ou le quota atteint, la saisie au clavier revient.</li>
+      <li>Sur mobile, en mode quiz, on répond à la voix&nbsp;: maintenez la barre «&nbsp;🎙 Maintenir pour parler&nbsp;» en bas de l'écran, attendez «&nbsp;● ÉMISSION&nbsp;», parlez, relâchez. Si le micro est refusé ou le quota atteint, la saisie au clavier revient.</li>
       <li>Après correction, l'icône avion fait écouter la réponse attendue.</li>
       <li><strong>Voix de l'ATC</strong> dans Réglages&nbsp;: en vol complet, l'ATC parle automatiquement. La part du quota voix restante aujourd'hui s'y affiche.</li>
       <li><strong>Voix en anglais seulement pour l'instant</strong>&nbsp;: Cloudflare a retiré sa voix française&nbsp;; elle reviendra dès qu'une nouvelle sera proposée. La reconnaissance de vos réponses fonctionne dans les deux langues.</li>
