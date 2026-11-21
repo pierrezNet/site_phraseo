@@ -4,7 +4,7 @@
       <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md max-h-screen overflow-y-auto">
         <div class="flex justify-between items-center border-b pb-2">
           <h2 class="text-lg font-semibold">{{ t('flight.full') }}</h2>
-          <button @click="close" class="text-gray-600 hover:text-gray-800" :aria-label="t('common.close')">&times;</button>
+          <button @click="close" type="button" class="modal-close" :aria-label="t('common.close')">&times;</button>
         </div>
 
         <p class="mt-3 text-sm opacity-80">

@@ -249,6 +249,26 @@ html[lang="en"] div#instructions > div:not(:has(div)):after {
 .modal a {
     @apply text-blue-600 hover:underline;
 }
+/* Croix de fermeture des modales : grande, contrastée sur les deux thèmes */
+.modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: currentColor;
+    opacity: 0.75;
+    transition: opacity .15s, background-color .15s;
+}
+.modal-close:hover,
+.modal-close:focus-visible {
+    opacity: 1;
+    background-color: rgb(59 130 246 / 0.15);
+    outline: none;
+}
 /* Bouton « Soutenir » : texte blanc sur fond rose, malgré le style des liens des modales */
 .modal a.support-btn {
     color: #fff;

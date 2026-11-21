@@ -6,7 +6,7 @@
       <div ref="scroller" class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-screen overflow-y-auto">
         <div class="flex justify-between items-center border-b pb-2">
           <h4 class="text-lg font-semibold">{{ t('nav.help') }}</h4>
-          <button @click="close" class="text-gray-600 hover:text-gray-800" :aria-label="t('help.close')">
+          <button @click="close" type="button" class="modal-close" :aria-label="t('help.close')">
             &times;
           </button>
         </div>
