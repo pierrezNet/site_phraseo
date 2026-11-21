@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { API_BASE } from '../utils/relay'
-import { fetchAtcAudio, playRadio, stopRadio, VOICE_LANGS, VoiceQuotaError, type QuotaScope } from '../utils/atcAudio'
+import { fetchAtcAudio, playRadio, stopRadio, VOICE_LANGS, VoiceLangError, VoiceQuotaError, type QuotaScope } from '../utils/atcAudio'
 import { playSelcal, stopSelcal } from '../utils/selcal'
 import { timeIn, translate } from '../i18n'
 import { useLangStore } from './lang'
@@ -42,8 +42,10 @@ export interface SpokenLine {
  */
 export const useVoiceStore = defineStore('voice', () => {
   const available = !!API_BASE
-  /** Une voix existe dans cette langue (plus de voix française depuis le retrait de MeloTTS) */
-  const speaks = (lang: Language) => available && VOICE_LANGS.includes(lang)
+  /** Langues refusées par le relais pendant la session (voix française non configurée ou offre gratuite épuisée) */
+  const missingLangs = ref<Language[]>([])
+  /** Une voix existe dans cette langue */
+  const speaks = (lang: Language) => available && VOICE_LANGS.includes(lang) && !missingLangs.value.includes(lang)
   const langStore = useLangStore()
   /** Lecture automatique en vol complet */
   const enabled = ref(readEnabled())
@@ -90,7 +92,10 @@ export const useVoiceStore = defineStore('voice', () => {
       }
     } catch (e) {
       if (mine !== generation) return
-      if (e instanceof VoiceQuotaError) {
+      if (e instanceof VoiceLangError) {
+        if (!missingLangs.value.includes(e.lang)) missingLangs.value.push(e.lang)
+        error.value = translate(langStore.ui, 'pref.voiceNoFr')
+      } else if (e instanceof VoiceQuotaError) {
         quotaReached()
         error.value = quotaMessage(e.scope, new Date(), langStore.ui)
       } else {
@@ -125,5 +130,5 @@ export const useVoiceStore = defineStore('voice', () => {
     if (!enabled.value) stop()
   }
 
-  return { available, speaks, enabled, loading, playing, error, quotaLeft, quotaBlocked, quotaReached, play, playAll, stop, toggle }
+  return { available, speaks, missingLangs, enabled, loading, playing, error, quotaLeft, quotaBlocked, quotaReached, play, playAll, stop, toggle }
 })

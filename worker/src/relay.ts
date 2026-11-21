@@ -109,22 +109,38 @@ export interface TtsRequest {
   speaker: TtsSpeaker;
 }
 
-/** Voix de synthèse d'une langue (Workers AI) */
+/** Voix de synthèse d'une langue : Workers AI, ou Azure AI Speech (clé en secret du Worker) */
 export interface TtsVoice {
+  provider: 'workers-ai' | 'azure';
+  /** Modèle Workers AI, ou nom de la voix Azure pour le cache */
   model: string;
   speakers: Record<TtsSpeaker, string>;
-  /** Coût en neurones par caractère (tarif au caractère : 0,015 $ / 1 000 ; 1 000 neurones = 0,011 $) */
+  /** Poids d'un caractère dans le quota voix, exprimé en neurones */
   neuronsPerChar: number;
 }
 
 /**
- * Langues ayant une voix. MeloTTS (seule voix française de Workers AI) a été retiré le 2026-11-20 :
- * plus de voix française jusqu'à ce que Cloudflare en propose une. Deepgram Aura 1 en anglais
- * (Aura 2 refuse le WAV) : WAV 24 kHz, comme attendu par le front.
+ * Voix de chaque langue.
+ * - Anglais : Deepgram Aura 1 sur Workers AI (Aura 2 refuse le WAV), facturé 0,015 $ les 1 000 caractères,
+ *   1 000 neurones = 0,011 $.
+ * - Français : Azure AI Speech, offre gratuite F0 (500 000 caractères par mois, refus au-delà, jamais facturé),
+ *   depuis le retrait de MeloTTS (2026-11-20), seule voix française de Workers AI. Un caractère pèse 0,5 neurone :
+ *   le plafond global du jour (8 000) reste sous 500 000 / 30 caractères.
+ * WAV 24 kHz dans les deux cas, comme attendu par le front.
  */
-export const TTS_VOICES: Partial<Record<TtsLang, TtsVoice>> = {
-  en: { model: '@cf/deepgram/aura-1', speakers: { atc: 'helios', pilot: 'orion' }, neuronsPerChar: 0.015 / 0.011 },
+export const TTS_VOICES: Record<TtsLang, TtsVoice> = {
+  en: { provider: 'workers-ai', model: '@cf/deepgram/aura-1', speakers: { atc: 'helios', pilot: 'orion' }, neuronsPerChar: 0.015 / 0.011 },
+  fr: { provider: 'azure', model: 'azure-tts', speakers: { atc: 'fr-FR-HenriNeural', pilot: 'fr-FR-AlainNeural' }, neuronsPerChar: 0.5 },
 };
+
+const escapeXml = (s: string) =>
+  s.replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' })[c]!);
+
+/** Demande Azure (SSML) : la voix et sa langue, le texte échappé */
+export function azureSsml(text: string, voiceName: string): string {
+  const lang = voiceName.slice(0, 5);
+  return `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="${lang}"><voice name="${voiceName}">${escapeXml(text)}</voice></speak>`;
+}
 
 /** Valide la demande de synthèse ; le texte arrive déjà préparé par le front (src/utils/speech.ts) */
 export function parseTts(body: unknown): TtsRequest | null {

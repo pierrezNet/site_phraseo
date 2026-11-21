@@ -11,6 +11,7 @@ import {
   quotaVerdict,
   toMetar,
   TTS_VOICES,
+  azureSsml,
   ttsAudioBytes,
   ttsCacheKey,
   ttsNeurons,
@@ -129,7 +130,7 @@ describe('parseTts', () => {
 
 describe('ttsCacheKey', () => {
   it('dépend du texte et de la langue', async () => {
-    const voice = TTS_VOICES.en!
+    const voice = TTS_VOICES.en
     const a = await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc' }, voice)
     expect(a).toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc' }, voice))
     expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'pilot' }, voice))
@@ -187,11 +188,20 @@ describe('wavSeconds', () => {
 
 describe('ttsNeurons', () => {
   it('compte au caractère : 0,015 $ les 1 000 caractères, soit ≈ 1,36 neurone par caractère', () => {
-    expect(ttsNeurons('x'.repeat(1000), TTS_VOICES.en!)).toBeCloseTo(1363.6, 0)
+    expect(ttsNeurons('x'.repeat(1000), TTS_VOICES.en)).toBeCloseTo(1363.6, 0)
   })
 
-  it('pas de voix française depuis le retrait de MeloTTS', () => {
-    expect(TTS_VOICES.fr).toBeUndefined()
+  it('français : Azure, un caractère pèse 0,5 neurone (plafond global sous l’offre gratuite)', () => {
+    expect(TTS_VOICES.fr.provider).toBe('azure')
+    expect(ttsNeurons('x'.repeat(1000), TTS_VOICES.fr)).toBe(500)
+  })
+})
+
+describe('azureSsml', () => {
+  it('nomme la voix et sa langue, texte échappé', () => {
+    expect(azureSsml('Piste 26 <gauche> & "vent"', 'fr-FR-HenriNeural')).toBe(
+      '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="fr-FR"><voice name="fr-FR-HenriNeural">Piste 26 &lt;gauche&gt; &amp; &quot;vent&quot;</voice></speak>'
+    )
   })
 })
 

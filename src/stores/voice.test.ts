@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
-import { VoiceQuotaError } from '../utils/atcAudio'
+import { VoiceLangError, VoiceQuotaError } from '../utils/atcAudio'
 import { useVoiceStore, quotaMessage } from './voice'
 
 vi.mock('../utils/relay', () => ({ API_BASE: 'http://relais.test' }))
@@ -40,11 +40,16 @@ describe('quota voix', () => {
     expect(voice.error).toMatch(/^Quota voix du jour atteint/)
   })
 
-  it('pas de voix française (MeloTTS retiré) : rien n’est demandé au relais', async () => {
+  it('voix française refusée par le relais : retirée pour la session, message, plus de demande', async () => {
+    vi.mocked(fetchAtcAudio).mockRejectedValue(new VoiceLangError('fr'))
     const voice = useVoiceStore()
+    expect(voice.speaks('fr')).toBe(true)
+    await voice.play({ key: '0', text: 'roger' }, 'fr')
     expect(voice.speaks('fr')).toBe(false)
     expect(voice.speaks('en')).toBe(true)
-    await voice.play({ key: '0', text: 'roger' }, 'fr')
+    expect(voice.error).toMatch(/^Voix française indisponible/)
+    vi.mocked(fetchAtcAudio).mockClear()
+    await voice.play({ key: '1', text: 'roger' }, 'fr')
     expect(fetchAtcAudio).not.toHaveBeenCalled()
   })
 

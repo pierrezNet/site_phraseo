@@ -27,7 +27,7 @@ export const fr = {
   'pref.quizHint': 'Masque les répliques du pilote pour vous entraîner',
   'pref.voice': "Voix de l'ATC",
   'pref.voiceHint': 'Lecture automatique en vol complet',
-  'pref.voiceNoFr': 'Voix française indisponible pour l’instant (retirée par Cloudflare) : écoute en anglais seulement',
+  'pref.voiceNoFr': 'Voix française indisponible pour le moment : les textes restent disponibles.',
   'pref.voiceQuota': "{n} % du quota voix restant aujourd'hui",
   'pref.exchangeLang': 'Langue des échanges',
   'pref.exchangeLangHint': 'Répliques du pilote et de l’ATC',

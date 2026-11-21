@@ -36,7 +36,10 @@ describe('ListenButton', () => {
     expect(wrapper.find('button').exists()).toBe(false)
   })
 
-  it('reste une simple icône pour une réplique française (plus de voix française)', () => {
+  it('reste une simple icône dans une langue sans voix (refusée par le relais)', async () => {
+    const voice = useVoiceStore()
+    expect(mountButton({ lang: 'fr' }).find('button').exists()).toBe(true)
+    ;(voice as unknown as { missingLangs: string[] }).missingLangs = ['fr']
     expect(mountButton({ lang: 'fr' }).find('button').exists()).toBe(false)
   })
 })

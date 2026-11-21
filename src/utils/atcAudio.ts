@@ -1,21 +1,26 @@
 /**
- * Voix des répliques : audio obtenu via le relais (POST /tts, Deepgram Aura sur Workers AI), joué avec un effet radio.
+ * Voix des répliques : audio obtenu via le relais (POST /tts : Deepgram Aura sur Workers AI en anglais,
+ * Azure AI Speech en français), joué avec un effet radio.
  * Le relais décompte un quota voix quotidien par navigateur (identifiant anonyme).
  */
 import { API_BASE } from './relay';
 import { fetchWithTimeout } from './api';
 
-/**
- * Langues ayant une voix (comme TTS_VOICES du relais) : MeloTTS, seule voix française de Workers AI,
- * a été retiré le 2026-11-20. Le français revient quand Cloudflare en propose une.
- */
-export const VOICE_LANGS: ReadonlyArray<'fr' | 'en'> = ['en'];
+/** Langues ayant une voix (TTS_VOICES du relais) ; une langue refusée par le relais est retirée pour la session */
+export const VOICE_LANGS: ReadonlyArray<'fr' | 'en'> = ['fr', 'en'];
 
 /** WAV d'environ 500 Ko par réplique : cache de session limité */
 const MAX_CACHED = 30;
 const USER_ID_KEY = 'voiceUserId';
 
 export type QuotaScope = 'user' | 'ip' | 'global';
+
+/** Pas de voix dans cette langue pour le moment (relais : 501, ex. voix française non configurée ou épuisée) */
+export class VoiceLangError extends Error {
+  constructor(public lang: 'fr' | 'en') {
+    super(`Pas de voix (${lang})`);
+  }
+}
 
 /** Quota voix du jour atteint (relais : 429 avec `quota`) */
 export class VoiceQuotaError extends Error {
@@ -66,6 +71,7 @@ export function fetchAtcAudio(
         const body = (await res.json().catch(() => ({}))) as { quota?: QuotaScope };
         if (body.quota) throw new VoiceQuotaError(body.quota);
       }
+      if (res.status === 501) throw new VoiceLangError(lang);
       if (!res.ok) throw new Error(`Synthèse vocale : HTTP ${res.status}`);
       const left = Number(res.headers.get('X-Voice-Quota-Left'));
       if (res.headers.has('X-Voice-Quota-Left') && Number.isFinite(left)) onQuota?.(left);

@@ -25,7 +25,7 @@ export const en: Record<MessageKey, string> = {
   'pref.quizHint': 'Hides the pilot’s lines so you can practise',
   'pref.voice': 'ATC voice',
   'pref.voiceHint': 'Plays automatically during a full flight',
-  'pref.voiceNoFr': 'French voice unavailable for now (withdrawn by Cloudflare): listening in English only',
+  'pref.voiceNoFr': 'French voice unavailable for now: the texts remain available.',
   'pref.voiceQuota': '{n}% of today’s voice quota left',
   'pref.exchangeLang': 'Phraseology language',
   'pref.exchangeLangHint': 'Pilot and ATC lines',

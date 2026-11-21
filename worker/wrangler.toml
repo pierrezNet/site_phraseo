@@ -9,6 +9,9 @@ ALLOWED_ORIGINS = "https://phraseo.aeronautique.xyz,http://localhost:5173,http:/
 QUOTA_USER = "800"
 QUOTA_IP = "2400"
 QUOTA_GLOBAL = "8000"
+# Voix française : Azure AI Speech (offre gratuite F0). Région de la ressource ; la clé est un secret :
+#   npx wrangler secret put AZURE_SPEECH_KEY
+AZURE_SPEECH_REGION = "francecentral"
 
 # 5 retours par minute et par IP
 [[ratelimits]]

@@ -3,8 +3,8 @@
  *
  *   GET  /metar/:icao  → METAR NOAA (sans clé), mis en cache 10 min
  *   POST /feedback     → retour « J'ai un retour » : sujet du forum privé d'AvroBB (liaison de service FORUM)
- *   POST /tts          → voix de l'ATC et du pilote (Deepgram Aura, Workers AI ; anglais seulement depuis
- *                        le retrait de MeloTTS), WAV mis en cache 30 jours,
+ *   POST /tts          → voix de l'ATC et du pilote (anglais : Deepgram Aura sur Workers AI ;
+ *                        français : Azure AI Speech), WAV mis en cache 30 jours,
  *                        quotas du jour par utilisateur anonyme, par IP et au total (Durable Object VoiceQuota)
  *   POST /stt?lang=fr  → réponse du pilote (WAV 16 kHz, 15 s max) transcrite par Whisper, mêmes quotas
  *
@@ -19,8 +19,11 @@ import {
   quotaLimits,
   sttNeurons,
   sttPrompt,
+  azureSsml,
   toMetar,
   TTS_VOICES,
+  type TtsRequest,
+  type TtsVoice,
   ttsAudioBytes,
   ttsCacheKey,
   ttsNeurons,
@@ -47,6 +50,9 @@ interface Env {
   STT_LIMITER: RateLimit;
   AI: Ai;
   QUOTA: DurableObjectNamespace<VoiceQuota>;
+  /** Voix française : clé (secret, `wrangler secret put AZURE_SPEECH_KEY`) et région de la ressource Azure AI Speech */
+  AZURE_SPEECH_KEY?: string;
+  AZURE_SPEECH_REGION?: string;
   /** Plafonds quotidiens en neurones (wrangler.toml) */
   QUOTA_USER?: string;
   QUOTA_IP?: string;
@@ -158,9 +164,11 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
   }
   const tts = parseTts(body);
   if (!tts) return json({ error: 'Champs invalides' }, 400, cors);
-  // Langue sans voix (français depuis le retrait de MeloTTS) : refus net, sans quota
+  // Langue sans voix (Azure non configuré) : refus net, sans quota
   const voice = TTS_VOICES[tts.lang];
-  if (!voice) return json({ error: 'Pas de voix dans cette langue', unavailable: tts.lang }, 501, cors);
+  if (voice.provider === 'azure' && !(env.AZURE_SPEECH_KEY && env.AZURE_SPEECH_REGION)) {
+    return json({ error: 'Pas de voix dans cette langue', unavailable: tts.lang }, 501, cors);
+  }
 
   // Même réplique avec les mêmes paramètres : servie depuis le cache, sans compter dans la limite ni le quota
   const cache = caches.default;
@@ -177,16 +185,11 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
 
   let audio: Uint8Array;
   try {
-    const output = await (env.AI.run as (model: string, input: Record<string, unknown>) => Promise<unknown>)(voice.model, {
-      text: tts.text,
-      speaker: voice.speakers[tts.speaker],
-      encoding: 'linear16',
-      container: 'wav',
-      sample_rate: 24000,
-    });
-    audio = await ttsAudioBytes(output);
+    audio = await synthesize(tts, voice, env);
   } catch (err) {
     console.error(`${voice.model} a échoué`, err);
+    // Azure refuse au-delà de l'offre gratuite (429) : la voix française est indisponible, pas en panne
+    if (err instanceof VoiceUnavailable) return json({ error: 'Pas de voix dans cette langue', unavailable: tts.lang }, 501, cors);
     return json({ error: 'Synthèse indisponible' }, 502, cors);
   }
 
@@ -196,6 +199,37 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
   const headers = { 'Content-Type': 'audio/wav', 'Cache-Control': `public, max-age=${TTS_TTL_S}` };
   ctx.waitUntil(cache.put(key, new Response(audio, { headers })));
   return new Response(audio, { headers: { ...headers, ...cors, 'X-Voice-Quota-Left': left.toFixed(3) } });
+}
+
+/** Voix momentanément refusée par le fournisseur (quota gratuit Azure épuisé) */
+class VoiceUnavailable extends Error {}
+
+/** Synthèse d'une réplique : WAV PCM 24 kHz mono */
+async function synthesize(tts: TtsRequest, voice: TtsVoice, env: Env): Promise<Uint8Array> {
+  const speaker = voice.speakers[tts.speaker];
+  if (voice.provider === 'azure') {
+    const res = await fetch(`https://${env.AZURE_SPEECH_REGION}.tts.speech.microsoft.com/cognitiveservices/v1`, {
+      method: 'POST',
+      headers: {
+        'Ocp-Apim-Subscription-Key': env.AZURE_SPEECH_KEY!,
+        'Content-Type': 'application/ssml+xml',
+        'X-Microsoft-OutputFormat': 'riff-24khz-16bit-mono-pcm',
+        'User-Agent': 'phraseo-relay',
+      },
+      body: azureSsml(tts.text, speaker),
+    });
+    if (res.status === 429 || res.status === 403) throw new VoiceUnavailable(`Azure ${res.status}`);
+    if (!res.ok) throw new Error(`Azure ${res.status} ${await res.text()}`);
+    return new Uint8Array(await res.arrayBuffer());
+  }
+  const output = await (env.AI.run as (model: string, input: Record<string, unknown>) => Promise<unknown>)(voice.model, {
+    text: tts.text,
+    speaker,
+    encoding: 'linear16',
+    container: 'wav',
+    sample_rate: 24000,
+  });
+  return ttsAudioBytes(output);
 }
 
 async function handleStt(request: Request, env: Env, cors: Record<string, string>): Promise<Response> {
