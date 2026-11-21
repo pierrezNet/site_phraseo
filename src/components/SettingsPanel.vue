@@ -42,6 +42,10 @@
           {{ t('pref.voiceQuota', { n: Math.round(voice.quotaLeft * 100) }) }}
           <a v-if="SUPPORT_URL" :href="SUPPORT_URL" target="_blank" rel="noopener noreferrer" class="underline">· {{ t('support.menu') }}</a>
         </span>
+        <!-- Jauge du fonds (dons du collectif, données publiques) -->
+        <span v-if="fundStore.visible && fundStore.fund" class="pref-hint">
+          {{ t('fund.gauge', { amount: fundMoney }) }}
+        </span>
       </span>
       <button
         type="button"
@@ -100,6 +104,8 @@ import { useQuizStore } from '../stores/quiz'
 import { useVoiceStore } from '../stores/voice'
 import { useI18n } from '../i18n'
 import { SUPPORT_URL } from '../utils/support'
+import { useFundStore } from '../stores/fund'
+import { computed, onMounted } from 'vue'
 
 const LANGS: Language[] = ['fr', 'en']
 
@@ -107,6 +113,12 @@ const { t, lang } = useI18n()
 const formStore = useFormStore()
 const quizStore = useQuizStore()
 const voice = useVoiceStore()
+const fundStore = useFundStore()
+const fundMoney = computed(() =>
+  new Intl.NumberFormat(lang.ui === 'fr' ? 'fr-FR' : 'en-GB', { style: 'currency', currency: fundStore.fund?.currency ?? 'EUR' })
+    .format((fundStore.fund?.balance ?? 0) / 100)
+)
+onMounted(() => fundStore.load())
 </script>
 
 <style scoped>

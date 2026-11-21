@@ -6,6 +6,7 @@ Le site est statique (GitHub Pages) : tout ce qui est injecté au build via `VIT
 |---|---|
 | `GET /metar/:icao` | METAR depuis aviationweather.gov (NOAA, sans clé), converti au format du front, cache 10 min |
 | `POST /feedback` | Valide le retour et le transmet au forum AvroBB (liaison de service `FORUM`, point d'entrée `PhraseoFeedback`) : sujet du forum privé « Retours Phraséo (à trier) », contact envoyé par e-mail aux administrateurs seulement. Origine autorisée uniquement, 5 envois/min/IP |
+| `GET /fund` | Fonds du collectif Open Collective (`OPEN_COLLECTIVE_SLUG`) : solde, totaux reçus et dépensés, 5 dernières dépenses payées. Données publiques (API GraphQL sans clé), cache 1 h |
 | `POST /tts` | Voix : `{ text, lang, speaker }` (`speaker` : `atc` ou `pilot` ; texte préparé par `src/utils/speech.ts`, 600 caractères max) → WAV 24 kHz : anglais Deepgram Aura 1 (Workers AI), français Azure AI Speech (offre gratuite F0, MeloTTS ayant été retiré le 2026-11-20). `501` si la voix française n'est pas configurée ou que son offre gratuite est épuisée. Origine autorisée uniquement, 60 synthèses/min/IP, cache 30 jours (une réplique déjà dite ne coûte rien), quotas quotidiens (ci-dessous) |
 | `POST /stt?lang=fr` | Réponse du pilote : WAV 16 kHz mono (15 s max), vocabulaire sans nombres dans `X-Stt-Hint` → `{ text }` (Whisper large-v3-turbo). Origine autorisée uniquement, 30 réponses/min/IP, mêmes quotas que la voix |
 

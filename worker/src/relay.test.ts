@@ -11,6 +11,7 @@ import {
   quotaVerdict,
   toMetar,
   TTS_VOICES,
+  toFund,
   azureSsml,
   ttsAudioBytes,
   ttsCacheKey,
@@ -243,5 +244,48 @@ describe('sttPrompt', () => {
       'Radiotéléphonie aéronautique. Strasbourg Tour décimale script'
     )
     expect(sttPrompt('en', null)).toBe('Aviation radiotelephony.')
+  })
+})
+
+// ── Fonds du collectif ───────────────────────────────────────────────────────
+
+describe('toFund', () => {
+  // Forme réelle de la réponse d'Open Collective (GraphQL v2)
+  const response = {
+    data: {
+      account: {
+        currency: 'EUR',
+        isActive: true,
+        stats: {
+          balance: { valueInCents: 166522 },
+          totalAmountReceived: { valueInCents: 877266 },
+          totalAmountSpent: { valueInCents: -594849 },
+        },
+      },
+      expenses: {
+        totalCount: 229,
+        nodes: [
+          { description: 'Hetzner November 2026', createdAt: '2026-11-15T11:50:51.448Z', amountV2: { valueInCents: 7040 } },
+          { description: 'x'.repeat(150), createdAt: '2026-10-21T07:35:25.299Z', amountV2: { valueInCents: 1735 } },
+        ],
+      },
+    },
+  }
+
+  it('garde le solde, les totaux (dépenses en positif) et les dernières dépenses', () => {
+    const fund = toFund(response)!
+    expect(fund).toMatchObject({ active: true, currency: 'EUR', balance: 166522, received: 877266, spent: 594849, expenseCount: 229 })
+    expect(fund.expenses[0]).toEqual({ description: 'Hetzner November 2026', date: '2026-11-15', amount: 7040 })
+    expect(fund.expenses[1].description).toHaveLength(100)
+  })
+
+  it('collectif pas encore accepté : inactif, tout à zéro', () => {
+    const pending = { data: { account: { currency: 'EUR', isActive: false, stats: {} }, expenses: { totalCount: 0, nodes: [] } } }
+    expect(toFund(pending)).toEqual({ active: false, currency: 'EUR', balance: 0, received: 0, spent: 0, expenseCount: 0, expenses: [] })
+  })
+
+  it('collectif introuvable ou réponse illisible : null', () => {
+    expect(toFund({ data: { account: null } })).toBeNull()
+    expect(toFund(null)).toBeNull()
   })
 })

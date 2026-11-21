@@ -12,6 +12,8 @@ QUOTA_GLOBAL = "8000"
 # Voix française : Azure AI Speech (offre gratuite F0). Région de la ressource ; la clé est un secret :
 #   npx wrangler secret put AZURE_SPEECH_KEY
 AZURE_SPEECH_REGION = "francecentral"
+# Collectif Open Collective du projet : fonds publics affichés dans l'appli (GET /fund)
+OPEN_COLLECTIVE_SLUG = "phraseo"
 
 # 5 retours par minute et par IP
 [[ratelimits]]

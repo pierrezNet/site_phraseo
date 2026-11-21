@@ -6,6 +6,7 @@
  *   POST /tts          → voix de l'ATC et du pilote (anglais : Deepgram Aura sur Workers AI ;
  *                        français : Azure AI Speech), WAV mis en cache 30 jours,
  *                        quotas du jour par utilisateur anonyme, par IP et au total (Durable Object VoiceQuota)
+ *   GET  /fund         → fonds du collectif Open Collective (solde, totaux, dernières dépenses), cache 1 h
  *   POST /stt?lang=fr  → réponse du pilote (WAV 16 kHz, 15 s max) transcrite par Whisper, mêmes quotas
  *
  * Le site statique (GitHub Pages) n'embarque ainsi plus aucun secret.
@@ -21,6 +22,9 @@ import {
   sttPrompt,
   azureSsml,
   voiceName,
+  toFund,
+  FUND_EXPENSES,
+  FUND_QUERY,
   toMetar,
   TTS_VOICES,
   type TtsRequest,
@@ -54,6 +58,8 @@ interface Env {
   /** Voix française : clé (secret, `wrangler secret put AZURE_SPEECH_KEY`) et région de la ressource Azure AI Speech */
   AZURE_SPEECH_KEY?: string;
   AZURE_SPEECH_REGION?: string;
+  /** Collectif Open Collective du projet (dons et dépenses publics) */
+  OPEN_COLLECTIVE_SLUG?: string;
   /** Plafonds quotidiens en neurones (wrangler.toml) */
   QUOTA_USER?: string;
   QUOTA_IP?: string;
@@ -61,6 +67,7 @@ interface Env {
 }
 
 const METAR_TTL_S = 600;
+const FUND_TTL_S = 3600;
 const MAX_BODY_BYTES = 4096;
 const TTS_TTL_S = 30 * 24 * 3600;
 
@@ -97,6 +104,33 @@ async function handleMetar(icao: string, cors: Record<string, string>): Promise<
   if (!list.length) return json({ error: 'Aucun METAR pour cette station' }, 404, cors);
 
   return json(toMetar(list[0]), 200, cors, { 'Cache-Control': `public, max-age=${METAR_TTL_S}` });
+}
+
+/** Fonds du collectif : données publiques d'Open Collective, gardées une heure en cache */
+async function handleFund(env: Env, ctx: ExecutionContext, cors: Record<string, string>): Promise<Response> {
+  const slug = env.OPEN_COLLECTIVE_SLUG;
+  if (!slug) return json({ error: 'Collectif non configuré' }, 404, cors);
+
+  const cache = caches.default;
+  const key = new Request(`https://fund.phraseo.cache/${slug}`);
+  const cached = await cache.match(key);
+  if (cached) return json(await cached.json(), 200, cors, { 'Cache-Control': `public, max-age=${FUND_TTL_S}` });
+
+  let fund;
+  try {
+    const res = await fetch('https://api.opencollective.com/graphql/v2', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'User-Agent': 'phraseo-relay' },
+      body: JSON.stringify({ query: FUND_QUERY, variables: { slug, limit: FUND_EXPENSES } }),
+    });
+    fund = res.ok ? toFund(await res.json()) : null;
+  } catch (err) {
+    console.error('Open Collective injoignable', err);
+  }
+  if (!fund) return json({ error: 'Fonds indisponible' }, 502, cors);
+
+  ctx.waitUntil(cache.put(key, new Response(JSON.stringify(fund), { headers: { 'Cache-Control': `public, max-age=${FUND_TTL_S}` } })));
+  return json(fund, 200, cors, { 'Cache-Control': `public, max-age=${FUND_TTL_S}` });
 }
 
 async function handleFeedback(request: Request, env: Env, cors: Record<string, string>): Promise<Response> {
@@ -278,11 +312,13 @@ export default {
 
     // Racine : simple description, utile pour vérifier que le relais répond
     if (pathname === '/' && request.method === 'GET') {
-      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'POST /feedback', 'POST /tts', 'POST /stt'] }, 200, cors);
+      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'GET /fund', 'POST /feedback', 'POST /tts', 'POST /stt'] }, 200, cors);
     }
 
     const metar = pathname.match(/^\/metar\/([^/]+)$/);
     if (metar && request.method === 'GET') return handleMetar(metar[1].toUpperCase(), cors);
+
+    if (pathname === '/fund' && request.method === 'GET') return handleFund(env, ctx, cors);
 
     if (pathname === '/feedback' && request.method === 'POST') return handleFeedback(request, env, cors);
 

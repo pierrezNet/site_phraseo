@@ -282,3 +282,64 @@ export function sttPrompt(lang: 'fr' | 'en', hint: string | null): string {
 
 /** Neurones consommés par une transcription */
 export const sttNeurons = (seconds: number): number => (seconds / 60) * NEURONS_PER_MINUTE.stt;
+
+// ── Fonds du collectif (Open Collective) : transparence des dons et des dépenses ─────────
+
+/** Dernières dépenses remboursées affichées dans l'appli */
+export const FUND_EXPENSES = 5;
+
+/** Requête GraphQL publique (sans clé) : solde, totaux et dernières dépenses payées */
+export const FUND_QUERY = `query($slug: String!, $limit: Int!) {
+  account(slug: $slug) {
+    currency
+    isActive
+    stats {
+      balance { valueInCents }
+      totalAmountReceived { valueInCents }
+      totalAmountSpent { valueInCents }
+    }
+  }
+  expenses(account: { slug: $slug }, limit: $limit, status: PAID, orderBy: { field: CREATED_AT, direction: DESC }) {
+    totalCount
+    nodes { description createdAt amountV2 { valueInCents } }
+  }
+}`;
+
+export interface Fund {
+  /** Collectif accepté par son hôte fiscal (il peut recevoir des dons) */
+  active: boolean;
+  currency: string;
+  /** Montants en centimes */
+  balance: number;
+  received: number;
+  spent: number;
+  expenseCount: number;
+  expenses: { description: string; date: string; amount: number }[];
+}
+
+const cents = (v: unknown): number => {
+  const n = Number((v as { valueInCents?: unknown } | null)?.valueInCents);
+  return Number.isFinite(n) ? Math.round(n) : 0;
+};
+
+/** Réponse d'Open Collective → fonds affichable ; null si le collectif est introuvable */
+export function toFund(body: unknown): Fund | null {
+  const data = (body as { data?: Record<string, any> } | null)?.data;
+  const account = data?.account;
+  if (!account) return null;
+  const nodes: any[] = Array.isArray(data?.expenses?.nodes) ? data.expenses.nodes : [];
+  return {
+    active: account.isActive === true,
+    currency: typeof account.currency === 'string' ? account.currency : 'EUR',
+    balance: cents(account.stats?.balance),
+    received: cents(account.stats?.totalAmountReceived),
+    // Open Collective compte les dépenses en négatif
+    spent: Math.abs(cents(account.stats?.totalAmountSpent)),
+    expenseCount: Number(data?.expenses?.totalCount) || 0,
+    expenses: nodes.slice(0, FUND_EXPENSES).map((e) => ({
+      description: str(e?.description).slice(0, 100),
+      date: str(e?.createdAt).slice(0, 10),
+      amount: cents(e?.amountV2),
+    })),
+  };
+}

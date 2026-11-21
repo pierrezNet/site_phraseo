@@ -269,6 +269,14 @@ export const en: Record<MessageKey, string> = {
   'support.menu': '♥ Support',
   'support.voice': '♥ Support the voice',
 
+  'fund.received': 'Received',
+  'fund.spent': 'Spent',
+  'fund.balance': 'Balance',
+  'fund.latest': 'Latest expenses',
+  'fund.none': 'No expenses yet.',
+  'fund.all': 'Full budget and invoices on Open Collective',
+  'fund.gauge': 'Voice fund: {amount}',
+
   // Retours
   'feedback.title': 'Send feedback',
   'feedback.thanks': 'Thank you! Your feedback has been sent.',

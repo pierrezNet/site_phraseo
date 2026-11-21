@@ -1,7 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount as baseMount } from '@vue/test-utils'
+import { createPinia } from 'pinia'
+import type { Component } from 'vue'
 
-const support = vi.hoisted(() => ({ SUPPORT_URL: '' }))
+// Le résumé du fonds (FundSummary) a besoin de Pinia ; pas de relais : aucun appel réseau
+vi.mock('../../utils/relay', () => ({ API_BASE: '' }))
+const mount = (c: Component) => baseMount(c, { global: { plugins: [createPinia()] } })
+
+const support = vi.hoisted(() => ({ SUPPORT_URL: '', SUPPORT_DEMO: false }))
 vi.mock('../../utils/support', () => support)
 
 describe('À propos : section « Soutenir le projet »', () => {

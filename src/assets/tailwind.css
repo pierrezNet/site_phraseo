@@ -249,6 +249,13 @@ html[lang="en"] div#instructions > div:not(:has(div)):after {
 .modal a {
     @apply text-blue-600 hover:underline;
 }
+/* Bouton « Soutenir » : texte blanc sur fond rose, malgré le style des liens des modales */
+.modal a.support-btn {
+    color: #fff;
+}
+.modal a.support-btn:hover {
+    text-decoration: none;
+}
 /* Fondu dynamique haut/bas sur les zones scrollables en mobile.
    La directive v-scroll-fade pose data-fade = top | bottom | both | none
    selon la position de scroll : pas de fondu au bout, fondu du côté où il

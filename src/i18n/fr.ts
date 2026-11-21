@@ -271,6 +271,14 @@ export const fr = {
   'support.menu': '♥ Soutenir',
   'support.voice': '♥ Soutenir la voix',
 
+  'fund.received': 'Reçu',
+  'fund.spent': 'Dépensé',
+  'fund.balance': 'Solde',
+  'fund.latest': 'Dernières dépenses',
+  'fund.none': 'Aucune dépense pour le moment.',
+  'fund.all': 'Tout le budget et les factures sur Open Collective',
+  'fund.gauge': 'Fonds voix : {amount}',
+
   // Retours
   'feedback.title': "J'ai un retour",
   'feedback.thanks': 'Merci ! Ton retour a bien été envoyé.',
