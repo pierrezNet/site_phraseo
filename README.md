@@ -18,5 +18,10 @@ Le site est généré en amont (build) puis déployé tel quel sur GitHub Pages.
 - Performance maximale
 - Hébergement simple et robuste
 
+## Soutenir le projet
+L'application est gratuite. Les dons, reçus par le collectif [opencollective.com/phraseo](https://opencollective.com/phraseo) (hôte fiscal : Open Source Europe), couvrent uniquement les frais de fonctionnement, sur factures publiques : voix de synthèse (Microsoft Azure, Cloudflare Workers AI) et hébergement.
+
 ## Licence
-Creative Commons Attribution 4.0 International (CC BY 4.0)
+Double licence, détaillée dans [LICENSE](LICENSE) :
+- **code** (application, relais `worker/`, banc `bench/`) : [MIT](https://opensource.org/license/mit) ;
+- **textes et données de phraséologie** (`src/data/`, aide et à propos, `docs/`) : [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).

@@ -1,0 +1,43 @@
+Phraséo — aviation phraseology training tool
+Copyright (c) 2025-2026 Emmanuel Pierrez
+
+This repository contains two kinds of material, under two licences:
+
+1. SOFTWARE — MIT License
+   All source code: the web application (src/, except src/data/ and the help
+   and about texts listed below), the relay worker (worker/), the voice bench
+   (bench/), build and configuration files.
+
+2. CONTENT — Creative Commons Attribution 4.0 International (CC BY 4.0)
+   The phraseology texts and data, and the written documentation:
+   - src/data/ (phraseologieVFR.json, phraseologieIFR.json, scenarios.json)
+   - src/components/help/ (help and about texts)
+   - docs/
+   Full licence: https://creativecommons.org/licenses/by/4.0/legalcode
+   Attribution: "Emmanuel Pierrez — Phraséo (phraseo.aeronautique.xyz)".
+   The phraseology follows the French DGAC "Manuel de phraséologie"
+   (10th edition, 15 April 2023).
+
+-------------------------------------------------------------------------------
+
+MIT License
+
+Copyright (c) 2025-2026 Emmanuel Pierrez
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

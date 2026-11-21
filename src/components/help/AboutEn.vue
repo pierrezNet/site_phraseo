@@ -5,7 +5,8 @@
       <span xmlns:dct="https://purl.org/dc/terms/" property="dct:title">Aviation phraseology for virtual pilots</span> is one of the applications by
       <a xmlns:cc="https://creativecommons.org/ns#" href="https://pierrez.net" property="cc:attributionName" target="_blank" rel="cc:attributionURL noopener noreferrer">Emmanuel Pierrez</a>
       published on <a href="https://aeronautique.xyz/en/phraseologie/" target="_blank" rel="noopener noreferrer">aeronautique.xyz</a>,
-      licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer">Creative Commons Attribution 4.0 International licence</a>.
+      Its phraseology texts and data are licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer">Creative Commons Attribution 4.0 International licence</a>,
+      its code under the <a href="https://github.com/pierrezNet/site_phraseo/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT licence</a>.
       The phraseology follows the French civil aviation authority (DGAC) phraseology manual for general air traffic.
     </p>
     <a href="https://www.ecologie.gouv.fr/sites/default/files/documents/Manuel_Phras%C3%A9ologie.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 mt-3 p-3 border rounded-lg hover:bg-gray-100 transition-colors">

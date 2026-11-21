@@ -5,7 +5,8 @@
       <span xmlns:dct="https://purl.org/dc/terms/" property="dct:title">Phraséologie aéronautique pour les pilotes virtuels</span> est l'une des applications proposées par
       <a xmlns:cc="https://creativecommons.org/ns#" href="https://pierrez.net" property="cc:attributionName" target="_blank" rel="cc:attributionURL noopener noreferrer">Emmanuel Pierrez</a>
       publiées sur <a href="https://aeronautique.xyz/phraseologie/" target="_blank" rel="noopener noreferrer">aeronautique.xyz</a>.
-      Cette dernière est mise à disposition selon les termes de la <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer">licence Creative Commons Attribution 4.0 International</a>.
+      Ses textes et données de phraséologie sont mis à disposition selon les termes de la <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer">licence Creative Commons Attribution 4.0 International</a>,
+      son code sous <a href="https://github.com/pierrezNet/site_phraseo/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">licence MIT</a>.
       Phraséologie réalisée d’après le Manuel de phraséologie à l’usage de la circulation aérienne générale.
     </p>
     <a href="https://www.ecologie.gouv.fr/sites/default/files/documents/Manuel_Phras%C3%A9ologie.pdf" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 mt-3 p-3 border rounded-lg hover:bg-gray-100 transition-colors">
