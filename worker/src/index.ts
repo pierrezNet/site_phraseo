@@ -20,6 +20,7 @@ import {
   sttNeurons,
   sttPrompt,
   azureSsml,
+  voiceName,
   toMetar,
   TTS_VOICES,
   type TtsRequest,
@@ -206,7 +207,7 @@ class VoiceUnavailable extends Error {}
 
 /** Synthèse d'une réplique : WAV PCM 24 kHz mono */
 async function synthesize(tts: TtsRequest, voice: TtsVoice, env: Env): Promise<Uint8Array> {
-  const speaker = voice.speakers[tts.speaker];
+  const speaker = voiceName(tts, voice);
   if (voice.provider === 'azure') {
     const res = await fetch(`https://${env.AZURE_SPEECH_REGION}.tts.speech.microsoft.com/cognitiveservices/v1`, {
       method: 'POST',

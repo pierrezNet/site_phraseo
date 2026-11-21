@@ -45,6 +45,32 @@ export function voiceUserId(): string {
   }
 }
 
+export type Gender = 'f' | 'm';
+const GENDERS_KEY = 'voiceGenders';
+let sessionGenders: Record<Speaker, Gender> | null = null;
+
+/**
+ * Genre des voix de la session (onglet) : tiré au sort une fois pour l'ATC et pour le pilote,
+ * gardé tant que l'onglet reste ouvert. Le relais choisit la voix correspondante.
+ */
+export function voiceGenders(random: () => number = Math.random): Record<Speaker, Gender> {
+  if (sessionGenders) return sessionGenders;
+  const pick = (): Gender => (random() < 0.5 ? 'f' : 'm');
+  try {
+    const stored = JSON.parse(sessionStorage.getItem(GENDERS_KEY) ?? 'null');
+    if (stored && /^[fm]$/.test(stored.atc) && /^[fm]$/.test(stored.pilot)) return (sessionGenders = stored);
+  } catch {
+    // Stockage indisponible ou illisible : nouveau tirage
+  }
+  sessionGenders = { atc: pick(), pilot: pick() };
+  try {
+    sessionStorage.setItem(GENDERS_KEY, JSON.stringify(sessionGenders));
+  } catch {
+    // Navigation privée stricte : tirage gardé en mémoire
+  }
+  return sessionGenders;
+}
+
 /** Audio déjà demandé pendant la session (le relais le garde aussi en cache 30 jours) */
 const cache = new Map<string, Promise<ArrayBuffer>>();
 
@@ -58,13 +84,14 @@ export function fetchAtcAudio(
   speaker: Speaker = 'atc',
   onQuota?: (left: number) => void
 ): Promise<ArrayBuffer> {
-  const key = `${lang}\n${speaker}\n${text}`;
+  const gender = voiceGenders()[speaker];
+  const key = `${lang}\n${speaker}\n${gender}\n${text}`;
   let audio = cache.get(key);
   if (!audio) {
     audio = fetchWithTimeout(`${API_BASE}/tts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Phraseo-User': voiceUserId() },
-      body: JSON.stringify({ text, lang, speaker }),
+      body: JSON.stringify({ text, lang, speaker, gender }),
       timeout: 15000,
     }).then(async (res) => {
       if (res.status === 429) {

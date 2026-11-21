@@ -115,8 +115,8 @@ describe('parseFeedback', () => {
 
 describe('parseTts', () => {
   it('accepte un texte et une langue valides, espaces réduits', () => {
-    expect(parseTts({ text: ' Foxtrot  Sierra Tango ', lang: 'fr' })).toEqual({ text: 'Foxtrot Sierra Tango', lang: 'fr', speaker: 'atc' })
-    expect(parseTts({ text: 'roger', lang: 'en', speaker: 'pilot' })).toMatchObject({ speaker: 'pilot' })
+    expect(parseTts({ text: ' Foxtrot  Sierra Tango ', lang: 'fr' })).toEqual({ text: 'Foxtrot Sierra Tango', lang: 'fr', speaker: 'atc', gender: 'm' })
+    expect(parseTts({ text: 'roger', lang: 'en', speaker: 'pilot', gender: 'f' })).toMatchObject({ speaker: 'pilot', gender: 'f' })
   })
 
   it('refuse texte vide, trop long ou langue inconnue', () => {
@@ -124,6 +124,7 @@ describe('parseTts', () => {
     expect(parseTts({ text: 'a'.repeat(TTS_MAX_CHARS + 1), lang: 'fr' })).toBeNull()
     expect(parseTts({ text: 'hello', lang: 'de' })).toBeNull()
     expect(parseTts({ text: 'hello', lang: 'en', speaker: 'tour' })).toBeNull()
+    expect(parseTts({ text: 'hello', lang: 'en', gender: 'x' })).toBeNull()
     expect(parseTts(null)).toBeNull()
   })
 })
@@ -131,11 +132,12 @@ describe('parseTts', () => {
 describe('ttsCacheKey', () => {
   it('dépend du texte et de la langue', async () => {
     const voice = TTS_VOICES.en
-    const a = await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc' }, voice)
-    expect(a).toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc' }, voice))
-    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'pilot' }, voice))
-    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'fr', speaker: 'atc' }, voice))
-    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc' }, { ...voice, model: '@cf/autre' }))
+    const a = await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc', gender: 'm' } as const, voice)
+    expect(a).toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc', gender: 'm' } as const, voice))
+    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'pilot', gender: 'm' } as const, voice))
+    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc', gender: 'f' } as const, voice))
+    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'fr', speaker: 'atc', gender: 'm' } as const, voice))
+    expect(a).not.toBe(await ttsCacheKey({ text: 'roger', lang: 'en', speaker: 'atc', gender: 'm' } as const, { ...voice, model: '@cf/autre' }))
   })
 })
 

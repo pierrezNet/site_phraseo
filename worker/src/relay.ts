@@ -101,12 +101,15 @@ export const TTS_MAX_CHARS = 600;
 
 export type TtsLang = 'fr' | 'en';
 export type TtsSpeaker = 'atc' | 'pilot';
+/** Voix féminine ou masculine (tirée au sort par le site pour chaque session) */
+export type TtsGender = 'f' | 'm';
 
 export interface TtsRequest {
   text: string;
   lang: TtsLang;
   /** Interlocuteur : une voix différente pour l'ATC et le pilote */
   speaker: TtsSpeaker;
+  gender: TtsGender;
 }
 
 /** Voix de synthèse d'une langue : Workers AI, ou Azure AI Speech (clé en secret du Worker) */
@@ -114,7 +117,8 @@ export interface TtsVoice {
   provider: 'workers-ai' | 'azure';
   /** Modèle Workers AI, ou nom de la voix Azure pour le cache */
   model: string;
-  speakers: Record<TtsSpeaker, string>;
+  /** Voix par interlocuteur et par genre (liste fermée : le site ne choisit que le genre) */
+  speakers: Record<TtsSpeaker, Record<TtsGender, string>>;
   /** Poids d'un caractère dans le quota voix, exprimé en neurones */
   neuronsPerChar: number;
 }
@@ -129,8 +133,21 @@ export interface TtsVoice {
  * WAV 24 kHz dans les deux cas, comme attendu par le front.
  */
 export const TTS_VOICES: Record<TtsLang, TtsVoice> = {
-  en: { provider: 'workers-ai', model: '@cf/deepgram/aura-1', speakers: { atc: 'helios', pilot: 'orion' }, neuronsPerChar: 0.015 / 0.011 },
-  fr: { provider: 'azure', model: 'azure-tts', speakers: { atc: 'fr-FR-HenriNeural', pilot: 'fr-FR-AlainNeural' }, neuronsPerChar: 0.5 },
+  en: {
+    provider: 'workers-ai',
+    model: '@cf/deepgram/aura-1',
+    speakers: { atc: { f: 'athena', m: 'helios' }, pilot: { f: 'luna', m: 'orion' } },
+    neuronsPerChar: 0.015 / 0.011,
+  },
+  fr: {
+    provider: 'azure',
+    model: 'azure-tts',
+    speakers: {
+      atc: { f: 'fr-FR-DeniseNeural', m: 'fr-FR-HenriNeural' },
+      pilot: { f: 'fr-FR-CoralieNeural', m: 'fr-FR-AlainNeural' },
+    },
+    neuronsPerChar: 0.5,
+  },
 };
 
 const escapeXml = (s: string) =>
@@ -149,15 +166,20 @@ export function parseTts(body: unknown): TtsRequest | null {
   const text = str(b.text).replace(/\s+/g, ' ');
   const lang = str(b.lang);
   const speaker = str(b.speaker) || 'atc';
+  const gender = str(b.gender) || 'm';
   if (!text || text.length > TTS_MAX_CHARS) return null;
   if (lang !== 'fr' && lang !== 'en') return null;
   if (speaker !== 'atc' && speaker !== 'pilot') return null;
-  return { text, lang, speaker };
+  if (gender !== 'f' && gender !== 'm') return null;
+  return { text, lang, speaker, gender };
 }
 
 /** Clé de cache stable pour un texte et une langue (SHA-256 hexadécimal) */
-export async function ttsCacheKey({ text, lang, speaker }: TtsRequest, voice: TtsVoice): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${lang}\n${voice.speakers[speaker]}\n${text}`));
+/** Nom de la voix d'une demande */
+export const voiceName = ({ speaker, gender }: TtsRequest, voice: TtsVoice): string => voice.speakers[speaker][gender];
+
+export async function ttsCacheKey(tts: TtsRequest, voice: TtsVoice): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${tts.lang}\n${voiceName(tts, voice)}\n${tts.text}`));
   const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
   // Le modèle fait partie de la clé : changer de voix n'en ressert pas une ancienne
   return `https://tts.phraseo.cache/${voice.model.replace(/[^\w-]/g, '_')}/${hex}`;
