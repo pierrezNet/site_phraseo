@@ -4,10 +4,12 @@ compatibility_date = "2026-09-01"
 
 [vars]
 ALLOWED_ORIGINS = "https://phraseo.aeronautique.xyz,http://localhost:5173,http://localhost:4173"
-# Quotas voix du jour (UTC), en neurones Workers AI (gratuit : 10 000/jour).
-# 8 000 au total (réserve de 20 %), 800 par utilisateur (≈ 10 utilisateurs), 2 400 par IP (club, NAT)
-QUOTA_USER = "800"
-QUOTA_IP = "2400"
+# Quotas voix du jour (UTC), en unités ≈ neurones (anglais : 1,36 par caractère ; français Azure : 0,5).
+# 8 000 au total : sous la gratuité Workers AI (10 000 neurones/jour) et Azure F0 (500 000 caractères/mois).
+# Plus de répliques par personne plutôt que plus de personnes servies : 4 000 par utilisateur
+# (≈ 30 répliques anglaises ou 80 françaises), 6 000 par IP (club, NAT)
+QUOTA_USER = "4000"
+QUOTA_IP = "6000"
 QUOTA_GLOBAL = "8000"
 # Voix française : Azure AI Speech (offre gratuite F0). Région de la ressource ; la clé est un secret :
 #   npx wrangler secret put AZURE_SPEECH_KEY

@@ -7,6 +7,7 @@ Le site est statique (GitHub Pages) : tout ce qui est injecté au build via `VIT
 | `GET /metar/:icao` | METAR depuis aviationweather.gov (NOAA, sans clé), converti au format du front, cache 10 min |
 | `POST /feedback` | Valide le retour et le transmet au forum AvroBB (liaison de service `FORUM`, point d'entrée `PhraseoFeedback`) : sujet du forum privé « Retours Phraséo (à trier) », contact envoyé par e-mail aux administrateurs seulement. Origine autorisée uniquement, 5 envois/min/IP |
 | `GET /fund` | Fonds du collectif Open Collective (`OPEN_COLLECTIVE_SLUG`) : solde, totaux reçus et dépensés, 5 dernières dépenses payées. Données publiques (API GraphQL sans clé), cache 1 h |
+| `GET /stats` | Page « Consommation voix » : personnes, répliques FR/EN, cache, transcriptions du jour ; quota global ; estimation Workers AI (jour) et Azure (mois) ; 30 derniers jours. `GET /stats.json` pour les mêmes données. Totaux anonymes gardés 90 jours |
 | `POST /tts` | Voix : `{ text, lang, speaker }` (`speaker` : `atc` ou `pilot` ; texte préparé par `src/utils/speech.ts`, 600 caractères max) → WAV 24 kHz : anglais Deepgram Aura 1 (Workers AI), français Azure AI Speech (offre gratuite F0, MeloTTS ayant été retiré le 2026-11-20). `501` si la voix française n'est pas configurée ou que son offre gratuite est épuisée. Origine autorisée uniquement, 60 synthèses/min/IP, cache 30 jours (une réplique déjà dite ne coûte rien), quotas quotidiens (ci-dessous) |
 | `POST /stt?lang=fr` | Réponse du pilote : WAV 16 kHz mono (15 s max), vocabulaire sans nombres dans `X-Stt-Hint` → `{ text }` (Whisper large-v3-turbo). Origine autorisée uniquement, 30 réponses/min/IP, mêmes quotas que la voix |
 
@@ -45,8 +46,8 @@ Le Durable Object `VoiceQuota` (SQLite, une instance unique) compte l'usage du j
 
 | Variable (`wrangler.toml`) | Défaut | Rôle |
 |---|---|---|
-| `QUOTA_USER` | 800 | Par navigateur (identifiant anonyme `X-Phraseo-User`), soit environ 6 répliques synthétisées (les répliques déjà en cache sont gratuites) |
-| `QUOTA_IP` | 2400 | Par IP : garde-fou si l'identifiant est effacé, tout en laissant passer un club derrière une seule connexion |
+| `QUOTA_USER` | 4000 | Par navigateur (identifiant anonyme `X-Phraseo-User`) : ≈ 30 répliques anglaises ou 80 françaises par jour (les répliques déjà en cache sont gratuites). Choix : plus de répliques par personne plutôt que plus de personnes servies |
+| `QUOTA_IP` | 6000 | Par IP : garde-fou si l'identifiant est effacé, tout en laissant passer un club derrière une seule connexion |
 | `QUOTA_GLOBAL` | 8000 | Total de l'application (réserve de 20 % sur les 10 000) : au-delà, la voix est coupée pour tout le monde |
 
 - Au-delà d'un plafond : `429 { "quota": "user" | "ip" | "global" }`. Le site affiche un message, et les textes restent disponibles.

@@ -36,6 +36,7 @@ import {
   type NoaaMetar,
 } from './relay';
 import type { VoiceQuota } from './quota';
+import { statsPage } from './statsPage';
 
 export { VoiceQuota } from './quota';
 
@@ -209,7 +210,11 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
   const cache = caches.default;
   const key = new Request(await ttsCacheKey(tts, voice));
   const cached = await cache.match(key);
-  if (cached) return new Response(cached.body, { headers: { ...Object.fromEntries(cached.headers), ...cors } });
+  if (cached) {
+    // Réplique servie par le cache : gratuite, comptée dans les statistiques
+    ctx.waitUntil(voiceIdentity(request, env).quota.record({ tts_cache: 1 }));
+    return new Response(cached.body, { headers: { ...Object.fromEntries(cached.headers), ...cors } });
+  }
 
   const { ip, user, limits, quota } = voiceIdentity(request, env);
   const { success } = await env.TTS_LIMITER.limit({ key: ip });
@@ -228,7 +233,10 @@ async function handleTts(request: Request, env: Env, ctx: ExecutionContext, cors
     return json({ error: 'Synthèse indisponible' }, 502, cors);
   }
 
-  const { left } = await quota.charge(user, ip, ttsNeurons(tts.text, voice), limits);
+  const { left } = await quota.charge(user, ip, ttsNeurons(tts.text, voice), limits, {
+    [`tts_${tts.lang}_lines`]: 1,
+    [`tts_${tts.lang}_chars`]: tts.text.length,
+  });
 
   // WAV PCM 24 kHz mono
   const headers = { 'Content-Type': 'audio/wav', 'Cache-Control': `public, max-age=${TTS_TTL_S}` };
@@ -299,7 +307,7 @@ async function handleStt(request: Request, env: Env, cors: Record<string, string
     return json({ error: 'Reconnaissance indisponible' }, 502, cors);
   }
 
-  const { left } = await quota.charge(user, ip, sttNeurons(check.seconds), limits);
+  const { left } = await quota.charge(user, ip, sttNeurons(check.seconds), limits, { stt_count: 1, stt_seconds: check.seconds });
   return json({ text }, 200, cors, { 'X-Voice-Quota-Left': left.toFixed(3) });
 }
 
@@ -312,13 +320,21 @@ export default {
 
     // Racine : simple description, utile pour vérifier que le relais répond
     if (pathname === '/' && request.method === 'GET') {
-      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'GET /fund', 'POST /feedback', 'POST /tts', 'POST /stt'] }, 200, cors);
+      return json({ service: 'phraseo-relay', routes: ['GET /metar/:icao', 'GET /fund', 'GET /stats', 'GET /stats.json', 'POST /feedback', 'POST /tts', 'POST /stt'] }, 200, cors);
     }
 
     const metar = pathname.match(/^\/metar\/([^/]+)$/);
     if (metar && request.method === 'GET') return handleMetar(metar[1].toUpperCase(), cors);
 
     if (pathname === '/fund' && request.method === 'GET') return handleFund(env, ctx, cors);
+
+    // Consommation voix (totaux anonymes) : page lisible et JSON
+    if ((pathname === '/stats' || pathname === '/stats.json') && request.method === 'GET') {
+      const quota = env.QUOTA.get(env.QUOTA.idFromName('global'));
+      const data = { ...(await quota.stats(30)), limits: quotaLimits(env) };
+      if (pathname === '/stats.json') return json(data, 200, cors, { 'Cache-Control': 'no-store' });
+      return new Response(statsPage(data), { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
+    }
 
     if (pathname === '/feedback' && request.method === 'POST') return handleFeedback(request, env, cors);
 

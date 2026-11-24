@@ -170,7 +170,7 @@ describe('quotaVerdict', () => {
 
 describe('quotaLimits', () => {
   it('lit les variables, avec repli sur les valeurs par défaut', () => {
-    expect(quotaLimits({ QUOTA_USER: '500', QUOTA_IP: 'x' })).toEqual({ user: 500, ip: 2400, global: 8000 })
+    expect(quotaLimits({ QUOTA_USER: '500', QUOTA_IP: 'x' })).toEqual({ user: 500, ip: 6000, global: 8000 })
   })
 })
 

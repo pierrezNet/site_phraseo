@@ -229,10 +229,19 @@ export function quotaVerdict(usage: QuotaUsage, limits: QuotaLimits): QuotaVerdi
   return scope ? { allowed: false, scope, left: 0 } : { allowed: true, left };
 }
 
+/** Statistiques voix gardées (jours) : totaux anonymes, sans identifiant */
+export const STATS_DAYS = 90;
+
+/** Statistiques d'un jour : compteurs (tts_fr_lines, tts_fr_chars, tts_en_lines, tts_en_chars, tts_cache, stt_count, stt_seconds, units, users) */
+export interface VoiceStatsDay {
+  day: string;
+  metrics: Record<string, number>;
+}
+
 /** Plafonds lus dans wrangler.toml ([vars]) ; valeurs par défaut si absents ou invalides */
 export function quotaLimits(vars: { QUOTA_USER?: string; QUOTA_IP?: string; QUOTA_GLOBAL?: string }): QuotaLimits {
   const num = (v: string | undefined, fallback: number) => (Number(v) > 0 ? Number(v) : fallback);
-  return { user: num(vars.QUOTA_USER, 800), ip: num(vars.QUOTA_IP, 2400), global: num(vars.QUOTA_GLOBAL, 8000) };
+  return { user: num(vars.QUOTA_USER, 4000), ip: num(vars.QUOTA_IP, 6000), global: num(vars.QUOTA_GLOBAL, 8000) };
 }
 
 /** Durée d'un WAV PCM (MeloTTS renvoie du WAV 44,1 kHz mono) ; null si ce n'est pas un WAV */

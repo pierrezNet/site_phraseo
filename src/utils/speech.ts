@@ -23,29 +23,11 @@ export const OACI_WORDS: Record<string, string> = {
   X: 'X-ray', Y: 'Yankee', Z: 'Zulu',
 };
 
-/**
- * Nom des lettres d'un sigle (Q_N_H) pour la voix française, écrit comme des mots que MeloTTS
- * lit correctement (vérifié par aller-retour MeloTTS → Whisper : « cu haine hache » → QNH)
- */
-const FR_LETTER_NAMES: Record<string, string> = {
-  A: 'a', B: 'bé', C: 'cé', D: 'dé', E: 'eu', F: 'effe', G: 'gé', H: 'hache', I: 'i', J: 'ji', K: 'ka',
-  L: 'elle', M: 'èm', N: 'haine', O: 'o', P: 'pé', Q: 'cu', R: 'erre', S: 'esse', T: 'té', U: 'u', V: 'vé',
-  W: 'double vé', X: 'ixe', Y: 'i grec', Z: 'zède',
-};
-
 const EN_CLOCK = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 
 const DIGITS: Record<SpeechLang, string[]> = {
   fr: ['zéro', 'unité', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf'],
   en: ['zero', 'one', 'two', 'tree', 'four', 'fife', 'six', 'seven', 'eight', 'niner'],
-};
-
-/** Mots anglais mal prononcés par la voix française : réécrits phonétiquement */
-const FR_PRONUNCIATION: Record<string, string> = {
-  Whiskey: 'Ouisski',
-  Whisky: 'Ouisski',
-  Boeing: 'Boïngue',
-  Foxtrot: 'Fox trotte',
 };
 
 /** Noms féminins après « 1 » : « une minute » */
@@ -135,7 +117,8 @@ function sayUnderscored(group: string, lang: SpeechLang): string {
     .map((part) => {
       if (/^\d$/.test(part)) return DIGITS[lang][Number(part)];
       if (/^\d+$/.test(part)) return sayNumber(part, lang, false);
-      if (/^[A-Z]$/i.test(part)) return lang === 'fr' ? FR_LETTER_NAMES[part.toUpperCase()] : part.toUpperCase();
+      // Lettres d'un sigle (Q_N_H) écrites séparées : les deux voix les épellent (Azure lisait « cu haine hache » d'un bloc)
+      if (/^[A-Z]$/i.test(part)) return part.toUpperCase();
       return /^[A-Z]{2,}$/.test(part) ? asWord(part) : part;
     })
     .join(' ');
@@ -190,6 +173,16 @@ export function toSpeech(text: string, lang: SpeechLang): string {
     return `${sayNumber(int, lang)} ${lang === 'fr' ? 'décimale' : 'decimal'} ${said}`;
   });
 
+  // Heure en français courant : « 06 heures 36 » → « six heures trente-six », « 15 heures 05 » → « quinze heures cinq »
+  // (pas la règle du zéro initial des codes)
+  if (lang === 'fr') {
+    s = s.replace(/\b(\d{1,2}) heures (\d{2})\b/g, (_m, h: string, m: string) =>
+      [sayNumber(String(Number(h)), 'fr', true), Number(h) > 1 ? 'heures' : 'heure', Number(m) ? sayNumber(String(Number(m)), 'fr', true) : '']
+        .filter(Boolean)
+        .join(' ')
+    );
+  }
+
   // Séparateur de milliers : « 1 800 » → 1800
   s = s.replace(/\b(\d{1,3}) (\d{3})\b/g, '$1$2');
 
@@ -210,8 +203,6 @@ export function toSpeech(text: string, lang: SpeechLang): string {
 
   // Points de report en capitales restants (BASIP, ODILO) : lus comme des mots
   s = s.replace(/\b[A-Z]{5,}\b/g, asWord);
-
-  if (lang === 'fr') s = s.replace(/\b[A-Z][a-z]+\b/g, (w) => FR_PRONUNCIATION[w] ?? w);
 
   // Point de report finissant par consonne + « gu » (MIRGU) : la voix française avale le « u » final
   // (« Mirg ») ; « Mire-gu » le fait entendre (vérifié par aller-retour MeloTTS → Whisper)

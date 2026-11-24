@@ -20,7 +20,7 @@ describe('toSpeech — français', () => {
   const fr = (t: string) => toSpeech(t, 'fr')
 
   it('langage courant pour altitudes, QNH, pistes et fréquences', () => {
-    expect(fr('Montez 2500 pieds, Q_N_H 1013.')).toBe('Montez deux mille cinq cents pieds, cu haine hache mille treize.')
+    expect(fr('Montez 2500 pieds, Q_N_H 1013.')).toBe('Montez deux mille cinq cents pieds, Q N H mille treize.')
     expect(fr('piste 26 Gauche')).toBe('piste vingt-six Gauche')
     expect(fr('contactez Lille Tour, 118 décimale 7')).toBe('contactez Lille Tour, cent dix-huit décimale sept')
     expect(fr('120 décimale 0_25')).toBe('cent vingt décimale zéro vingt-cinq')
@@ -51,12 +51,12 @@ describe('toSpeech — français', () => {
 
   it('types d\'avions et mots réécrits pour la voix française', () => {
     expect(fr('derrière un A320 puis l\'Airbus A320')).toBe('derrière un Airbus trois cent vingt puis l\'Airbus trois cent vingt')
-    expect(fr('un Boeing 737')).toBe('un Boïngue sept cent trente-sept')
+    expect(fr('un Boeing 737')).toBe('un Boeing sept cent trente-sept')
   })
 
   it('indicatifs et taxiways en alphabet OACI', () => {
-    expect(fr('F-EPST, roulez via W41')).toBe('Fox trotte Echo Papa Sierra Tango, roulez via Ouisski quarante et un')
-    expect(fr('F S T, rappelez prêt')).toBe('Fox trotte Sierra Tango, rappelez prêt')
+    expect(fr('F-EPST, roulez via W41')).toBe('Foxtrot Echo Papa Sierra Tango, roulez via Whiskey quarante et un')
+    expect(fr('F S T, rappelez prêt')).toBe('Foxtrot Sierra Tango, rappelez prêt')
     expect(fr('point d\'attente (S A 1)')).toBe('point d\'attente Sierra Alfa unité')
   })
 
@@ -70,7 +70,9 @@ describe('toSpeech — français', () => {
   })
 
   it('heures', () => {
-    expect(fr('il est 15 heures 05')).toBe('il est quinze heures zéro cinq')
+    expect(fr('il est 15 heures 05')).toBe('il est quinze heures cinq')
+    expect(fr('il est 06 heures 36')).toBe('il est six heures trente-six')
+    expect(fr('il est 01 heures 00')).toBe('il est une heure')
     expect(fr('décollage 15_40')).toBe('décollage quinze quarante')
   })
 })
@@ -117,6 +119,6 @@ describe('routes et C_T_O_T', () => {
   it('route ATS et créneau', () => {
     expect(toSpeech('puis (route) (Upper N 871)', 'fr')).toBe('puis route Upper November huit cent soixante et onze')
     expect(toSpeech('then (Upper N 871)', 'en')).toBe('then Upper November eight seven one')
-    expect(toSpeech('C_T_O_T 15_25', 'fr')).toBe('cé té o té quinze vingt-cinq')
+    expect(toSpeech('C_T_O_T 15_25', 'fr')).toBe('C T O T quinze vingt-cinq')
   })
 })

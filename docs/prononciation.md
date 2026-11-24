@@ -3,8 +3,8 @@
 Référence des règles appliquées par la synthèse vocale, avec leur source et des exemples.
 
 - **Où c'est codé** : [`src/utils/speech.ts`](../src/utils/speech.ts) (texte → parole), testé dans [`speech.test.ts`](../src/utils/speech.test.ts). Chaque règle ci-dessous y a un test.
-- **Moteur** : MeloTTS (Cloudflare Workers AI) via le relais `POST /tts`, **retiré le 2026-11-20** ; l'anglais passe désormais par Deepgram Aura 1 (une voix pour l'ATC, une pour le pilote), le français n'a plus de voix. Les règles ci-dessous restent celles du texte envoyé ; celles propres à MeloTTS sont à revérifier à l'oreille avec Aura. Une seule voix par langue, sans réglage de style : on ne contrôle que le texte envoyé et la façon de le jouer.
-- **Sources** : manuel DGAC de phraséologie, 10ᵉ édition (`Manuel_Phraseologie.pdf`, abrégé « DGAC ») ; wiki IVAO France (« IVAO ») ; écoute par Emmanuel (« oreille ») ; aller-retour MeloTTS → Whisper (« aller-retour », voir en fin de page).
+- **Moteur** : relais `POST /tts`. Français : Azure AI Speech (voix Denise / Henri pour l'ATC, Coralie / Alain pour le pilote) ; anglais : Deepgram Aura 1 sur Workers AI (Athena / Helios, Luna / Orion). MeloTTS, le moteur d'origine, a été retiré le 2026-11-20. On ne contrôle que le texte envoyé et la façon de le jouer.
+- **Sources** : manuel DGAC de phraséologie, 10ᵉ édition (`Manuel_Phraseologie.pdf`, abrégé « DGAC ») ; wiki IVAO France (« IVAO ») ; écoute par Emmanuel (« oreille ») ; aller-retour voix → Whisper (« aller-retour », voir en fin de page).
 
 ## Nombres
 
@@ -13,6 +13,7 @@ Référence des règles appliquées par la synthèse vocale, avec leur source et
 | Cas général | Langage courant : « transpondeur 7001 » → *sept mille un*, « niveau 110 » → *cent dix*, QNH 1013 → *mille treize* | Chiffre par chiffre : *seven zero zero one*, *one one zero*, *one zero one tree* | DGAC p. 17 (FR : courant ou chiffres) ; oreille (FR : le découpage n'est pas nécessaire) |
 | Centaines et milliers ronds | *deux mille cinq cents* | *two thousand fife hundred*, *one zero thousand* | DGAC (EN) |
 | Écrit avec underscores (`1_1_0`, `6_0`) | Nombre entier : *cent dix*, *soixante* | Chiffre par chiffre | Convention des JSON |
+| Heure (`[HOU]` : `06 heures 36`) | Langage courant : *six heures trente-six*, *quinze heures cinq*, *une heure* (pas de zéro initial lu) | Chiffre par chiffre (`0_6_3_6`) | Oreille (2026-11-24) |
 | Zéro initial (`04`, `0_25`) | Chiffre par chiffre : *zéro quatre* ; `0_25` → *zéro vingt-cinq* | Chiffre par chiffre | DGAC |
 | Cap | Toujours trois chiffres, un par un : *cap deux sept zéro*, « cap 60 » → *zéro six zéro* | *heading zero six zero* | DGAC p. 17 |
 | Chiffre 1 seul dans un identifiant (W41 n'est pas concerné, ODILO 1A) | *unité* : *Odilo unité Alfa* | *one* | IVAO |
@@ -30,8 +31,8 @@ Le groupement du numéro de vol touche seulement la voix française, pas l'affic
 
 | Règle | FR | EN | Source |
 |---|---|---|---|
-| Lettres isolées (indicatif abrégé, taxiway, immatriculation) | Alphabet OACI : « F S T » → *Fox trotte Sierra Tango*, « W 7 » → *Ouisski sept*, « F-EPST » épelé | *Foxtrot Sierra Tango* | OACI |
-| Sigle à underscores (`Q_N_H`, `I_L_S`, `C_T_O_T`) | Lettres écrites comme des mots français : *cu haine hache*, *i elle esse*, *cé té o té* | Lettres : *Q N H* | Aller-retour : « ku ène ache » était compris « Queen H » |
+| Lettres isolées (indicatif abrégé, taxiway, immatriculation) | Alphabet OACI : « F S T » → *Foxtrot Sierra Tango*, « W 7 » → *Whiskey sept*, « F-EPST » épelé | *Foxtrot Sierra Tango* | OACI |
+| Sigle à underscores (`Q_N_H`, `I_L_S`, `C_T_O_T`) | Lettres séparées : *Q N H*, épelées par la voix Azure | Lettres : *Q N H* | Aller-retour Azure → Whisper (2026-11-24) : *Q N H* → « QNH » ; l'ancienne graphie MeloTTS *cu haine hache* → « CUNH » |
 | Sigles prononcés comme un mot | `A_TIS`, `C_TOT` (EN) : la partie en un bloc est lue comme un mot | Idem | DGAC p. 10 (énonciation des sigles usuels) |
 | CTOT | `C_T_O_T` | `C_TOT` | DGAC p. 10 (les deux formes sont admises) ; oreille (FR épelé) |
 | Point de report, procédure (BASIP, `Bubli_3_Papa`) | Lu comme un mot, pas épelé : *Basip*, *Bubli trois Papa* | Idem | Oreille |
@@ -40,16 +41,11 @@ Le groupement du numéro de vol touche seulement la voix française, pas l'affic
 
 ### Mots réécrits pour la voix française
 
-MeloTTS prononce mal certains mots anglais. Ils sont réécrits uniquement dans le texte envoyé à la voix :
+Les réécritures faites pour MeloTTS (*Ouisski*, *Boïngue*, *Fox trotte*, lettres en mots français) ont été retirées le 2026-11-24 : la voix française Azure lit ces mots et sigles tels quels. Seule reste :
 
 | Mot | Envoyé comme | Source |
 |---|---|---|
-| Whiskey / Whisky | Ouisski | Oreille, aller-retour |
-| Boeing | Boïngue | Oreille |
-| Foxtrot | Fox trotte | Oreille ; aller-retour (« Foxtrotte » → « Fextrot ») |
-| Point de report finissant par consonne + « gu » (MIRGU) | Mire-gu (« Mirgu » est lu « Mirg ») | Oreille ; aller-retour |
-
-Pour en ajouter un : dictionnaire `FR_PRONUNCIATION` de `speech.ts`, plus un test.
+| Point de report finissant par consonne + « gu » (MIRGU) | Mire-gu (« Mirgu » était lu « Mirg » par MeloTTS ; sans effet gênant avec Azure) | Oreille ; aller-retour |
 
 ## Ce qui n'est pas dit
 
@@ -75,7 +71,7 @@ Réglages dans `VOICES` ([`src/utils/atcAudio.ts`](../src/utils/atcAudio.ts)) :
 
 ## Tester une graphie sans l'écouter : l'aller-retour
 
-Faire dire la graphie par MeloTTS, puis transcrire l'audio avec Whisper (les deux sur Workers AI, avec les clés de `bench/voice/.env.bench`). Si Whisper retrouve le sigle ou le mot, la graphie est bonne. Whisper reste un juge imparfait : tester chaque variante dans deux phrases différentes. Par exemple, « approche i elle esse piste » est mal découpé par Whisper, alors qu'une oreille humaine comprend.
+Faire dire la graphie par la voix (relais `POST /tts` : Azure en français, Aura en anglais), puis transcrire l'audio avec Whisper (les deux sur Workers AI, avec les clés de `bench/voice/.env.bench`). Si Whisper retrouve le sigle ou le mot, la graphie est bonne. Whisper reste un juge imparfait : tester chaque variante dans deux phrases différentes. Par exemple, « approche i elle esse piste » est mal découpé par Whisper, alors qu'une oreille humaine comprend.
 
 ## Reconnaissance de la réponse du pilote (quiz)
 
